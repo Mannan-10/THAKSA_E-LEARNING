@@ -122,3 +122,22 @@ CREATE TABLE reviews (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
+
+-- OTP VERIFICATIONS
+CREATE TABLE otp_verifications (
+  email VARCHAR(255) PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  otp VARCHAR(6) NOT NULL,
+  password TEXT NOT NULL,
+  role VARCHAR(20),
+  expires_at TIMESTAMP NOT NULL
+);
+
+
+CREATE TABLE refresh_tokens (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  token TEXT NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
