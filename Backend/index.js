@@ -11,6 +11,7 @@ import moduleRouter from './src/routes/moduleRoutes.js';
 import lessonRouter from './src/routes/lessonRoutes.js';
 import batchRouter from './src/routes/batchRoutes.js';
 import enrollmentRouter from './src/routes/enrollmentRoutes.js';
+import paymentRouter from './src/routes/paymentRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -34,6 +35,8 @@ app.use('/api/courses', moduleRouter);
 app.use('/api/modules', lessonRouter);
 app.use('/api', batchRouter);
 app.use('/api', enrollmentRouter);
+app.use('/api', paymentRouter);
+
 
 app.listen(PORT ,() => {
     console.log(`Server is running on http://localhost:${PORT}`);
