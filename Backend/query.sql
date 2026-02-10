@@ -126,7 +126,7 @@ CREATE TABLE reviews (
 -- OTP VERIFICATIONS
 CREATE TABLE otp_verifications (
   email VARCHAR(255) PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
+  username VARCHAR(100) NOT NULL,
   otp VARCHAR(6) NOT NULL,
   password TEXT NOT NULL,
   role VARCHAR(20),
@@ -141,3 +141,9 @@ CREATE TABLE refresh_tokens (
   expires_at TIMESTAMP NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE lesson_progress
+ADD CONSTRAINT unique_lesson_progress
+UNIQUE (user_id, lesson_id);
+
+-- Razorpay/Stripe integration, admin revenue dashboard(charts)

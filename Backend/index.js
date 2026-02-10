@@ -12,6 +12,9 @@ import lessonRouter from './src/routes/lessonRoutes.js';
 import batchRouter from './src/routes/batchRoutes.js';
 import enrollmentRouter from './src/routes/enrollmentRoutes.js';
 import paymentRouter from './src/routes/paymentRoutes.js';
+import lessonProgressRouter from './src/routes/lessonProgressRoutes.js';
+import certificateRouter from './src/routes/certificateRoutes.js';
+import reviewRouter from './src/routes/reviewRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -36,7 +39,9 @@ app.use('/api/modules', lessonRouter);
 app.use('/api', batchRouter);
 app.use('/api', enrollmentRouter);
 app.use('/api', paymentRouter);
-
+app.use('/api', lessonProgressRouter)
+app.use('/api', certificateRouter);
+app.use('/api', reviewRouter);
 
 app.listen(PORT ,() => {
     console.log(`Server is running on http://localhost:${PORT}`);

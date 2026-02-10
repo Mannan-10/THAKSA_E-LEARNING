@@ -6,8 +6,8 @@ const userRouter = express.Router();
 
 // Auth
 userRouter.post('/register', register);
+userRouter.post('/verify-otp', verifyOtp);
 userRouter.post('/login', login);
-userRouter.post('/verify-otp', verifyOtp)
 userRouter.post('/refresh-token', refreshToken);
 userRouter.post('/logout', logout);
 
