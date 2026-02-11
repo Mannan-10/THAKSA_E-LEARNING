@@ -1,35 +1,116 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from "./layout/Navbar";
+import Footer from "./layout/Footer";
+import DashboardLayout from "./pages/dashboard/DashboardLayout";
+import AdminLayout from "./pages/admin/AdminLayout";
 
+import Home from "./pages/Home";
+import CoursesPage from "./pages/CoursesPage";
+import PricingPage from "./pages/PricingPage";
+import ContactPage from "./pages/ContactPage";
+import BatchesPage from "./pages/BatchesPage";
+
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+
+import UserDashboard from "./pages/dashboard/UserDashboard";
+import MyCourses from "./pages/dashboard/MyCourses";
+import MyBatch from "./pages/dashboard/MyBatch";
+import Profile from "./pages/dashboard/Profile";
+import Settings from "./pages/dashboard/Settings";
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminBatches from "./pages/admin/AdminBatches";
+import AdminCourses from "./pages/admin/AdminCourses";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminSettings from "./pages/admin/AdminSettings";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicOnlyRoute from "./routes/PublicOnlyRoute";
+
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+
+   
+        <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
+        <Route path="/courses" element={<PublicLayout><CoursesPage /></PublicLayout>} />
+        <Route path="/batches" element={<PublicLayout><BatchesPage /></PublicLayout>} />
+        <Route path="/pricing" element={<PublicLayout><PricingPage /></PublicLayout>} />
+        <Route path="/contact" element={<PublicLayout><ContactPage /></PublicLayout>} />
+
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <LoginPage />
+            </PublicOnlyRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicOnlyRoute>
+              <SignupPage />
+            </PublicOnlyRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicOnlyRoute>
+              <ForgotPasswordPage />
+            </PublicOnlyRoute>
+          }
+        />
+
+      
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<UserDashboard />} />
+          <Route path="courses" element={<MyCourses />} />
+          <Route path="batch" element={<MyBatch />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+
+     
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="batches" element={<AdminBatches />} />
+          <Route path="courses" element={<AdminCourses />} />
+          <Route path="students" element={<AdminStudents />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+
+function PublicLayout({ children }) {
+  return (
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
+  );
+}
