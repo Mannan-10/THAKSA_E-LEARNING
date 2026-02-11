@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
 
 export default function PublicOnlyRoute({ children }) {
-  const isAuth = localStorage.getItem("isAuth") === "true";
+  const token = localStorage.getItem("accessToken");
 
-  if (isAuth) {
-    return <Navigate to="/dashboard" replace />;
+  if (token) {
+    return <Navigate to="/dashboard" />;
   }
 
   return children;

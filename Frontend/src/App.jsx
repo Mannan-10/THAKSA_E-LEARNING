@@ -14,6 +14,7 @@ import BatchesPage from "./pages/BatchesPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import VerifyOtpPage from "./pages/VerifyOtpPage";
 
 import UserDashboard from "./pages/dashboard/UserDashboard";
 import MyCourses from "./pages/dashboard/MyCourses";
@@ -34,13 +35,46 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-   
-        <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-        <Route path="/courses" element={<PublicLayout><CoursesPage /></PublicLayout>} />
-        <Route path="/batches" element={<PublicLayout><BatchesPage /></PublicLayout>} />
-        <Route path="/pricing" element={<PublicLayout><PricingPage /></PublicLayout>} />
-        <Route path="/contact" element={<PublicLayout><ContactPage /></PublicLayout>} />
+        <Route
+          path="/"
+          element={
+            <PublicLayout>
+              <Home />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/courses"
+          element={
+            <PublicLayout>
+              <CoursesPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/batches"
+          element={
+            <PublicLayout>
+              <BatchesPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/pricing"
+          element={
+            <PublicLayout>
+              <PricingPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <PublicLayout>
+              <ContactPage />
+            </PublicLayout>
+          }
+        />
 
         <Route
           path="/login"
@@ -66,8 +100,15 @@ export default function App() {
             </PublicOnlyRoute>
           }
         />
+        <Route
+          path="/verify-otp"
+          element={
+            <PublicOnlyRoute>
+              <VerifyOtpPage />
+            </PublicOnlyRoute>
+          }
+        />
 
-      
         <Route
           path="/dashboard"
           element={
@@ -83,7 +124,6 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
 
-     
         <Route
           path="/admin"
           element={
@@ -98,12 +138,10 @@ export default function App() {
           <Route path="students" element={<AdminStudents />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
-
       </Routes>
     </BrowserRouter>
   );
 }
-
 
 function PublicLayout({ children }) {
   return (

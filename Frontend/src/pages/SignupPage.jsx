@@ -1,48 +1,66 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+
+    setFormData((prev) => ({
+      ...formData,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+      console.log("REGISTER RESPONSE:", data);
+
+      if (res.ok) {
+        navigate("/verify-otp", {
+          state: {
+            email: formData.email,
+          },
+        });
+      } else {
+        alert(data.message || "Signup failed");
+      }
+
+    } catch (error) {
+      console.error("Signup Error:", error);
+      alert("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#f8fafc",
-        position: "relative",
-      }}
-    >
-    
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          position: "absolute",
-          top: "24px",
-          left: "24px",
-          background: "transparent",
-          border: "none",
-          fontSize: "20px",
-          cursor: "pointer",
-          color: "#2563eb",
-          fontWeight: "600",
-        }}
-      >
+    <div style={containerStyle}>
+      <button onClick={() => navigate("/")} style={backBtn}>
         ← Back
       </button>
 
-      
-      <div
-        style={{
-          background: "#ffffff",
-          padding: "40px",
-          borderRadius: "16px",
-          width: "100%",
-          maxWidth: "420px",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
-        }}
-      >
+      <div style={cardStyle}>
         <h2 style={{ fontSize: "26px", marginBottom: "8px" }}>
           Create Account
         </h2>
@@ -50,21 +68,49 @@ export default function SignupPage() {
           Start your learning journey with Thaksa
         </p>
 
-        <input type="text" placeholder="Full Name" style={inputStyle} />
-        <input type="email" placeholder="Email" style={inputStyle} />
-        <input type="password" placeholder="Password" style={inputStyle} />
+        <form onSubmit={handleSignup}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Full Name"
+            style={inputStyle}
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
 
-        <button style={primaryBtn}>
-          Get Started
-        </button>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            style={inputStyle}
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
 
-       
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            style={inputStyle}
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit" style={primaryBtn}>
+            {loading ? "Creating..." : "Get Started"}
+          </button>
+        </form>
+
         <div style={footerLinks}>
           <span>
             Already have an account?{" "}
             <button
               onClick={() => navigate("/login")}
               style={linkBtn}
+              type="button"
             >
               Log in
             </button>
@@ -73,6 +119,7 @@ export default function SignupPage() {
           <button
             onClick={() => navigate("/forgot-password")}
             style={forgotBtn}
+            type="button"
           >
             Forgot password?
           </button>
@@ -82,6 +129,35 @@ export default function SignupPage() {
   );
 }
 
+const containerStyle = {
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "#f8fafc",
+  position: "relative",
+};
+
+const cardStyle = {
+  background: "#ffffff",
+  padding: "40px",
+  borderRadius: "16px",
+  width: "100%",
+  maxWidth: "420px",
+  boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+};
+
+const backBtn = {
+  position: "absolute",
+  top: "24px",
+  left: "24px",
+  background: "transparent",
+  border: "none",
+  fontSize: "20px",
+  cursor: "pointer",
+  color: "#2563eb",
+  fontWeight: "600",
+};
 
 const inputStyle = {
   width: "100%",
@@ -129,3 +205,5 @@ const forgotBtn = {
   cursor: "pointer",
   padding: 0,
 };
+
+

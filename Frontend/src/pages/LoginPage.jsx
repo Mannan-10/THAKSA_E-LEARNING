@@ -1,76 +1,87 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleLogin = (e) => {
+  const handleChange = (e) => {
+    setFormData(
+      {
+        ...formData,
+        [e.target.name]: e.target.value,
+      },
+    )
+  }
+
+  const handleLogin = async(e) => {
     e.preventDefault();
 
-    localStorage.setItem("isAuth", "true");
+    try {
+      const res = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      })
 
-    navigate("/dashboard");
+      const data = await res.json();
+      console.log("LOGIN RESPONSE:", data);
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        navigate("/dashboard");
+
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred during login.");
+    }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#f8fafc",
-        position: "relative",
-      }}
-    >
-     
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          position: "absolute",
-          top: "24px",
-          left: "24px",
-          background: "transparent",
-          border: "none",
-          fontSize: "20px",
-          cursor: "pointer",
-          color: "#2563eb",
-          fontWeight: "600",
-        }}
-      >
+        <div style={containerStyle}>
+      <button onClick={() => navigate("/")} style={backBtn}>
         ← Back
       </button>
 
-      <div
-        style={{
-          background: "#ffffff",
-          padding: "40px",
-          borderRadius: "16px",
-          width: "100%",
-          maxWidth: "420px",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h2 style={{ fontSize: "26px", marginBottom: "8px" }}>
-          Welcome Back
-        </h2>
-        <p style={{ color: "#64748b", marginBottom: "24px" }}>
+      <div style={cardStyle}>
+        <h2>Welcome Back</h2>
+        <p style={{ color: "#64748b" }}>
           Login to continue your learning journey
         </p>
 
-       
         <form onSubmit={handleLogin}>
           <input
-            type="email"
+            type="email" 
+            name="email"
             placeholder="Email"
             required
             style={inputStyle}
+            value={formData.email}
+            onChange={handleChange}
           />
 
           <input
             type="password"
+            name="password"
             placeholder="Password"
             required
             style={inputStyle}
+            value={formData.password}
+            onChange={handleChange}
           />
 
           <button type="submit" style={primaryBtn}>
@@ -78,7 +89,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-     
         <div style={footerLinks}>
           <span>
             Don’t have an account?{" "}
@@ -105,6 +115,37 @@ export default function LoginPage() {
 }
 
 /* ===== STYLES ===== */
+
+const containerStyle = {
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "#f8fafc",
+  position: "relative",
+};
+
+const backBtn = {
+  position: "absolute",
+  top: "24px",
+  left: "24px",
+  background: "transparent",
+  border: "none",
+  fontSize: "20px",
+  cursor: "pointer",
+  color: "#2563eb",
+  fontWeight: "600",
+};
+
+const cardStyle = {
+  background: "#ffffff",
+  padding: "40px",
+  borderRadius: "16px",
+  width: "100%",
+  maxWidth: "420px",
+  boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+};
+
 
 const inputStyle = {
   width: "100%",

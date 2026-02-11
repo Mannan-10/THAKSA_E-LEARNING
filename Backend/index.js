@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import axios from 'axios';
 import userRouter from './src/routes/users.js';
 import adminRouter from './src/routes/adminRoutes.js';
 import router from './src/routes/instructorRoutes.js';
@@ -19,10 +21,11 @@ import reviewRouter from './src/routes/reviewRoutes.js';
 dotenv.config({ quiet: true });
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('Server is running..');

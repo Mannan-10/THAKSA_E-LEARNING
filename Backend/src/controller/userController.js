@@ -53,7 +53,7 @@ const login = async (req, res) => {
     ]);
     const user = response.rows[0];
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "User not found", user });
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
@@ -88,11 +88,14 @@ const verifyOtp = async (req, res) => {
     try {
         const { email, otp } = req.body;
 
-        const result = await db.query(
+        await client.query("BEGIN")
+
+        const result = await client.query(
             'SELECT * FROM otp_verifications WHERE email = $1',[email]
         );
 
         const record = result.rows[0];
+        console.log(record)
 
         if (!record || record.otp !== otp) {
             return res.status(400).json({ message: "Invalid OTP" });
