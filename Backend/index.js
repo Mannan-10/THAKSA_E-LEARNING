@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import axios from 'axios';
 import userRouter from './src/routes/users.js';
 import adminRouter from './src/routes/adminRoutes.js';
 import router from './src/routes/instructorRoutes.js';

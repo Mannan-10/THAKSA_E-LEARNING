@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { register } from "../services/userServices";
+import {Box, CircularProgress ,TextField, Button, InputAdornment, IconButton, Typography} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
+
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -11,32 +19,50 @@ export default function SignupPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-
     setFormData((prev) => ({
-      ...formData,
+      ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }))
   };
+
+  const validate = () => {
+    let tempErrors = {};
+
+    if (!formData.username) {
+      tempErrors.username = "Username is required";
+    }
+    if (!formData.email) {
+      tempErrors.email = "Email is required";
+    }
+    if (!formData.password) {
+      tempErrors.password = "Password is required";
+    }
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  }
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return;
+
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await res.json();
+      const data = await register(formData);
       console.log("REGISTER RESPONSE:", data);
 
-      if (res.ok) {
+      if (data.success) {
         navigate("/verify-otp", {
           state: {
             email: formData.email,
@@ -55,77 +81,130 @@ export default function SignupPage() {
   };
 
   return (
+    <Box sx={{minHeight: "100vh"}}>
     <div style={containerStyle}>
       <button onClick={() => navigate("/")} style={backBtn}>
         ← Back
       </button>
 
       <div style={cardStyle}>
-        <h2 style={{ fontSize: "26px", marginBottom: "8px" }}>
+        <Typography variant="h5" align="center" mb={1} fontWeight="bold">
           Create Account
-        </h2>
-        <p style={{ color: "#64748b", marginBottom: "24px" }}>
+        </Typography>
+        <Typography align="center" color="text.secondary" mb={3}>
           Start your learning journey with Thaksa
-        </p>
+        </Typography>
 
         <form onSubmit={handleSignup}>
-          <input
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Full Name"
             type="text"
             name="username"
             placeholder="Full Name"
-            style={inputStyle}
-            value={formData.name}
+            value={formData.username}
             onChange={handleChange}
             required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon color="action" />
+                </InputAdornment>
+              )
+            }}
           />
 
-          <input
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Email"
             type="email"
             name="email"
             placeholder="Email"
-            style={inputStyle}
             value={formData.email}
             onChange={handleChange}
             required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon color="action" />
+                </InputAdornment>
+              )
+            }}
           />
 
-          <input
-            type="password"
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            style={inputStyle}
             value={formData.password}
             onChange={handleChange}
             required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon color="action" />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
 
-          <button type="submit" style={primaryBtn}>
-            {loading ? "Creating..." : "Get Started"}
-          </button>
+          <Button fullWidth type="submit" sx={{
+            mt: 3,
+            py: 1.3,
+            fontWeight: "bold",
+            borderRadius: 2,
+            textTransform: "none",
+            background: "linear-gradient(45deg, #1976d2, #42a5f5)",
+            color: "white",
+            boxShadow: "none",
+            padding: "14px",
+            "&:hover": {
+              background: "linear-gradient(45deg, #1565c0, #1e88e5)",
+            },
+          }}
+          disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" />: "Get Started"}
+          </Button>
         </form>
 
         <div style={footerLinks}>
           <span>
             Already have an account?{" "}
-            <button
+            <Button
               onClick={() => navigate("/login")}
               style={linkBtn}
+              sx={{textTransform: "none"}}
               type="button"
             >
               Log in
-            </button>
+            </Button>
           </span>
 
-          <button
+          <Button
             onClick={() => navigate("/forgot-password")}
             style={forgotBtn}
+            sx={{textTransform: "none"}}
             type="button"
           >
             Forgot password?
-          </button>
+          </Button>
         </div>
       </div>
     </div>
+    </Box>
   );
 }
 
@@ -157,15 +236,6 @@ const backBtn = {
   cursor: "pointer",
   color: "#2563eb",
   fontWeight: "600",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px 14px",
-  marginBottom: "16px",
-  borderRadius: "10px",
-  border: "1px solid #e5e7eb",
-  fontSize: "14px",
 };
 
 const primaryBtn = {

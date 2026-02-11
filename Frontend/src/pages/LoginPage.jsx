@@ -1,5 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { login } from "../services/userServices";
+import { TextField, Button, InputAdornment, IconButton, Box,} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -8,6 +14,9 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData(
@@ -18,22 +27,25 @@ export default function LoginPage() {
     )
   }
 
+  const validate = () => {
+    let tempErrors = {};
+    if (!formData.email) {
+      tempErrors.email = "Email is required";
+    }
+    if (!formData.password) {
+      tempErrors.password = "Password is required";
+    }
+    setError(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  }
+
   const handleLogin = async(e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:3000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
-      })
+      setLoading(true);
+      const data = await login(formData)
 
-      const data = await res.json();
       console.log("LOGIN RESPONSE:", data);
 
       if (data.token) {
@@ -49,9 +61,13 @@ export default function LoginPage() {
       console.error(error);
       alert("An error occurred during login.");
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
+      <Box sx={{minHeight: "100vh"}}>
         <div style={containerStyle}>
       <button onClick={() => navigate("/")} style={backBtn}>
         ← Back
@@ -64,29 +80,58 @@ export default function LoginPage() {
         </p>
 
         <form onSubmit={handleLogin}>
-          <input
-            type="email" 
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Email"
             name="email"
+            type="email"
             placeholder="Email"
             required
-            style={inputStyle}
             value={formData.email}
             onChange={handleChange}
+            InputProps={{
+              startAdornment:(
+                <InputAdornment position="start">
+                  <EmailIcon color="action" />
+                </InputAdornment>
+              )
+            }}
           />
 
-          <input
-            type="password"
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
             required
-            style={inputStyle}
             value={formData.password}
             onChange={handleChange}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon color="action"/>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+
           />
 
-          <button type="submit" style={primaryBtn}>
-            Login
-          </button>
+          <Button type="submit" style={primaryBtn} disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </Button>
         </form>
 
         <div style={footerLinks}>
@@ -111,6 +156,7 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </Box>
   );
 }
 
@@ -146,15 +192,6 @@ const cardStyle = {
   boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
 };
 
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px 14px",
-  marginBottom: "16px",
-  borderRadius: "10px",
-  border: "1px solid #e5e7eb",
-  fontSize: "14px",
-};
 
 const primaryBtn = {
   width: "100%",
