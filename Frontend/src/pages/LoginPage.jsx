@@ -52,8 +52,13 @@ export default function LoginPage() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         
-        navigate("/dashboard");
-
+        if (data.user.role === "admin") {
+          navigate("/admin");
+        } else if (data.user.role === "instructor") {
+          navigate("/instructor");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         alert(data.message || "Login failed");
       }

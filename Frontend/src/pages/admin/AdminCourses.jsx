@@ -1,81 +1,28 @@
+import { useEffect, useState } from "react";
+import { approveCourse, getPendingCourses, rejectCourse } from "../../services/adminServices";
+
+import { Tabs, Tab, Box } from "@mui/material";
+import AdminApprovedCourses from "./AdminApprovedCourses";
+import { AdminRejectedCourses } from "./AdminRejectedCourses";
+import { AdminPendingCourses } from "./AdminPendingCourses";
+
 export default function AdminCourses() {
-  const courses = [
-    {
-      id: 1,
-      title: "DevOps & Cloud Engineering",
-      category: "DevOps",
-      duration: "4 Months",
-      status: "Active",
-    },
-    {
-      id: 2,
-      title: "Data Science & Machine Learning",
-      category: "Data Science",
-      duration: "5 Months",
-      status: "Draft",
-    },
-    {
-      id: 3,
-      title: "AWS Cloud Practitioner",
-      category: "Cloud",
-      duration: "2 Months",
-      status: "Active",
-    },
-  ];
+  const [tab, setTab] = useState(0);
 
   return (
-    <div style={container}>
- 
-      <div style={header}>
-        <h1 style={title}>Courses</h1>
-        <button style={primaryBtn}>+ Add Course</button>
-      </div>
+        <Box sx={{ p: 3 }}>
+      <Tabs value={tab} onChange={(e, newVal) => setTab(newVal)}>
+        <Tab label="Pending" />
+        <Tab label="Approved" />
+        <Tab label="Rejected" />
+      </Tabs>
 
-    
-      <div style={tableWrapper}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Course Title</th>
-              <th style={th}>Category</th>
-              <th style={th}>Duration</th>
-              <th style={th}>Status</th>
-              <th style={th}>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {courses.map((course) => (
-              <tr key={course.id}>
-                <td style={td}>{course.title}</td>
-                <td style={td}>{course.category}</td>
-                <td style={td}>{course.duration}</td>
-                <td style={td}>
-                  <span
-                    style={{
-                      ...statusBadge,
-                      background:
-                        course.status === "Active"
-                          ? "#dcfce7"
-                          : "#fef3c7",
-                      color:
-                        course.status === "Active"
-                          ? "#166534"
-                          : "#92400e",
-                    }}
-                  >
-                    {course.status}
-                  </span>
-                </td>
-                <td style={td}>
-                  <button style={actionBtn}>View</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <Box sx={{ mt: 3 }}>
+        {tab === 0 && <AdminPendingCourses />}
+        {tab === 1 && <AdminApprovedCourses />}
+        {tab === 2 && <AdminRejectedCourses />}
+      </Box>
+    </Box>
   );
 }
 
@@ -98,14 +45,34 @@ const title = {
   fontWeight: "800",
 };
 
-const primaryBtn = {
-  background: "#2563eb",
-  color: "white",
+const approveBtn = {
+  background: "#dcfce7",
+  color: "#166534",
   border: "none",
-  padding: "10px 16px",
-  borderRadius: "10px",
-  fontWeight: "600",
+  padding: "6px 12px",
+  borderRadius: "8px",
   cursor: "pointer",
+  fontWeight: "600",
+  marginRight: "8px",
+};
+
+const rejectBtn = {
+  background: "#fee2e2",
+  color: "#991b1b",
+  border: "none",
+  padding: "6px 12px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  fontWeight: "600",
+};
+
+const pendingBadge = {
+  padding: "4px 10px",
+  borderRadius: "999px",
+  fontSize: "12px",
+  fontWeight: "600",
+  background: "#fef3c7",
+  color: "#92400e",
 };
 
 const tableWrapper = {

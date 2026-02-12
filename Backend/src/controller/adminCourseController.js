@@ -37,4 +37,36 @@ const rejectCourse = async (req, res) => {
     }
 }
 
-export { getPendingCourses, approveCourse, rejectCourse };
+const getApprovedCourses = async (req, res) => {
+    try {
+        const result = await db.query(
+            `SELECT c.*, u.name AS instructor_name
+            FROM courses c
+            JOIN users u ON c.instructor_id = u.id
+            WHERE c.approval_status = 'approved'
+            ORDER BY c.created_at DESC
+            `
+        );
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ message: err.message})
+    }
+}
+
+const getRejectedCourses = async (req, res) => {
+    try {
+        const result = await db.query(
+            `SELECT c.*, u.name AS instructor_name
+            FROM courses c
+            JOIN users u ON c.instructor_id = u.id
+            WHERE c.approval_status = 'rejected'
+            ORDER BY c.created_at DESC
+            `
+        );
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ message: error.message})
+    }
+}
+
+export { getPendingCourses, approveCourse, rejectCourse, getApprovedCourses, getRejectedCourses };

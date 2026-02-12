@@ -30,6 +30,16 @@ import AdminSettings from "./pages/admin/AdminSettings";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicOnlyRoute from "./routes/PublicOnlyRoute";
+import InstructorLayout from "./pages/instructor/InstructorLayout";
+import InstructorDashboard from "./pages/instructor/InstructorDashboard";
+import ManageBatch from "./pages/instructor/ManageBatch";
+import ManageCourses from "./pages/instructor/ManageCourses";
+import MyStudents from "./pages/instructor/MyStudents";
+import InstructorProfile from "./pages/instructor/InstructorProfile";
+import InstructorSettings from "./pages/instructor/InstructorSettings";
+import { UserDetailsModal } from "./pages/admin/components/UserDetailsModal";
+import { RoleUpdateDialog } from "./pages/admin/components/RoleUpdateDialog";
+import { DeleteUserDialog } from "./pages/admin/components/DeleteUserDialog";
 
 export default function App() {
   return (
@@ -112,7 +122,7 @@ export default function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="student">
               <DashboardLayout />
             </ProtectedRoute>
           }
@@ -127,7 +137,7 @@ export default function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="admin">
               <AdminLayout />
             </ProtectedRoute>
           }
@@ -136,7 +146,26 @@ export default function App() {
           <Route path="batches" element={<AdminBatches />} />
           <Route path="courses" element={<AdminCourses />} />
           <Route path="students" element={<AdminStudents />} />
+          <Route path="students/:id" element={<UserDetailsModal />} />
+          <Route path="students/:id/role" element={<RoleUpdateDialog />} />
+          <Route path="students/:id/delete" element={<DeleteUserDialog />} />
           <Route path="settings" element={<AdminSettings />} />
+        </Route>
+
+        <Route
+          path="/instructor"
+          element={
+            <ProtectedRoute role="instructor">
+              <InstructorLayout />
+            </ProtectedRoute>
+          }
+          >
+            <Route index element={<InstructorDashboard/>} />
+            <Route path="batches" element={<ManageBatch />}/>
+            <Route path="courses" element={<ManageCourses />} />
+            <Route path="students" element={<MyStudents />} />
+            <Route path="profile" element={<InstructorProfile />} />
+            <Route path="settings" element={<InstructorSettings />} />
         </Route>
       </Routes>
     </BrowserRouter>
