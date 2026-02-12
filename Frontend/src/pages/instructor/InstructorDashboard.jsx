@@ -1,181 +1,142 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getInstructorStats } from "../../services/instructorService.js";
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Chip,
+  CircularProgress,
+} from "@mui/material";
 
 export default function InstructorDashboard() {
-  const stats = [
-    { label: "Active Batches", value: "3", color: "#2563eb" },
-    { label: "Total Students", value: "124", color: "#16a34a" },
-    { label: "Courses Managed", value: "2", color: "#9333ea" },
-    { label: "Pending Assignments", value: "18", color: "#ea580c" },
-  ];
+  const [stats, setStats] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  },[]);
+
+  const fetchStats = async () => {
+    try {
+      const data = await getInstructorStats();
+      console.log("Instructor stats fetched:", data);
+      setStats(data.stats);
+      setCourses(data.courseStats)
+    } catch (error) {
+      console.log("Error on fetching stats for Instructor",error);      
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!stats) {
+    return <Typography variant="h6">No data available.</Typography>;
+  }
 
   return (
-    <div>
-      <header style={header}>
-        <h1 style={title}>Instructor Dashboard</h1>
-        <p style={subtitle}>Welcome back! Here is what's happening with your classes today.</p>
-      </header>
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 800, color: "#0f172a" }}>
+          Instructor Dashboard
+        </Typography>
+        <Typography variant="body1" sx={{ color: "#64748b", mt: 1 }}>
+          Welcome back! Here's an overview of your performance.
+        </Typography>
+      </Box>
 
-      <div style={statsGrid}>
-        {stats.map((stat) => (
-          <div key={stat.label} style={statCard}>
-            <span style={{ ...statValue, color: stat.color }}>{stat.value}</span>
-            <span style={statLabel}>{stat.label}</span>
-          </div>
-        ))}
-      </div>
+      {/* STATS */}
+      <Grid container spacing={3} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={4}>
+          <StatCard label="Total Courses" value={stats.totalCourses} color="#2563eb" />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <StatCard label="Total Students" value={stats.totalStudents} color="#16a34a" />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <StatCard
+            label="Total Revenue"
+            value={`₹ ${Number(stats.totalRevenue).toLocaleString()}`}
+            color="#f59e0b"
+          />
+        </Grid>
+      </Grid>
 
-      <div style={sectionContainer}>
-        <div style={card}>
-          <h3 style={cardTitle}>Upcoming Sessions</h3>
-          <div style={list}>
-            <SessionItem 
-              time="10:00 AM" 
-              title="Cloud & DevOps - Batch A" 
-              topic="Kubernetes Architecture" 
-            />
-            <SessionItem 
-              time="02:30 PM" 
-              title="Full Stack - Batch C" 
-              topic="React Context API & Hooks" 
-            />
-          </div>
-        </div>
+      {/* COURSE PERFORMANCE */}
+      <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
+            Course Performance
+          </Typography>
 
-        <div style={card}>
-          <h3 style={cardTitle}>Recent Activity</h3>
-          <div style={list}>
-            <ActivityItem text="John Doe submitted Assignment 4" time="2 hours ago" />
-            <ActivityItem text="New student enrolled in Data Science Batch" time="5 hours ago" />
-            <ActivityItem text="Batch B session recording uploaded" time="Yesterday" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-const cardTitle = {
-  fontSize: "18px",
-  fontWeight: "700",
-  color: "#0f172a",
-  marginBottom: "20px",
-};
-
-const list = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "16px",
-};
-
-const listItem = {
-  display: "flex",
-  gap: "16px",
-  padding: "12px 0",
-  borderBottom: "1px solid #f1f5f9",
-};
-
-const sessionTime = {
-  fontSize: "14px",
-  fontWeight: "700",
-  color: "#2563eb",
-  minWidth: "80px",
-};
-
-const sessionTitle = {
-  fontSize: "15px",
-  fontWeight: "600",
-  color: "#0f172a",
-};
-
-const sessionTopic = {
-  fontSize: "13px",
-  color: "#64748b",
-};
-
-const activityText = {
-  fontSize: "14px",
-  color: "#334155",
-  flex: 1,
-};
-
-const activityTime = {
-  fontSize: "12px",
-  color: "#94a3b8",
-};
-
-function SessionItem({ time, title, topic }) {
-  return (
-    <div style={listItem}>
-      <div style={sessionTime}>{time}</div>
-      <div>
-        <div style={sessionTitle}>{title}</div>
-        <div style={sessionTopic}>{topic}</div>
-      </div>
-    </div>
+          {courses.length === 0 ? (
+            <Typography sx={{ color: "#64748b" }}>No courses found</Typography>
+          ) : (
+            <TableContainer>
+              <Table>
+                <TableHead sx={{ bgcolor: "#f8fafc" }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 600, color: "#475569" }}>Course</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: "#475569" }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: "#475569" }}>Enrollments</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: "#475569" }}>Rating</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {courses.map((course) => (
+                    <TableRow key={course.id}>
+                      <TableCell>{course.title}</TableCell>
+                      <TableCell>
+                        <Chip
+                          label={course.approval_status}
+                          size="small"
+                          sx={{
+                            fontWeight: 600,
+                            bgcolor: course.approval_status === "approved" ? "#dcfce7" : "#fee2e2",
+                            color: course.approval_status === "approved" ? "#166534" : "#991b1b",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>{course.enrollment_count}</TableCell>
+                      <TableCell>⭐ {Number(course.avg_rating).toFixed(1)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
 
-function ActivityItem({ text, time }) {
+const StatCard = ({ label, value, color }) => {
   return (
-    <div style={listItem}>
-      <div style={activityText}>{text}</div>
-      <div style={activityTime}>{time}</div>
-    </div>
+    <Card variant="outlined" sx={{ p: 3, borderRadius: "16px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
+      <Typography variant="h4" sx={{ fontWeight: 800, color }}>
+        {value}
+      </Typography>
+      <Typography variant="body2" sx={{ fontWeight: 600, color: "#64748b" }}>
+        {label}
+      </Typography>
+    </Card>
   );
-}
-
-const header = {
-  marginBottom: "32px",
-};
-
-const title = {
-  fontSize: "28px",
-  fontWeight: "800",
-  color: "#0f172a",
-  margin: 0,
-};
-
-const subtitle = {
-  color: "#64748b",
-  marginTop: "8px",
-};
-
-const statsGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: "24px",
-  marginBottom: "40px",
-};
-
-const statCard = {
-  background: "white",
-  padding: "24px",
-  borderRadius: "16px",
-  border: "1px solid #e5e7eb",
-  display: "flex",
-  flexDirection: "column",
-  gap: "4px",
-};
-
-const statValue = {
-  fontSize: "32px",
-  fontWeight: "800",
-};
-
-const statLabel = {
-  fontSize: "14px",
-  fontWeight: "600",
-  color: "#64748b",
-};
-
-const sectionContainer = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-  gap: "24px",
-};
-
-const card = {
-  background: "white",
-  padding: "24px",
-  borderRadius: "16px",
-  border: "1px solid #e5e7eb",
 };

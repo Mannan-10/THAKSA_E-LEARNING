@@ -16,6 +16,7 @@ import paymentRouter from './src/routes/paymentRoutes.js';
 import lessonProgressRouter from './src/routes/lessonProgressRoutes.js';
 import certificateRouter from './src/routes/certificateRoutes.js';
 import reviewRouter from './src/routes/reviewRoutes.js';
+import instructorDashboardRouter from './src/routes/instructorDashboardRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/instructor', router);
+app.use('/api/instructor', instructorDashboardRouter);
 app.use('/api/admin', adminCourseRouter);
 app.use('/api/courses', courseRouter);
 app.use('/api/admin', adminDashboardRoutes);

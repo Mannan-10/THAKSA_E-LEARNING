@@ -16,9 +16,9 @@ export const RoleUpdateDialog = () => {
 
   const fetchUser = async () => {
     const data = await getUserById(id);
-    const userData = data.user || data;
-    setUser(userData);
-    setRole(userData.role);
+    console.log("Fetch User by Id API Response:", data);
+    setUser(data);
+    setRole(data.role);
   };
 
   const handleUpdate = async () => {
@@ -34,7 +34,7 @@ export const RoleUpdateDialog = () => {
     }
   };
 
-  if (!open || !user) return null;
+  if (!user) return null;
 
   return (
     <Container>

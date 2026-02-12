@@ -41,7 +41,7 @@ export const getUserById = async (id) => {
 }
 
 export const updateUserRole = async (id, role) => {
-    const response = await api.put(`/admin/users/${id}/${role}`);
+    const response = await api.put(`/admin/users/${id}/role`, {role});
     return response.data;
 }
 
