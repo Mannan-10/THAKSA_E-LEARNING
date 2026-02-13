@@ -238,4 +238,154 @@ const changePassword = async (req, res) => {
   res.status(200).json({ message: "Password changed successfully. Please log in again." });
 }
 
-export { register, login, getProfile, verifyOtp, refreshToken, updateProfile, changePassword, logout };
+const requestResetOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS password_reset_otps (
+        email VARCHAR(255) PRIMARY KEY,
+        otp VARCHAR(6) NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        verified BOOLEAN DEFAULT false
+      );
+    `);
+
+    const userResult = await db.query(
+      "SELECT id, name, email FROM users WHERE email = $1;",
+      [email]
+    );
+
+    const user = userResult.rows[0];
+    if (!user) {
+      return res.status(404).json({ message: "No account found with this email" });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await db.query(
+      `INSERT INTO password_reset_otps (email, otp, expires_at, verified)
+       VALUES ($1, $2, $3, false)
+       ON CONFLICT (email)
+       DO UPDATE SET otp = EXCLUDED.otp, expires_at = EXCLUDED.expires_at, verified = false`,
+      [email, otp, expiresAt]
+    );
+
+    await sendMail(
+      email,
+      "Thaksa E-Learning - Reset Password OTP",
+      { name: user.name, otp }
+    );
+
+    return res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error sending reset OTP: " + error.message });
+  }
+};
+
+const verifyResetOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required" });
+    }
+
+    const result = await db.query(
+      "SELECT * FROM password_reset_otps WHERE email = $1",
+      [email]
+    );
+    const record = result.rows[0];
+
+    if (!record || record.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (new Date() > record.expires_at) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    await db.query(
+      "UPDATE password_reset_otps SET verified = true WHERE email = $1",
+      [email]
+    );
+
+    return res.status(200).json({ message: "OTP verified successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error verifying reset OTP: " + error.message });
+  }
+};
+
+const resetPasswordWithOtp = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res.status(400).json({ message: "Email and new password are required" });
+    }
+
+    const otpResult = await db.query(
+      "SELECT * FROM password_reset_otps WHERE email = $1",
+      [email]
+    );
+    const otpRecord = otpResult.rows[0];
+
+    if (!otpRecord || !otpRecord.verified) {
+      return res.status(400).json({ message: "OTP verification is required" });
+    }
+
+    if (new Date() > otpRecord.expires_at) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE email = $1",
+      [email]
+    );
+
+    const user = userResult.rows[0];
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    await db.query(
+      "UPDATE users SET password = $1 WHERE email = $2",
+      [hashed, email]
+    );
+
+    await db.query(
+      "DELETE FROM refresh_tokens WHERE user_id = $1",
+      [user.id]
+    );
+
+    await db.query(
+      "DELETE FROM password_reset_otps WHERE email = $1",
+      [email]
+    );
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error resetting password: " + error.message });
+  }
+};
+
+export {
+  register,
+  login,
+  getProfile,
+  verifyOtp,
+  refreshToken,
+  updateProfile,
+  changePassword,
+  logout,
+  requestResetOtp,
+  verifyResetOtp,
+  resetPasswordWithOtp,
+};

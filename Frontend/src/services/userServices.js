@@ -29,3 +29,18 @@ export const changePassword = async (data) => {
     const response = await api.put("/users/change-password", data);
     return response.data;
 };
+
+export const requestForgotPasswordOtp = async (data) => {
+    const response = await api.post("/users/forgot-password/request-otp", data);
+    return response.data;
+};
+
+export const verifyForgotPasswordOtp = async (data) => {
+    const response = await api.post("/users/forgot-password/verify-otp", data);
+    return response.data;
+};
+
+export const resetPasswordWithOtp = async (data) => {
+    const response = await api.post("/users/forgot-password/reset", data);
+    return response.data;
+};

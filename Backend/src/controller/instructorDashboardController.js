@@ -26,7 +26,7 @@ const getInstructorDashboardStats = async (req, res) => {
        FROM payments p
        JOIN batches b ON p.batch_id = b.id
        JOIN courses c ON b.course_id = c.id
-       WHERE c.instructor_id = $1 AND p.payment_status = 'SUCCESS'`,
+       WHERE c.instructor_id = $1 AND LOWER(p.payment_status) = 'success'`,
       [instructorId]
     );
 

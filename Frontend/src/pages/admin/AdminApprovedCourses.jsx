@@ -1,9 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Alert,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { getApprovedCourses } from "../../services/adminServices";
+
+const toArray = (payload) => (Array.isArray(payload) ? payload : payload?.courses || payload?.data || []);
 
 export default function AdminApprovedCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchApproved();
@@ -11,112 +29,61 @@ export default function AdminApprovedCourses() {
 
   const fetchApproved = async () => {
     try {
+      setLoading(true);
+      setError("");
       const data = await getApprovedCourses();
-      console.log("API Response:", data);
-      setCourses(data);
-    } catch (error) {
-      console.error("Error fetching approved courses:", error.response?.data || error);
+      setCourses(toArray(data));
+    } catch (requestError) {
+      setError(requestError?.response?.data?.message || "Error fetching approved courses");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <p>Loading approved courses...</p>;
-  }
+  const noData = useMemo(() => !loading && courses.length === 0, [loading, courses]);
 
   return (
-    <div style={container}>
-      <div style={header}>
-        <h1 style={title}>Approved Courses</h1>
-      </div>
+    <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
+      <CardContent sx={{ p: 2.2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.2 }}>Approved Courses</Typography>
+        {error ? <Alert severity="error" sx={{ mb: 1.5 }}>{error}</Alert> : null}
 
-      <div style={tableWrapper}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Title</th>
-              <th style={th}>Instructor</th>
-              <th style={th}>Category</th>
-              <th style={th}>Duration</th>
-              <th style={th}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.length > 0 ? (
-              courses.map((course) => (
-                <tr key={course.id}>
-                  <td style={td}>{course.title}</td>
-                  <td style={td}>{course.instructor_name}</td>
-                  <td style={td}>{course.category}</td>
-                  <td style={td}>{course.duration}</td>
-                  <td style={td}>
-                    <span style={approvedBadge}>
-                      {course.approval_status}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" style={{ ...td, textAlign: "center" }}>No approved courses found.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+        {loading ? (
+          <Stack direction="row" alignItems="center" spacing={1.2} sx={{ py: 1 }}>
+            <CircularProgress size={20} />
+            <Typography color="text.secondary">Loading approved courses...</Typography>
+          </Stack>
+        ) : noData ? (
+          <Alert severity="info">No approved courses found.</Alert>
+        ) : (
+          <TableContainer sx={{ overflowX: "auto" }}>
+            <Table size="small" sx={{ minWidth: 760 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Title</strong></TableCell>
+                  <TableCell><strong>Instructor</strong></TableCell>
+                  <TableCell><strong>Category</strong></TableCell>
+                  <TableCell><strong>Duration</strong></TableCell>
+                  <TableCell><strong>Status</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {courses.map((course) => (
+                  <TableRow key={course.id} hover>
+                    <TableCell>{course.title}</TableCell>
+                    <TableCell>{course.instructor_name}</TableCell>
+                    <TableCell>{course.category || "-"}</TableCell>
+                    <TableCell>{course.duration || "-"}</TableCell>
+                    <TableCell>
+                      <Chip label={course.approval_status || "approved"} size="small" sx={{ bgcolor: "#dcfce7", color: "#166534", fontWeight: 700 }} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </CardContent>
+    </Card>
   );
 }
-
-const container = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "24px",
-};
-
-const header = {  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const title = {
-  fontSize: "26px",
-  fontWeight: "800",
-};
-
-const tableWrapper = {
-  background: "white",
-  borderRadius: "14px",
-  border: "1px solid #e5e7eb",
-  overflow: "hidden",
-};
-
-const table = {
-  width: "100%",
-  borderCollapse: "collapse",
-};
-
-const th = {
-  textAlign: "left",
-  padding: "14px",
-  background: "#f8fafc",
-  fontSize: "14px",
-  color: "#475569",
-};
-
-const td = {
-  padding: "14px",
-  borderTop: "1px solid #e5e7eb",
-  fontSize: "14px",
-};
-
-const approvedBadge = {
-  padding: "4px 10px",
-  borderRadius: "999px",
-  fontSize: "12px",
-  fontWeight: "600",
-  background: "#dcfce7",
-  color: "#166534",
-};
-

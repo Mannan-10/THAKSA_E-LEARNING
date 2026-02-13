@@ -1,98 +1,33 @@
+import { Box, Card, CardContent, Stack, TextField, Typography } from "@mui/material";
+
 export default function AdminSettings() {
   return (
-    <div style={container}>
-      <h1 style={title}>Settings</h1>
-      <p style={subtitle}>
-        Manage your admin profile and platform preferences
-      </p>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 0.6 }}>Settings</Typography>
+      <Typography color="text.secondary" sx={{ mb: 2.2 }}>
+        Manage your admin profile and platform preferences.
+      </Typography>
 
-   
-      <div style={card}>
-        <h3 style={cardTitle}>Admin Profile</h3>
+      <Stack spacing={2.2} sx={{ maxWidth: 640 }}>
+        <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.6 }}>Admin Profile</Typography>
+            <Stack spacing={1.6}>
+              <TextField label="Name" value="Admin User" disabled fullWidth />
+              <TextField label="Email" value="admin@thaksa.com" disabled fullWidth />
+            </Stack>
+          </CardContent>
+        </Card>
 
-        <div style={fieldGroup}>
-          <label style={label}>Name</label>
-          <input
-            type="text"
-            value="Admin User"
-            disabled
-            style={input}
-          />
-        </div>
-
-        <div style={fieldGroup}>
-          <label style={label}>Email</label>
-          <input
-            type="email"
-            value="admin@thaksa.com"
-            disabled
-            style={input}
-          />
-        </div>
-      </div>
-
-      <div style={card}>
-        <h3 style={cardTitle}>Platform Settings</h3>
-        <p style={muted}>
-          Platform-level configurations will appear here in future.
-        </p>
-      </div>
-    </div>
+        <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>Platform Settings</Typography>
+            <Typography color="text.secondary">
+              Platform-level configurations will appear here in future.
+            </Typography>
+          </CardContent>
+        </Card>
+      </Stack>
+    </Box>
   );
 }
-
-
-
-const container = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "24px",
-};
-
-const title = {
-  fontSize: "26px",
-  fontWeight: "800",
-};
-
-const subtitle = {
-  color: "#64748b",
-  fontSize: "14px",
-};
-
-const card = {
-  background: "#ffffff",
-  padding: "24px",
-  borderRadius: "16px",
-  border: "1px solid #e5e7eb",
-  maxWidth: "520px",
-};
-
-const cardTitle = {
-  fontSize: "18px",
-  fontWeight: "700",
-  marginBottom: "16px",
-};
-
-const fieldGroup = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "6px",
-  marginBottom: "14px",
-};
-
-const label = {
-  fontSize: "14px",
-  fontWeight: "600",
-};
-
-const input = {
-  padding: "10px 12px",
-  borderRadius: "10px",
-  border: "1px solid #e5e7eb",
-  background: "#f8fafc",
-};
-
-const muted = {
-  color: "#64748b",
-  fontSize: "14px",
-};

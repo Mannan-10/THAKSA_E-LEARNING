@@ -14,20 +14,34 @@ const getAdminDashboardStats = async (req, res) => {
 
     const totalCourses = await db.query("SELECT COUNT(*) FROM courses");
 
-    const pendingCourses = await db.query(
-      "SELECT COUNT(*) FROM courses WHERE approval_status = 'pending'",
+    const columnCheck = await db.query(
+      `SELECT EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name = 'courses' AND column_name = 'approval_status'
+      ) AS has_approval_status`,
     );
 
-    const approvedCourses = await db.query(
-      "SELECT COUNT(*) FROM courses WHERE approval_status = 'approved'",
-    );
+    const hasApprovalStatus = columnCheck.rows[0]?.has_approval_status;
+
+    const pendingCourses = hasApprovalStatus
+      ? await db.query(
+          "SELECT COUNT(*) FROM courses WHERE LOWER(approval_status) = 'pending'",
+        )
+      : { rows: [{ count: "0" }] };
+
+    const approvedCourses = hasApprovalStatus
+      ? await db.query(
+          "SELECT COUNT(*) FROM courses WHERE LOWER(approval_status) = 'approved'",
+        )
+      : { rows: [{ count: "0" }] };
 
     const totalEnrollments = await db.query(
       "SELECT COUNT(*) FROM batch_enrollments",
     );
 
     const totalRevenue = await db.query(
-      "SELECT COALESCE(SUM(amount), 0) FROM payments WHERE payment_status = 'success'",
+      "SELECT COALESCE(SUM(amount), 0) AS revenue FROM payments WHERE LOWER(payment_status) = 'success'",
     );
 
     res.json({
@@ -42,7 +56,7 @@ const getAdminDashboardStats = async (req, res) => {
         approved: approvedCourses.rows[0].count,
       },
       enrollments: totalEnrollments.rows[0].count,
-      revenue: totalRevenue.rows[0].coalesce,
+      revenue: totalRevenue.rows[0].revenue,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

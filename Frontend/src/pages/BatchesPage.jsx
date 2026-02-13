@@ -1,174 +1,94 @@
+import { Box, Button, Card, CardContent, Chip, Container, Grid, Stack, Typography } from "@mui/material";
+
+const batches = [
+  {
+    name: "Full Stack Cloud and DevOps Batch",
+    domains: "AWS, DevOps, CI/CD, Cloud Automation",
+    duration: "4 Months",
+    start: "March 2026",
+    mode: "Online (Live + Guided)",
+    status: "Open",
+  },
+  {
+    name: "Data Science and Machine Learning Batch",
+    domains: "Python, Data Analysis, ML, MLOps",
+    duration: "4 Months",
+    start: "April 2026",
+    mode: "Online (Live + Projects)",
+    status: "Upcoming",
+  },
+  {
+    name: "Software Testing and Automation Batch",
+    domains: "Selenium, Automation, Testing Fundamentals",
+    duration: "3 Months",
+    start: "February 2026",
+    mode: "Online",
+    status: "Closed",
+  },
+];
+
+const statusColor = {
+  Open: { bg: "#dcfce7", text: "#166534" },
+  Upcoming: { bg: "#e0e7ff", text: "#3730a3" },
+  Closed: { bg: "#f1f5f9", text: "#475569" },
+};
+
 export default function BatchesPage() {
-  const isMobile = window.innerWidth <= 768;
-  const isTablet = window.innerWidth <= 1024;
-
-  const batches = [
-    {
-      name: "Full Stack Cloud & DevOps Batch",
-      domains: "AWS • DevOps • CI/CD • Cloud Automation",
-      duration: "4 Months",
-      start: "March 2026",
-      mode: "Online (Live + Guided)",
-      status: "Open",
-    },
-    {
-      name: "Data Science & Machine Learning Batch",
-      domains: "Python • Data Analysis • ML • MLOps",
-      duration: "4 Months",
-      start: "April 2026",
-      mode: "Online (Live + Projects)",
-      status: "Upcoming",
-    },
-    {
-      name: "Software Testing & Automation Batch",
-      domains: "Selenium • Automation • Testing Fundamentals",
-      duration: "3 Months",
-      start: "February 2026",
-      mode: "Online",
-      status: "Closed",
-    },
-  ];
-
   return (
-    <section
-      style={{
-        padding: isMobile ? "60px 20px" : "100px 100px",
-        background: "#f8fafc",
-        minHeight: "calc(100vh - 80px)",
-      }}
-    >
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-  
-        <div style={{ textAlign: "center", marginBottom: "70px" }}>
-          <h1
-            style={{
-              fontSize: isMobile ? "32px" : "42px",
-              fontWeight: "800",
-              color: "#0f172a",
-              marginBottom: "14px",
-            }}
-          >
-            Training Batches
-          </h1>
+    <Box sx={{ py: { xs: 7, md: 10 }, background: "#f8fbff", minHeight: "calc(100vh - 80px)" }}>
+      <Container maxWidth="lg">
+        <Stack textAlign="center" spacing={1.5} sx={{ mb: { xs: 5, md: 7 } }}>
+          <Typography variant="h3">Training Batches</Typography>
+          <Typography color="text.secondary" sx={{ maxWidth: 760, mx: "auto" }}>
+            Carefully structured batches designed to guide motivated learners through
+            disciplined, long-term skill development.
+          </Typography>
+        </Stack>
 
-          <p
-            style={{
-              fontSize: "18px",
-              color: "#475569",
-              maxWidth: "720px",
-              margin: "0 auto",
-            }}
-          >
-            Carefully structured batches designed to guide motivated learners
-            through disciplined, long-term skill development.
-          </p>
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile
-              ? "1fr"
-              : isTablet
-              ? "repeat(2, 1fr)"
-              : "repeat(3, 1fr)",
-            gap: "32px",
-          }}
-        >
+        <Grid container spacing={2.5}>
           {batches.map((batch) => (
-            <div
-              key={batch.name}
-              style={{
-                background: "white",
-                borderRadius: "20px",
-                padding: "28px",
-                boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
-                border: "1px solid #e5e7eb",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-    
-              <span
-                style={{
-                  alignSelf: "flex-start",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  padding: "6px 12px",
-                  borderRadius: "999px",
-                  marginBottom: "16px",
-                  background:
-                    batch.status === "Open"
-                      ? "#dcfce7"
-                      : batch.status === "Upcoming"
-                      ? "#e0e7ff"
-                      : "#f1f5f9",
-                  color:
-                    batch.status === "Open"
-                      ? "#166534"
-                      : batch.status === "Upcoming"
-                      ? "#3730a3"
-                      : "#475569",
+            <Grid key={batch.name} size={{ xs: 12, sm: 6, lg: 4 }}>
+              <Card
+                elevation={0}
+                sx={{
+                  height: "100%",
+                  borderRadius: 3,
+                  border: "1px solid #e2e8f0",
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                 }}
               >
-                {batch.status}
-              </span>
-
-              <div>
-                <h3
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "700",
-                    color: "#0f172a",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {batch.name}
-                </h3>
-
-                <p style={infoStyle}>{batch.domains}</p>
-                <p style={infoStyle}>Duration: {batch.duration}</p>
-                <p style={infoStyle}>Start: {batch.start}</p>
-                <p style={infoStyle}>Mode: {batch.mode}</p>
-              </div>
-
-        
-              <button
-                disabled={batch.status === "Closed"}
-                style={{
-                  marginTop: "24px",
-                  background:
-                    batch.status === "Open"
-                      ? "#2563eb"
-                      : "#cbd5f5",
-                  color: "white",
-                  border: "none",
-                  padding: "12px",
-                  borderRadius: "12px",
-                  fontSize: "15px",
-                  fontWeight: "600",
-                  cursor:
-                    batch.status === "Open"
-                      ? "pointer"
-                      : "not-allowed",
-                }}
-              >
-                {batch.status === "Open"
-                  ? "Apply Now"
-                  : batch.status === "Upcoming"
-                  ? "Notify Me"
-                  : "Closed"}
-              </button>
-            </div>
+                <CardContent sx={{ p: 3, display: "flex", flexDirection: "column", height: "100%" }}>
+                  <Chip
+                    label={batch.status}
+                    size="small"
+                    sx={{
+                      alignSelf: "flex-start",
+                      mb: 1.8,
+                      bgcolor: statusColor[batch.status].bg,
+                      color: statusColor[batch.status].text,
+                      fontWeight: 700,
+                    }}
+                  />
+                  <Typography variant="h6" sx={{ mb: 1, fontWeight: 800 }}>
+                    {batch.name}
+                  </Typography>
+                  <Typography color="text.secondary" sx={{ mb: 0.8 }}>{batch.domains}</Typography>
+                  <Typography variant="body2" sx={{ mb: 0.6 }}>Duration: {batch.duration}</Typography>
+                  <Typography variant="body2" sx={{ mb: 0.6 }}>Start: {batch.start}</Typography>
+                  <Typography variant="body2" sx={{ mb: 2 }}>Mode: {batch.mode}</Typography>
+                  <Button
+                    variant="contained"
+                    disabled={batch.status === "Closed"}
+                    sx={{ mt: "auto", borderRadius: 2.5 }}
+                  >
+                    {batch.status === "Open" ? "Apply Now" : batch.status === "Upcoming" ? "Notify Me" : "Closed"}
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Container>
+    </Box>
   );
 }
-
-const infoStyle = {
-  fontSize: "15px",
-  color: "#475569",
-  marginBottom: "6px",
-};

@@ -1,4 +1,16 @@
 import { useEffect, useState } from "react";
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { getProfile, updateProfile } from "../../services/userServices";
 
 export default function Profile() {
@@ -12,256 +24,136 @@ export default function Profile() {
 
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  
+  const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
+
   useEffect(() => {
     const loadProfile = async () => {
       try {
         const data = await getProfile();
-
         setFormData({
           name: data.name || "",
           email: data.email || "",
           phone: data.phone || "",
           bio: data.bio || "",
-          date_of_birth: data.date_of_birth || "",
+          date_of_birth: (data.date_of_birth || "").slice(0, 10),
         });
-      } catch (error) {
-        console.error(error.response?.data || error.message);
+      } catch (requestError) {
+        setError(requestError?.response?.data?.message || requestError.message || "Failed to load profile");
       }
     };
     loadProfile();
-  },[]);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setStatus("");
+    setError("");
   };
 
   const handleSave = async () => {
     try {
       setLoading(true);
       await updateProfile(formData);
-      alert("Profile updated successfully");
-    } catch (error) {
-      console.error(error.response?.data || error.message);
+      setStatus("Profile updated successfully.");
+      setIsEditing(false);
+    } catch (requestError) {
+      setError(requestError?.response?.data?.message || requestError.message || "Failed to update profile");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <header style={header}>
-      <h1 style={title}>My Profile</h1>
-      <p style={subtitle}>Manage your personal information</p>
-      </header>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 0.6 }}>My Profile</Typography>
+      <Typography color="text.secondary" sx={{ mb: 3.2 }}>
+        Manage your personal information.
+      </Typography>
 
-      <div style={profileCard}>
-        <div style={avatarSection}>
-          <div style={avatarCircle}>
-            {formData.name.charAt(0)}
-          </div>
-          <div style={headerInfo}>
-            <h2 style={userName}>{formData.name}</h2>
-            <span style={userRole}>Student</span>
-          </div>
-          <button 
-            style={isEditing ? saveBtn : editBtn} 
-            onClick={isEditing ? handleSave : () => setIsEditing(true)}
-          >
-            {isEditing ? "Save Changes" : "Edit Profile"}
-          </button>
-        </div>
+      <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
+        <CardContent sx={{ p: { xs: 2.2, md: 3.2 } }}>
+          <Stack direction={{ xs: "column", md: "row" }} spacing={2.2} alignItems={{ xs: "flex-start", md: "center" }} sx={{ mb: 3 }}>
+            <Avatar sx={{ width: 72, height: 72, bgcolor: "#2563eb", fontSize: "1.9rem", fontWeight: 800 }}>
+              {(formData.name || "U").charAt(0).toUpperCase()}
+            </Avatar>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 900 }}>{formData.name || "Student"}</Typography>
+              <Typography color="text.secondary">Student</Typography>
+            </Box>
+            <Button
+              variant={isEditing ? "contained" : "outlined"}
+              onClick={isEditing ? handleSave : () => setIsEditing(true)}
+              disabled={loading}
+              sx={{ borderRadius: 2.5 }}
+            >
+              {loading ? "Saving..." : isEditing ? "Save Changes" : "Edit Profile"}
+            </Button>
+          </Stack>
 
-        <div style={detailsGrid}>
-        <div style={inputGroup}>
-          <label style={label}>Full Name</label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={handleChange}
-            name="name"
-            placeholder="Full Name"
-            style={input}
-            disabled={!isEditing}
-          />
-        </div>
+          {status ? <Alert severity="success" sx={{ mb: 2 }}>{status}</Alert> : null}
+          {error ? <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert> : null}
 
-        <div style={inputGroup}>
-          <label style={label}>Email Address</label>
-          <input
-            type="email"
-            style={{...input, background: "#f1f5f9", cursor: "not-allowed" }}
-            name="email"
-            value={formData.email}
-            disabled={!isEditing}
-          />
-        </div>
-
-        <div style={inputGroup}>
-          <label style={label}>Phone Number</label>
-          <input
-            placeholder="+91 XXXXX XXXXX"
-            style={input}
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </div>
-
-        <div style={inputGroup}>
-          <label style={label}>bio</label>
-          <input
-            style={{...input, height: "80px" }}
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder="Tell us about yourself"
-            disabled={!isEditing}
-          />
-        </div>
-
-        <div style={inputGroup}>
-          <label style={label}>Date of Birth</label>
-          <input
-            type="date"
-            style={input}
-            name="date_of_birth"
-            value={formData.date_of_birth}
-            onChange={handleChange}
-            disabled={!isEditing}
-          />
-        </div>
-        </div>
-      </div>
-    </div>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                name="name"
+                disabled={!isEditing}
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label="Email Address"
+                name="email"
+                value={formData.email}
+                disabled
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label="Phone Number"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                disabled={!isEditing}
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                type="date"
+                label="Date of Birth"
+                name="date_of_birth"
+                value={formData.date_of_birth}
+                onChange={handleChange}
+                disabled={!isEditing}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <TextField
+                label="Bio"
+                name="bio"
+                value={formData.bio}
+                onChange={handleChange}
+                disabled={!isEditing}
+                fullWidth
+                multiline
+                rows={4}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
-
-const header = {
-  marginBottom: "32px",
-};
-
-const title = {
-  fontSize: "28px",
-  fontWeight: "800",
-  color: "#0f172a",
-  margin: 0,
-};
-
-const subtitle = {
-  color: "#64748b",
-  marginTop: "8px",
-};
-
-const profileCard = {
-  background: "white",
-  padding: "32px",
-  borderRadius: "16px",
-  border: "1px solid #e5e7eb",
-  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-};
-
-const avatarSection = {
-  display: "flex",
-  alignItems: "center",
-  gap: "24px",
-  marginBottom: "40px",
-  paddingBottom: "32px",
-  borderBottom: "1px solid #f1f5f9",
-};
-
-const avatarCircle = {
-  width: "80px",
-  height: "80px",
-  borderRadius: "50%",
-  background: "#f1e40af",
-  color: "white",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "32px",
-  fontWeight: "700",
-};
-
-const headerInfo = {
-  flex: 1,
-};
-
-const userName = {
-  fontSize: "24px",
-  fontWeight: "700",
-  color: "#0f172a",
-  margin: 0,
-};
-
-const userRole = {
-  color: "#64748b",
-  fontSize: "16px",
-  fontWeight: "500",
-};
-
-const editBtn = {
-  padding: "10px 20px",
-  borderRadius: "8px",
-  border: "1px solid #e2e8f0",
-  background: "white",
-  color: "#0f172a",
-  fontWeight: "600",
-  cursor: "pointer",
-};
-
-const saveBtn = {
-  padding: "10px 20px",
-  borderRadius: "8px",
-  border: "none",
-  background: "#2563eb",
-  color: "white",
-  fontWeight: "600",
-  cursor: "pointer",
-};
-
-const detailsGrid = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "24px",
-  maxWidth: "600px",
-};
-
-const inputGroup = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "8px",
-};
-
-const label = {
-  fontSize: "14px",
-  fontWeight: "600",
-  color: "#475569",
-};
-
-const input = {
-  padding: "12px",
-  borderRadius: "8px",
-  border: "1px solid #e2e8f0",
-  fontSize: "15px",
-  color: "#0f172a",
-  background: "#f8fafc",
-};
-
-const footerInfo = {
-  marginTop: "40px",
-  paddingTop: "32px",
-  borderTop: "1px solid #f1f5f9",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const joinedText = {
-  fontSize: "14px",
-  color: "#64748b",
-};

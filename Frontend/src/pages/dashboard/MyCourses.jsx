@@ -1,98 +1,51 @@
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import { Box, Button, Card, CardContent, Grid, LinearProgress, Stack, Typography } from "@mui/material";
+
+const courses = [
+  { title: "AWS and DevOps Bootcamp", progress: 62, duration: "4 Months" },
+  { title: "Data Science and ML", progress: 28, duration: "5 Months" },
+];
 
 export default function MyCourses() {
   return (
-    <div>
-      <h1 style={title}>My Courses</h1>
-      <p style={subtitle}>Track and continue your learning</p>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 0.6 }}>My Courses</Typography>
+      <Typography color="text.secondary" sx={{ mb: 3.2 }}>
+        Track and continue your learning.
+      </Typography>
 
-      <div style={grid}>
-        <CourseCard
-          title="AWS & DevOps Bootcamp"
-          progress={62}
-          duration="4 Months"
-        />
-        <CourseCard
-          title="Data Science & ML"
-          progress={28}
-          duration="5 Months"
-        />
-      </div>
-    </div>
+      <Grid container spacing={2.2}>
+        {courses.map((course) => (
+          <Grid key={course.title} size={{ xs: 12, md: 6 }}>
+            <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0", height: "100%" }}>
+              <CardContent sx={{ p: 2.6, display: "flex", flexDirection: "column", height: "100%" }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 0.4 }}>
+                  {course.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.8 }}>
+                  {course.duration}
+                </Typography>
+
+                <LinearProgress
+                  variant="determinate"
+                  value={course.progress}
+                  sx={{ height: 10, borderRadius: 999, bgcolor: "#e2e8f0", "& .MuiLinearProgress-bar": { borderRadius: 999 } }}
+                />
+
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1.2 }}>
+                  {course.progress}% completed
+                </Typography>
+
+                <Stack direction="row" sx={{ mt: "auto", pt: 2 }}>
+                  <Button component={RouterLink} to="#" variant="contained" sx={{ borderRadius: 2.5 }}>
+                    Continue Learning
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 }
-
-
-function CourseCard({ title, progress, duration }) {
-  return (
-    <div style={card}>
-      <h3>{title}</h3>
-      <p style={muted}>{duration}</p>
-
-      <div style={progressWrap}>
-        <div style={{ ...progressBar, width: `${progress}%` }} />
-      </div>
-
-      <p style={muted}>{progress}% completed</p>
-
-      <Link to="#" style={btn}>
-        Continue Learning
-      </Link>
-    </div>
-  );
-}
-
-
-
-const title = {
-  fontSize: "28px",
-  fontWeight: "800",
-  marginBottom: "6px",
-};
-
-const subtitle = {
-  color: "#64748b",
-  marginBottom: "32px",
-};
-
-const grid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: "24px",
-};
-
-const card = {
-  background: "white",
-  padding: "24px",
-  borderRadius: "16px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-};
-
-const progressWrap = {
-  height: "8px",
-  background: "#e5e7eb",
-  borderRadius: "6px",
-  overflow: "hidden",
-  margin: "14px 0",
-};
-
-const progressBar = {
-  height: "100%",
-  background: "#2563eb",
-};
-
-const muted = {
-  fontSize: "14px",
-  color: "#64748b",
-};
-
-const btn = {
-  display: "inline-block",
-  marginTop: "14px",
-  background: "#2563eb",
-  color: "white",
-  padding: "10px 14px",
-  borderRadius: "10px",
-  textDecoration: "none",
-  fontWeight: "600",
-};

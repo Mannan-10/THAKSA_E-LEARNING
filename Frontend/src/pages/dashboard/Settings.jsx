@@ -2,16 +2,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { changePassword } from "../../services/userServices";
 import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  FormControl,
   IconButton,
   InputAdornment,
-  OutlinedInput,
-  FormControl,
   InputLabel,
+  OutlinedInput,
+  Stack,
+  Typography,
 } from "@mui/material";
-
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Button from "@mui/material/Button";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -29,45 +34,36 @@ export default function Settings() {
     new: false,
     confirm: false,
   });
-  const togglePassword = (field) => {
-    setShowPassword((prev) => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
-  };
 
   const [error, setError] = useState({});
 
-  const handleLogout = async () => {
+  const togglePassword = (field) => {
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
   const handlePasswordChange = (e) => {
-    setPasswordData({
-      ...passwordData,
-      [e.target.name]: e.target.value,
-    });
-
-    setError({
-      ...error,
-      [e.target.name]: "",
-    });
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+    setError({ ...error, [e.target.name]: "", api: "" });
+    setSuccess("");
   };
 
   const validate = () => {
-    let newErrors = {};
+    const newErrors = {};
 
     if (!passwordData.currentPassword) {
       newErrors.currentPassword = "Current password is required";
     }
-
     if (!passwordData.newPassword) {
       newErrors.newPassword = "New password is required";
     } else if (passwordData.newPassword.length < 6) {
       newErrors.newPassword = "New password must be at least 6 characters";
     }
-
     if (!passwordData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your new password";
     } else if (passwordData.confirmPassword !== passwordData.newPassword) {
@@ -84,223 +80,113 @@ export default function Settings() {
 
     try {
       setLoading(true);
-
       await changePassword({
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });
-      setSuccess("Password updated successfully");
-      alert("Password updated successfully");
-      setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      console.error(error.response?.data || error.message);
-      alert(error.response?.data?.message || "Failed to update password");
+
+      setSuccess("Password updated successfully.");
+      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (requestError) {
+      setError((prev) => ({
+        ...prev,
+        api: requestError?.response?.data?.message || "Failed to update password",
+      }));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleManageNotifications = () => {
-    alert("Manage notifications feature coming soon!");
-  };
-
   return (
-    <div>
-      <h1 style={title}>Settings</h1>
-      <p style={subtitle}>Manage your account preferences</p>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 0.6 }}>Settings</Typography>
+      <Typography color="text.secondary" sx={{ mb: 3.2 }}>
+        Manage your account preferences.
+      </Typography>
 
-      <div style={card}>
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Current Password</InputLabel>
-          <OutlinedInput
-            type={showPassword.current ? "text" : "password"}
-            name="currentPassword"
-            value={passwordData.currentPassword}
-            onChange={handlePasswordChange}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => togglePassword("current")}
-                  edge="end"
-                >
-                  {showPassword.current ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Current Password"
-          />
-        </FormControl>
+      <Card elevation={0} sx={cardSx}>
+        <CardContent sx={{ p: { xs: 2.2, md: 3 } }}>
+          <Typography variant="h6" sx={{ mb: 1.2, fontWeight: 800 }}>Update Password</Typography>
 
-        <FormControl fullWidth margin="normal">
-          <InputLabel>New Password</InputLabel>
-          <OutlinedInput
-            type={showPassword.new ? "text" : "password"}
-            name="newPassword"
-            value={passwordData.newPassword}
-            onChange={handlePasswordChange}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton onClick={() => togglePassword("new")} edge="end">
-                  {showPassword.new ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="New Password"
-          />
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Confirm Password</InputLabel>
-          <OutlinedInput
-            type={showPassword.confirm ? "text" : "password"}
-            name="confirmPassword"
-            value={passwordData.confirmPassword}
-            onChange={handlePasswordChange}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => togglePassword("confirm")}
-                  edge="end"
-                >
-                  {showPassword.confirm ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Confirm Password"
-          />
-        </FormControl>
+          <Stack spacing={1.5}>
+            <PasswordField
+              label="Current Password"
+              name="currentPassword"
+              value={passwordData.currentPassword}
+              show={showPassword.current}
+              onToggle={() => togglePassword("current")}
+              onChange={handlePasswordChange}
+            />
+            {error.currentPassword ? <Alert severity="error">{error.currentPassword}</Alert> : null}
 
-        {error.api && <p style={errorText}>{error.api}</p>}
-        {success && <p style={successText}>{success}</p>}
+            <PasswordField
+              label="New Password"
+              name="newPassword"
+              value={passwordData.newPassword}
+              show={showPassword.new}
+              onToggle={() => togglePassword("new")}
+              onChange={handlePasswordChange}
+            />
+            {error.newPassword ? <Alert severity="error">{error.newPassword}</Alert> : null}
 
-        <Button
-          style={{ ...saveBtn, width: "100%" }}
-          onClick={updatePassword}
-          disabled={loading}
-        >
-          {loading ? "Updating..." : "Update Password"}
-        </Button>
-        
-        <button style={actionBtn} onClick={handleManageNotifications}>
-          Manage Notifications
-        </button>
-      </div>
+            <PasswordField
+              label="Confirm Password"
+              name="confirmPassword"
+              value={passwordData.confirmPassword}
+              show={showPassword.confirm}
+              onToggle={() => togglePassword("confirm")}
+              onChange={handlePasswordChange}
+            />
+            {error.confirmPassword ? <Alert severity="error">{error.confirmPassword}</Alert> : null}
 
-      <div style={card}>
-        <h3 style={sectionTitle}>Security</h3>
-        <p style={muted}>Last login: Today · Chrome · India</p>
+            {error.api ? <Alert severity="error">{error.api}</Alert> : null}
+            {success ? <Alert severity="success">{success}</Alert> : null}
 
-        <button style={dangerBtn}>Logout from all devices</button>
-      </div>
+            <Button variant="contained" onClick={updatePassword} disabled={loading} sx={{ mt: 0.5, borderRadius: 2.5 }}>
+              {loading ? "Updating..." : "Update Password"}
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
 
-      <div style={card}>
-        <h3 style={sectionTitle}>Session</h3>
-        <button onClick={handleLogout} style={logoutBtn} disabled={loading}>
-          {loading ? "Logging out..." : "Logout"}
-        </button>
-      </div>
-    </div>
+      <Card elevation={0} sx={cardSx}>
+        <CardContent sx={{ p: { xs: 2.2, md: 3 } }}>
+          <Typography variant="h6" sx={{ mb: 0.6, fontWeight: 800 }}>Session</Typography>
+          <Typography color="text.secondary" sx={{ mb: 1.4 }}>Sign out from this device.</Typography>
+          <Button color="error" variant="contained" onClick={handleLogout} sx={{ borderRadius: 2.5 }}>
+            Logout
+          </Button>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
 
-const title = {
-  fontSize: "28px",
-  fontWeight: "800",
-  marginBottom: "6px",
-};
+function PasswordField({ label, name, value, show, onToggle, onChange }) {
+  return (
+    <FormControl fullWidth>
+      <InputLabel>{label}</InputLabel>
+      <OutlinedInput
+        type={show ? "text" : "password"}
+        name={name}
+        value={value}
+        onChange={onChange}
+        endAdornment={
+          <InputAdornment position="end">
+            <IconButton onClick={onToggle} edge="end">
+              {show ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
+        }
+        label={label}
+      />
+    </FormControl>
+  );
+}
 
-const subtitle = {
-  color: "#64748b",
-  marginBottom: "32px",
-};
-
-const card = {
-  background: "white",
-  padding: "24px",
-  borderRadius: "16px",
-  marginBottom: "24px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-};
-
-const sectionTitle = {
-  fontSize: "18px",
-  fontWeight: "700",
-  marginBottom: "12px",
-};
-
-const actionBtn = {
-  display: "block",
-  width: "100%",
-  textAlign: "left",
-  padding: "12px 14px",
-  borderRadius: "10px",
-  border: "1px solid #e5e7eb",
-  background: "#f8fafc",
-  cursor: "pointer",
-  marginBottom: "10px",
-  fontWeight: "500",
-};
-
-const dangerBtn = {
-  display: "block",
-  width: "100%",
-  textAlign: "left",
-  padding: "12px 14px",
-  borderRadius: "10px",
-  border: "1px solid #fecaca",
-  background: "#fef2f2",
-  color: "#b91c1c",
-  cursor: "pointer",
-  marginTop: "12px",
-  fontWeight: "600",
-};
-
-const logoutBtn = {
-  width: "100%",
-  background: "#dc2626",
-  color: "white",
-  padding: "14px",
-  borderRadius: "12px",
-  border: "none",
-  fontWeight: "600",
-  cursor: "pointer",
-};
-
-const muted = {
-  color: "#64748b",
-  fontSize: "14px",
-};
-
-const input = {
-  width: "100%",
-  padding: "12px 14px",
-  borderRadius: "10px",
-  border: "1px solid #e5e7eb",
-  fontSize: "14px",
-};
-
-const saveBtn = {
-  marginTop: "12px",
-  background: "#2563eb",
-  color: "white",
-  padding: "12px 20px",
-  borderRadius: "12px",
-  border: "none",
-  fontWeight: "600",
-  cursor: "pointer",
-};
-
-const errorText = {
-  color: "#dc2626",
-  fontSize: "13px",
-  marginTop: "4px",
-};
-
-const successText = {
-  color: "#16a34a",
-  fontSize: "14px",
-  marginTop: "10px",
+const cardSx = {
+  borderRadius: 3,
+  border: "1px solid #e2e8f0",
+  boxShadow: "0 14px 26px rgba(15,23,42,0.05)",
+  mb: 2.2,
 };

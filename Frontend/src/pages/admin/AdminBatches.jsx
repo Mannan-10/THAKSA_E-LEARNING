@@ -1,144 +1,72 @@
 import { useState } from "react";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 
 export default function AdminBatches() {
-  const [batches, setBatches] = useState([
-    {
-      id: 1,
-      name: "DevOps & Cloud – Jan 2025",
-      duration: "4 Months",
-      students: 32,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Data Science – Feb 2025",
-      duration: "5 Months",
-      students: 24,
-      status: "Upcoming",
-    },
+  const [batches] = useState([
+    { id: 1, name: "DevOps and Cloud - Jan 2025", duration: "4 Months", students: 32, status: "Active" },
+    { id: 2, name: "Data Science - Feb 2025", duration: "5 Months", students: 24, status: "Upcoming" },
   ]);
 
   return (
-    <div style={container}>
-      
-      <div style={header}>
-        <h1 style={title}>Batches</h1>
-        <button style={primaryBtn}>+ Create Batch</button>
-      </div>
+    <Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2.2 }}>
+        <Typography variant="h4">Batches</Typography>
+        <Button variant="contained" sx={{ borderRadius: 2.5 }}>Create Batch</Button>
+      </Box>
 
-      <div style={tableWrapper}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Batch Name</th>
-              <th style={th}>Duration</th>
-              <th style={th}>Students</th>
-              <th style={th}>Status</th>
-              <th style={th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {batches.map((batch) => (
-              <tr key={batch.id}>
-                <td style={td}>{batch.name}</td>
-                <td style={td}>{batch.duration}</td>
-                <td style={td}>{batch.students}</td>
-                <td style={td}>
-                  <span
-                    style={{
-                      ...statusBadge,
-                      background:
-                        batch.status === "Active"
-                          ? "#dcfce7"
-                          : "#e0f2fe",
-                      color:
-                        batch.status === "Active"
-                          ? "#166534"
-                          : "#0369a1",
-                    }}
-                  >
-                    {batch.status}
-                  </span>
-                </td>
-                <td style={td}>
-                  <button style={actionBtn}>View</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
+        <CardContent sx={{ p: 0 }}>
+          <TableContainer sx={{ overflowX: "auto" }}>
+            <Table sx={{ minWidth: 720 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Batch Name</strong></TableCell>
+                  <TableCell><strong>Duration</strong></TableCell>
+                  <TableCell><strong>Students</strong></TableCell>
+                  <TableCell><strong>Status</strong></TableCell>
+                  <TableCell><strong>Actions</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {batches.map((batch) => (
+                  <TableRow key={batch.id} hover>
+                    <TableCell>{batch.name}</TableCell>
+                    <TableCell>{batch.duration}</TableCell>
+                    <TableCell>{batch.students}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={batch.status}
+                        size="small"
+                        sx={{
+                          fontWeight: 700,
+                          bgcolor: batch.status === "Active" ? "#dcfce7" : "#e0f2fe",
+                          color: batch.status === "Active" ? "#166534" : "#0369a1",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button size="small" variant="outlined">View</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
-
-
-
-const container = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "24px",
-};
-
-const header = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const title = {
-  fontSize: "26px",
-  fontWeight: "800",
-};
-
-const primaryBtn = {
-  background: "#2563eb",
-  color: "#fff",
-  border: "none",
-  padding: "10px 16px",
-  borderRadius: "10px",
-  fontWeight: "600",
-  cursor: "pointer",
-};
-
-const tableWrapper = {
-  background: "#ffffff",
-  borderRadius: "14px",
-  border: "1px solid #e5e7eb",
-  overflow: "hidden",
-};
-
-const table = {
-  width: "100%",
-  borderCollapse: "collapse",
-};
-
-const th = {
-  textAlign: "left",
-  padding: "14px",
-  background: "#f8fafc",
-  fontSize: "14px",
-  color: "#475569",
-};
-
-const td = {
-  padding: "14px",
-  borderTop: "1px solid #e5e7eb",
-  fontSize: "14px",
-};
-
-const statusBadge = {
-  padding: "4px 10px",
-  borderRadius: "999px",
-  fontSize: "12px",
-  fontWeight: "600",
-};
-
-const actionBtn = {
-  background: "#f1f5f9",
-  border: "none",
-  padding: "6px 12px",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontWeight: "600",
-};

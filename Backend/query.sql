@@ -26,6 +26,7 @@ CREATE TABLE courses (
   description TEXT,
   price INT NOT NULL,
   level VARCHAR(50),
+  approval_status VARCHAR(20) NOT NULL DEFAULT 'pending',
   instructor_id INT NOT NULL,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -140,6 +141,13 @@ CREATE TABLE refresh_tokens (
   token TEXT NOT NULL,
   expires_at TIMESTAMP NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE password_reset_otps (
+  email VARCHAR(255) PRIMARY KEY,
+  otp VARCHAR(6) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  verified BOOLEAN DEFAULT false
 );
 
 ALTER TABLE lesson_progress

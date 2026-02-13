@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Alert, Box, Button, Card, CardContent, CircularProgress, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { getUserById, updateUserRole } from "../../../services/adminServices";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Typography, Button, Select, MenuItem } from "@mui/material";
 
 export const RoleUpdateDialog = () => {
   const { id } = useParams();
@@ -9,54 +9,71 @@ export const RoleUpdateDialog = () => {
   const [role, setRole] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setFetching(true);
+        setError("");
+        const data = await getUserById(id);
+        const userData = data?.user || data;
+        setUser(userData);
+        setRole(userData?.role || "student");
+      } catch (requestError) {
+        setError(requestError?.response?.data?.message || "Failed to load user");
+      } finally {
+        setFetching(false);
+      }
+    };
     fetchUser();
   }, [id]);
-
-  const fetchUser = async () => {
-    const data = await getUserById(id);
-    console.log("Fetch User by Id API Response:", data);
-    setUser(data);
-    setRole(data.role);
-  };
 
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const response = await updateUserRole(id, role);
-      console.log("Update Role API Response:", response);
+      await updateUserRole(id, role);
       navigate("/admin/students");
-    } catch (error) {
-      console.error("update error:",error);
+    } catch (requestError) {
+      setError(requestError?.response?.data?.message || "Failed to update role");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!user) return null;
-
   return (
-    <Container>
-      <Typography variant="h4">Update Role</Typography>
-      <Typography>User: {user.name}</Typography>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 2 }}>Update Role</Typography>
+      {error ? <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert> : null}
 
-      <Select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        sx={{ mt: 2 }}
-      >
-        <MenuItem value="student">Student</MenuItem>
-        <MenuItem value="instructor">Instructor</MenuItem>
-        <MenuItem value="admin">Admin</MenuItem>
-      </Select>
+      {fetching ? (
+        <Stack direction="row" alignItems="center" spacing={1.2}>
+          <CircularProgress size={20} />
+          <Typography color="text.secondary">Loading user...</Typography>
+        </Stack>
+      ) : !user ? (
+        <Alert severity="warning">User not found.</Alert>
+      ) : (
+        <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0", maxWidth: 680 }}>
+          <CardContent>
+            <Typography sx={{ mb: 1.5 }}><strong>User:</strong> {user.name}</Typography>
 
-      <div style={{ marginTop: 20 }}>
-        <Button onClick={handleUpdate}>Save</Button>
-        <Button onClick={() => navigate(-1)} sx={{ ml: 2 }}>
-          Cancel
-        </Button>
-      </div>
-    </Container>
+            <Select value={role} onChange={(e) => setRole(e.target.value)} fullWidth>
+              <MenuItem value="student">Student</MenuItem>
+              <MenuItem value="instructor">Instructor</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </Select>
+
+            <Stack direction="row" spacing={1.2} sx={{ mt: 2 }}>
+              <Button variant="contained" onClick={handleUpdate} disabled={loading}>
+                {loading ? "Saving..." : "Save"}
+              </Button>
+              <Button onClick={() => navigate(-1)}>Cancel</Button>
+            </Stack>
+          </CardContent>
+        </Card>
+      )}
+    </Box>
   );
 };

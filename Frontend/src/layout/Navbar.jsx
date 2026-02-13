@@ -1,113 +1,187 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Drawer,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+
+const navItems = [
+  { label: "Courses", to: "/courses" },
+  { label: "Batches", to: "/batches" },
+  { label: "Pricing", to: "/pricing" },
+  { label: "Contact", to: "/contact" },
+];
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const isAuth = localStorage.getItem("isAuth") === "true";
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const user = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "null");
+    } catch {
+      return null;
+    }
+  }, []);
+  const token = localStorage.getItem("token");
+  const isAuth = Boolean(token);
+  const dashboardPath = user?.role === "admin" ? "/admin" : user?.role === "instructor" ? "/instructor" : "/dashboard";
 
   const handleLogout = () => {
-    localStorage.removeItem("isAuth");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
   return (
-    <header style={header}>
-      <div style={container}>
-        {/* Logo */}
-        <Link to="/" style={logo}>
-          Thaksa
-        </Link>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        bgcolor: "rgba(255,255,255,0.92)",
+        backdropFilter: "blur(8px)",
+        borderBottom: "1px solid rgba(15,23,42,0.08)",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Toolbar disableGutters sx={{ minHeight: 72 }}>
+          <Typography
+            component={RouterLink}
+            to="/"
+            sx={{
+              textDecoration: "none",
+              color: "#0f172a",
+              fontWeight: 900,
+              fontSize: "1.35rem",
+              letterSpacing: "-0.02em",
+              fontFamily: "'Merriweather', Georgia, serif",
+            }}
+          >
+            Thaksa
+          </Typography>
 
-        {/* Nav links */}
-        <nav style={nav}>
-          <Link to="/courses" style={navItem}>Courses</Link>
-          <Link to="/batches" style={navItem}>Batches</Link>
-          <Link to="/pricing" style={navItem}>Pricing</Link>
-          <Link to="/contact" style={navItem}>Contact</Link>
-        </nav>
+          <Stack
+            direction="row"
+            spacing={2.5}
+            sx={{ ml: 5, display: { xs: "none", md: "flex" }, flexGrow: 1 }}
+          >
+            {navItems.map((item) => (
+              <Button
+                key={item.to}
+                component={RouterLink}
+                to={item.to}
+                color="inherit"
+                sx={{ color: "#334155", fontWeight: 600 }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Stack>
 
-        {/* Auth actions */}
-        <div style={actions}>
-          {!isAuth ? (
-            <>
-              <Link to="/login" style={loginBtn}>Login</Link>
-              <Link to="/signup" style={signupBtn}>Get Started</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/dashboard" style={loginBtn}>Dashboard</Link>
-              <button onClick={handleLogout} style={logoutBtn}>
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </header>
+          <Stack
+            direction="row"
+            spacing={1.2}
+            sx={{ ml: "auto", display: { xs: "none", md: "flex" } }}
+          >
+            {!isAuth ? (
+              <>
+                <Button component={RouterLink} to="/login" sx={{ color: "#1d4ed8", fontWeight: 700 }}>
+                  Login
+                </Button>
+                <Button
+                  component={RouterLink}
+                  to="/signup"
+                  variant="contained"
+                  sx={{ bgcolor: "#2563eb", "&:hover": { bgcolor: "#1d4ed8" } }}
+                >
+                  Get Started
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button component={RouterLink} to={dashboardPath} sx={{ color: "#1d4ed8", fontWeight: 700 }}>
+                  Dashboard
+                </Button>
+                <Button onClick={handleLogout} color="error" variant="text">
+                  Logout
+                </Button>
+              </>
+            )}
+          </Stack>
+
+          <IconButton
+            edge="end"
+            onClick={() => setMobileOpen(true)}
+            sx={{ ml: "auto", display: { xs: "inline-flex", md: "none" } }}
+          >
+            <MenuRoundedIcon />
+          </IconButton>
+        </Toolbar>
+      </Container>
+
+      <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)}>
+        <Box sx={{ width: 280, p: 2 }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+            <Typography sx={{ fontWeight: 800 }}>Menu</Typography>
+            <IconButton onClick={() => setMobileOpen(false)}>
+              <CloseRoundedIcon />
+            </IconButton>
+          </Stack>
+
+          <Stack spacing={1}>
+            {navItems.map((item) => (
+              <Button
+                key={item.to}
+                component={RouterLink}
+                to={item.to}
+                onClick={() => setMobileOpen(false)}
+                sx={{ justifyContent: "flex-start", color: "#334155", fontWeight: 600 }}
+              >
+                {item.label}
+              </Button>
+            ))}
+            {!isAuth ? (
+              <>
+                <Button component={RouterLink} to="/login" onClick={() => setMobileOpen(false)}>
+                  Login
+                </Button>
+                <Button
+                  component={RouterLink}
+                  to="/signup"
+                  variant="contained"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Get Started
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button component={RouterLink} to={dashboardPath} onClick={() => setMobileOpen(false)}>
+                  Dashboard
+                </Button>
+                <Button
+                  color="error"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            )}
+          </Stack>
+        </Box>
+      </Drawer>
+    </AppBar>
   );
 }
-
-/* ===== styles ===== */
-
-const header = {
-  position: "sticky",
-  top: 0,
-  background: "#fff",
-  borderBottom: "1px solid #e5e7eb",
-  zIndex: 100,
-};
-
-const container = {
-  maxWidth: "1200px",
-  margin: "0 auto",
-  padding: "16px 20px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-};
-
-const logo = {
-  fontSize: "22px",
-  fontWeight: "800",
-  textDecoration: "none",
-  color: "#0f172a",
-};
-
-const nav = {
-  display: "flex",
-  gap: "24px",
-};
-
-const navItem = {
-  textDecoration: "none",
-  color: "#334155",
-  fontWeight: "500",
-};
-
-const actions = {
-  display: "flex",
-  gap: "14px",
-  alignItems: "center",
-};
-
-const loginBtn = {
-  textDecoration: "none",
-  fontWeight: "600",
-  color: "#2563eb",
-};
-
-const signupBtn = {
-  textDecoration: "none",
-  background: "#2563eb",
-  color: "#fff",
-  padding: "10px 16px",
-  borderRadius: "10px",
-  fontWeight: "600",
-};
-
-const logoutBtn = {
-  background: "transparent",
-  border: "none",
-  color: "#dc2626",
-  fontWeight: "600",
-  cursor: "pointer",
-};

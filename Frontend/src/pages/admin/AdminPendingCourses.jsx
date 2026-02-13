@@ -1,9 +1,29 @@
-import { useEffect, useState } from "react";
-import { getPendingCourses, approveCourse, rejectCourse } from "../../services/adminServices";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { approveCourse, getPendingCourses, rejectCourse } from "../../services/adminServices";
+
+const toArray = (payload) => (Array.isArray(payload) ? payload : payload?.courses || payload?.data || []);
 
 export const AdminPendingCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchPending();
@@ -11,166 +31,88 @@ export const AdminPendingCourses = () => {
 
   const fetchPending = async () => {
     try {
+      setLoading(true);
+      setError("");
       const data = await getPendingCourses();
-      setCourses(data);
-    } catch (error) {
-      console.error("Error fetching pending courses:", error);
+      setCourses(toArray(data));
+    } catch (requestError) {
+      setError(requestError?.response?.data?.message || "Error fetching pending courses");
     } finally {
       setLoading(false);
     }
   };
 
   const handleApprove = async (id) => {
-    if (window.confirm("Are you sure you want to approve this course?")) {
-      try {
-        await approveCourse(id);
-        setCourses(courses.filter((c) => c.id !== id));
-        alert("Course approved successfully");
-      } catch (error) {
-        alert("Failed to approve course");
-      }
+    if (!window.confirm("Approve this course?")) return;
+    try {
+      await approveCourse(id);
+      setCourses((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      setError("Failed to approve course");
     }
   };
 
   const handleReject = async (id) => {
-    if (window.confirm("Are you sure you want to reject this course?")) {
-      try {
-        await rejectCourse(id);
-        setCourses(courses.filter((c) => c.id !== id));
-        alert("Course rejected");
-      } catch (error) {
-        alert("Failed to reject course");
-      }
+    if (!window.confirm("Reject this course?")) return;
+    try {
+      await rejectCourse(id);
+      setCourses((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      setError("Failed to reject course");
     }
   };
 
-  if (loading) return <p>Loading pending courses...</p>;
+  const noData = useMemo(() => !loading && courses.length === 0, [loading, courses]);
 
   return (
-    <div style={container}>
-      <div style={header}>
-        <h1 style={title}>Pending Approvals</h1>
-      </div>
+    <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
+      <CardContent sx={{ p: 2.2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.2 }}>Pending Approvals</Typography>
+        {error ? <Alert severity="error" sx={{ mb: 1.5 }}>{error}</Alert> : null}
 
-      <div style={tableWrapper}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Title</th>
-              <th style={th}>Instructor</th>
-              <th style={th}>Category</th>
-              <th style={th}>Status</th>
-              <th style={th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.length > 0 ? (
-              courses.map((course) => (
-                <tr key={course.id}>
-                  <td style={td}>{course.title}</td>
-                  <td style={td}>{course.instructor_name}</td>
-                  <td style={td}>{course.category}</td>
-                  <td style={td}>
-                    <span style={pendingBadge}>{course.approval_status}</span>
-                  </td>
-                  <td style={td}>
-                    <button
-                      style={approveBtn}
-                      onClick={() => handleApprove(course.id)}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      style={rejectBtn}
-                      onClick={() => handleReject(course.id)}
-                    >
-                      Reject
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" style={{ ...td, textAlign: "center" }}>
-                  No pending courses found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+        {loading ? (
+          <Stack direction="row" alignItems="center" spacing={1.2} sx={{ py: 1 }}>
+            <CircularProgress size={20} />
+            <Typography color="text.secondary">Loading pending courses...</Typography>
+          </Stack>
+        ) : noData ? (
+          <Alert severity="info">No pending courses found.</Alert>
+        ) : (
+          <TableContainer sx={{ overflowX: "auto" }}>
+            <Table size="small" sx={{ minWidth: 760 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Title</strong></TableCell>
+                  <TableCell><strong>Instructor</strong></TableCell>
+                  <TableCell><strong>Category</strong></TableCell>
+                  <TableCell><strong>Status</strong></TableCell>
+                  <TableCell align="right"><strong>Actions</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {courses.map((course) => (
+                  <TableRow key={course.id} hover>
+                    <TableCell>{course.title}</TableCell>
+                    <TableCell>{course.instructor_name}</TableCell>
+                    <TableCell>{course.category || "-"}</TableCell>
+                    <TableCell>
+                      <Chip label={course.approval_status || "pending"} size="small" sx={{ bgcolor: "#fef3c7", color: "#92400e", fontWeight: 700 }} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button size="small" color="success" onClick={() => handleApprove(course.id)} sx={{ mr: 1 }}>
+                        Approve
+                      </Button>
+                      <Button size="small" color="error" onClick={() => handleReject(course.id)}>
+                        Reject
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </CardContent>
+    </Card>
   );
-};
-
-const container = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "24px",
-};
-
-const header = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const title = {
-  fontSize: "26px",
-  fontWeight: "800",
-};
-
-const tableWrapper = {
-  background: "white",
-  borderRadius: "14px",
-  border: "1px solid #e5e7eb",
-  overflow: "hidden",
-};
-
-const table = {
-  width: "100%",
-  borderCollapse: "collapse",
-};
-
-const th = {
-  textAlign: "left",
-  padding: "14px",
-  background: "#f8fafc",
-  fontSize: "14px",
-  color: "#475569",
-};
-
-const td = {
-  padding: "14px",
-  borderTop: "1px solid #e5e7eb",
-  fontSize: "14px",
-};
-
-const approveBtn = {
-  background: "#dcfce7",
-  color: "#166534",
-  border: "none",
-  padding: "6px 12px",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontWeight: "600",
-  marginRight: "8px",};
-
-const rejectBtn = {
-  background: "#fee2e2",
-  color: "#991b1b",
-  border: "none",
-  padding: "6px 12px",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontWeight: "600",
-};
-
-const pendingBadge = {
-  padding: "4px 10px",
-  borderRadius: "999px",
-  fontSize: "12px",
-  fontWeight: "600",
-  background: "#fef3c7",
-  color: "#92400e",
 };
