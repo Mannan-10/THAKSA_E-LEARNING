@@ -6,7 +6,7 @@ import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import AdminLayout from "./pages/admin/AdminLayout";
 
 import Home from "./pages/Home";
-import CoursesPage from "./pages/CoursesPage";
+import { PublicCoursePage } from "./pages/PublicCoursePage";
 import PricingPage from "./pages/PricingPage";
 import ContactPage from "./pages/ContactPage";
 import BatchesPage from "./pages/BatchesPage";
@@ -40,6 +40,9 @@ import InstructorSettings from "./pages/instructor/InstructorSettings";
 import { UserDetailsModal } from "./pages/admin/components/UserDetailsModal";
 import { RoleUpdateDialog } from "./pages/admin/components/RoleUpdateDialog";
 import { DeleteUserDialog } from "./pages/admin/components/DeleteUserDialog";
+import Batches from "./pages/dashboard/Batches";
+import CourseLearning from "./pages/dashboard/CourseLearning";
+
 
 export default function App() {
   return (
@@ -57,7 +60,7 @@ export default function App() {
           path="/courses"
           element={
             <PublicLayout>
-              <CoursesPage />
+              <PublicCoursePage />
             </PublicLayout>
           }
         />
@@ -129,7 +132,9 @@ export default function App() {
         >
           <Route index element={<UserDashboard />} />
           <Route path="courses" element={<MyCourses />} />
-          <Route path="batch" element={<MyBatch />} />
+          <Route path="batches" element={<Batches />} />
+          <Route path="batch/:batchId/course/:courseId" element={<CourseLearning />} />
+          <Route path="my-batch" element={<MyBatch />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
         </Route>

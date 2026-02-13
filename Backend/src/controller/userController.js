@@ -123,7 +123,7 @@ const verifyOtp = async (req, res) => {
 
         await client.query('COMMIT');
 
-        res.status(201).json({ message: "OTP verified successfully. User registered." });
+        res.status(200).json({ message: "OTP verified successfully. User registered." });
     } catch (err) {
         await client.query('ROLLBACK');
         res.status(500).json({ message: "Error verifying OTP: " + err.message });

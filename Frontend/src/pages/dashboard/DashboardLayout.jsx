@@ -10,12 +10,12 @@ export default function DashboardLayout() {
         <nav style={nav}>
           <NavItem to="/dashboard">Dashboard</NavItem>
           <NavItem to="/dashboard/courses">My Courses</NavItem>
-          <NavItem to="/dashboard/batch">My Batch</NavItem>
+          <NavItem to="/dashboard/my-batch">My Batch</NavItem>
+          <NavItem to="/dashboard/batches">Browse Batches</NavItem>
           <NavItem to="/dashboard/profile">Profile</NavItem>
           <NavItem to="/dashboard/settings">Settings</NavItem>
         </nav>
       </aside>
-
  
       <main style={content}>
         <Outlet />

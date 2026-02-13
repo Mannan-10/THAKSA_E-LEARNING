@@ -8,13 +8,14 @@ import Testimonials from "../home/Testimonials";
 import Newsletter from "../home/Newsletter";
 import Contact from "../home/Contact";
 import Pricing from "../home/Pricing";
+import { PublicCoursePage } from "./PublicCoursePage";
 
 export default function Home() {
   return (
     <>
       <Hero />
       <Stats />
-      <Courses />
+      <PublicCoursePage />
       <Instructor />
       <Features />
       <HowItWorks />

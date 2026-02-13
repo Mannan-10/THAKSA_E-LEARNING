@@ -62,7 +62,7 @@ export default function SignupPage() {
       const data = await register(formData);
       console.log("REGISTER RESPONSE:", data);
 
-      if (data.success) {
+      if (data.otp) {
         navigate("/verify-otp", {
           state: {
             email: formData.email,

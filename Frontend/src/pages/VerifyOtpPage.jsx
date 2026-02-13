@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { verifyOtp } from "../services/userServices";
 
 export default function VerifyOtpPage() {
     const navigate = useNavigate();
@@ -7,35 +8,32 @@ export default function VerifyOtpPage() {
     const email = location.state?.email;
 
     const [otp, setOtp] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleVerify = async (e) => {
         e.preventDefault();
 
-        try {
-            const res = await fetch("http://localhost:3000/api/users/verify-otp", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email,
-                    otp
-                })
-            });
+        if (!otp) {
+            alert("Please enter OTP");
+            return;
+        }
 
-            const data = await res.json();
+        try {
+            setLoading(true);
+            const data = await verifyOtp({email, otp});
             console.log("OTP VERIFICATION RESPONSE:", data);
 
-            if (res.ok) {
-                alert("OTP verified successfully!");
+            if (data) {
+                alert("OTP verified successfully");
                 navigate("/login");
             } else {
                 alert(data.message || "Invalid OTP");
             }
-
         } catch (error) {
             console.error(error);
-            alert("An error occurred during OTP verification.");
+            alert("An error occurred during OTP verification");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -44,7 +42,7 @@ export default function VerifyOtpPage() {
     }
 
     return (
-        <div style={{}}>
+        <div style={{ padding: "40px", textAlign: "center" }}>
             <h2>Verify OTP</h2>
             <p>OTP sent to {email}</p>
             <form onSubmit={handleVerify}>
@@ -56,7 +54,9 @@ export default function VerifyOtpPage() {
                     required
                 />
                 <br /><br />
-                <button type="submit">Verify</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? "Verifying..." : "Verify"}
+                </button>
             </form>
         </div>
     )

@@ -96,6 +96,7 @@ CREATE TABLE lesson_progress (
   lesson_id INT NOT NULL,
   completed BOOLEAN DEFAULT false,
   completed_at TIMESTAMP,
+  UNIQUE(user_id, lesson_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
 );

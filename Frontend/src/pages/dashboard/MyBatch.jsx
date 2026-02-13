@@ -1,34 +1,70 @@
+import { useEffect } from "react";
+import { useState } from "react";
+import { getMyBatch } from "../../services/batchService";
+import { Link } from "react-router-dom";
+
 export default function MyBatch() {
+  const [batch, setBatch] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBatch();
+  },[]);
+
+  const fetchBatch = async () => {
+    try {
+      const data = await getMyBatch();
+      console.log(data);
+      setBatch(data);
+    } catch (err) {
+      console.error(err);
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+  if (loading) {
+    return <p>Loading batch...</p>;
+  }
+
+  if (!batch) {
+    return <p>You have not joined any batch yet.</p>;
+  }
+
   return (
     <div>
       <h1 style={title}>My Batch</h1>
       <p style={subtitle}>Your assigned training batch details</p>
 
-     
       <div style={card}>
-        <h3>AWS • DevOps • Data Science Bootcamp</h3>
-        <p style={muted}>Batch Duration: 4 Months</p>
+        <h3>{batch.course_title}</h3>
+        <p style={muted}>Batch: {batch.batch_name}</p>
 
         <div style={infoGrid}>
-          <Info label="Batch Code" value="THK-DEV-0425" />
-          <Info label="Start Date" value="15 April 2025" />
-          <Info label="Schedule" value="Mon–Sat · 7:00–9:00 PM" />
-          <Info label="Mode" value="Live + Recorded" />
+          <Info label="Start Date" value={formatDate(batch.start_date)} />
+          <Info label="End Date" value={formatDate(batch.end_date)} />
+          <Info label="Schedule" value={batch.schedule} />
+          <Info label="Max Students" value={batch.max_students} />
         </div>
       </div>
 
       <div style={card}>
         <h3>Trainer</h3>
-        <p style={{ fontWeight: "600" }}>Tharunkrishna Kaithoju</p>
-        <p style={muted}>
-          Senior DevOps • Cloud • Data & ML Instructor
-        </p>
+        <p style={{ fontWeight: "600" }}>{batch.instructor_name}</p>
+        <p style={muted}>{batch.instructor_email}</p>
+        {batch.course_id && (
+          <Link to={`/dashboard/batch/${batch.id}/course/${batch.course_id}`}>
+            Open Course
+          </Link>
+        )}
       </div>
+
+
 
       <div style={card}>
         <h3>Batch Guidelines</h3>
         <ul style={list}>
-          <li>Attendance is mandatory for live sessions</li>
+          <li>Attendance is mandatory</li>
           <li>Assignments must be submitted on time</li>
           <li>Recordings available for revision</li>
           <li>Weekly doubt-clearing sessions</li>
@@ -38,6 +74,13 @@ export default function MyBatch() {
   );
 }
 
+function formatDate(date) {
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 
 const title = {

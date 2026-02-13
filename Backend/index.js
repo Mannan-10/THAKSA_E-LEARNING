@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import userRouter from './src/routes/users.js';
+import userDashboardRouter from './src/routes/userDashboardRoutes.js';
 import adminRouter from './src/routes/adminRoutes.js';
 import router from './src/routes/instructorRoutes.js';
 import adminCourseRouter from './src/routes/adminCourseRoutes.js';
@@ -17,6 +18,7 @@ import lessonProgressRouter from './src/routes/lessonProgressRoutes.js';
 import certificateRouter from './src/routes/certificateRoutes.js';
 import reviewRouter from './src/routes/reviewRoutes.js';
 import instructorDashboardRouter from './src/routes/instructorDashboardRoutes.js';
+import courseContentRouter from './src/routes/courseContentRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -34,16 +36,18 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/instructor', router);
+app.use('/api/users', userDashboardRouter);
 app.use('/api/instructor', instructorDashboardRouter);
 app.use('/api/admin', adminCourseRouter);
 app.use('/api/courses', courseRouter);
+app.use('/api/courses', courseContentRouter);
 app.use('/api/admin', adminDashboardRoutes);
 app.use('/api/courses', moduleRouter);
 app.use('/api/modules', lessonRouter);
 app.use('/api', batchRouter);
 app.use('/api', enrollmentRouter);
 app.use('/api', paymentRouter);
-app.use('/api', lessonProgressRouter)
+app.use('/api', lessonProgressRouter);
 app.use('/api', certificateRouter);
 app.use('/api', reviewRouter);
 
