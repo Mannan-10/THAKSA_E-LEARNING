@@ -2,75 +2,153 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { getMyBatch } from "../../services/batchService";
 import { Link } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Button,
+  Box,
+  Chip,
+  Divider,
+  LinearProgress,
+} from "@mui/material";
 
 export default function MyBatch() {
-  const [batch, setBatch] = useState(null);
+  const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBatch();
-  },[]);
+  }, []);
 
   const fetchBatch = async () => {
     try {
       const data = await getMyBatch();
       console.log(data);
-      setBatch(data);
+      setBatches(data);
     } catch (err) {
       console.error(err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const getBatchStatus = (start, end) => {
+    const now = new Date();
+    const startDate = start ? new Date(start) : null;
+    const endDate = end ? new Date(end) : null;
+
+    if (endDate && now > endDate) return "Completed";
+    if (startDate && now < startDate) return "Upcoming";
+    return "Ongoing";
+  };
+
+  const getDaysRemaining = (end) => {
+    if (!end) return null;
+    const today = new Date();
+    const endDate = new Date(end);
+    const diff = endDate - today;
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  };
+
+  const getProgress = () => {
+    return Math.floor(Math.random() * 100); 
+  };
+
+
   if (loading) {
     return <p>Loading batch...</p>;
   }
 
-  if (!batch) {
+  if (!batches) {
     return <p>You have not joined any batch yet.</p>;
   }
 
   return (
-    <div>
-      <h1 style={title}>My Batch</h1>
-      <p style={subtitle}>Your assigned training batch details</p>
+    <Box sx={{ padding: 4 }}>
+      <Typography variant="h4" fontWeight="bold" gutterBottom>
+        My Batches
+      </Typography>
 
-      <div style={card}>
-        <h3>{batch.course_title}</h3>
-        <p style={muted}>Batch: {batch.batch_name}</p>
+      <Typography variant="body1" color="text.secondary" mb={4}>
+        Your assigned training batch details
+      </Typography>
 
-        <div style={infoGrid}>
-          <Info label="Start Date" value={formatDate(batch.start_date)} />
-          <Info label="End Date" value={formatDate(batch.end_date)} />
-          <Info label="Schedule" value={batch.schedule} />
-          <Info label="Max Students" value={batch.max_students} />
-        </div>
-      </div>
+      {batches.map((batch) => {
+        const status = getBatchStatus(batch.start_date, batch.end_date);
+        const daysRemaining = getDaysRemaining(batch.end_date);
+        const progress = getProgress();
+        const isExpired = status === "Completed";
 
-      <div style={card}>
-        <h3>Trainer</h3>
-        <p style={{ fontWeight: "600" }}>{batch.instructor_name}</p>
-        <p style={muted}>{batch.instructor_email}</p>
-        {batch.course_id && (
-          <Link to={`/dashboard/batch/${batch.id}/course/${batch.course_id}`}>
-            Open Course
-          </Link>
-        )}
-      </div>
+        return (
+          <Card key={batch.id} sx={{ mb: 4, borderRadius: 3, boxShadow: 3 }}>
+            <CardContent>
+              {/* HEADER */}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="h6" fontWeight="bold">
+                  {batch.course_title}
+                </Typography>
 
+                <Chip
+                  label={status}
+                  color={
+                    status === "Ongoing"
+                      ? "success"
+                      : status === "Upcoming"
+                        ? "warning"
+                        : "default"
+                  }
+                />
+              </Box>
 
+              <Typography color="text.secondary" mb={2}>
+                Batch: {batch.batch_name}
+              </Typography>
 
-      <div style={card}>
-        <h3>Batch Guidelines</h3>
-        <ul style={list}>
-          <li>Attendance is mandatory</li>
-          <li>Assignments must be submitted on time</li>
-          <li>Recordings available for revision</li>
-          <li>Weekly doubt-clearing sessions</li>
-        </ul>
-      </div>
-    </div>
+              {/* DAYS REMAINING */}
+              {status === "Ongoing" && daysRemaining > 0 && (
+                <Typography variant="body2" color="primary" mb={2}>
+                  {daysRemaining} days remaining
+                </Typography>
+              )}
+
+              {/* PROGRESS */}
+              <Box mb={2}>
+                <Typography variant="body2" mb={1}>
+                  Progress: {progress}%
+                </Typography>
+                <LinearProgress variant="determinate" value={progress} />
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              {/* TRAINER */}
+              <Typography fontWeight="bold">Trainer</Typography>
+              <Typography>{batch.instructor_name}</Typography>
+              <Typography color="text.secondary">
+                {batch.instructor_email}
+              </Typography>
+
+              {/* BUTTON */}
+              <Button
+                component={Link}
+                to={`/dashboard/batch/${batch.id}/course/${batch.course_id}`}
+                variant="contained"
+                disabled={isExpired}
+                sx={{ mt: 2 }}
+              >
+                {isExpired ? "Batch Expired" : "Open Course"}
+              </Button>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </Box>
   );
 }
 
@@ -82,48 +160,7 @@ function formatDate(date) {
   });
 }
 
-
-const title = {
-  fontSize: "28px",
-  fontWeight: "800",
-  marginBottom: "6px",
-};
-
-const subtitle = {
-  color: "#64748b",
-  marginBottom: "32px",
-};
-
-const card = {
-  background: "white",
-  padding: "24px",
-  borderRadius: "16px",
-  marginBottom: "24px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-};
-
-const infoGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: "16px",
-  marginTop: "16px",
-};
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p style={muted}>{label}</p>
-      <p style={{ fontWeight: "600" }}>{value}</p>
-    </div>
-  );
-}
-
 const muted = {
   color: "#64748b",
   fontSize: "14px",
-};
-
-const list = {
-  paddingLeft: "18px",
-  lineHeight: "1.8",
 };

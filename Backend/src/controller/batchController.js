@@ -68,7 +68,7 @@ const getMyBatch = async (req, res) => {
       return res.status(404).json({ message: "No batch assigned" });
     }
 
-    res.json(result.rows[0]);
+    res.json(result.rows);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

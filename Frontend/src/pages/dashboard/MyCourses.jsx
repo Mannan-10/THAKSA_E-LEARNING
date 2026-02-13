@@ -13,7 +13,6 @@ export default function MyCourses() {
   const fetchMyCourses = async () => {
     try {
       const data = await getApprovedCourses();
-      console.log("My courses:",data);
       setCourses(data);
     } catch (error) {
       console.error("Error fetching courses:", error);
