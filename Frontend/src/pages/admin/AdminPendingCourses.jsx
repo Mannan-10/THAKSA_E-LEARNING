@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
-  Box,
   Button,
   Card,
   CardContent,
@@ -17,10 +16,12 @@ import {
   Typography,
 } from "@mui/material";
 import { approveCourse, getPendingCourses, rejectCourse } from "../../services/adminServices";
+import useToast from "../../hooks/useToast";
 
 const toArray = (payload) => (Array.isArray(payload) ? payload : payload?.courses || payload?.data || []);
 
 export const AdminPendingCourses = () => {
+  const { showToast } = useToast();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,8 +48,11 @@ export const AdminPendingCourses = () => {
     try {
       await approveCourse(id);
       setCourses((prev) => prev.filter((c) => c.id !== id));
-    } catch {
-      setError("Failed to approve course");
+      showToast("Course approved successfully.", "success");
+    } catch (requestError) {
+      const errorMessage = requestError?.response?.data?.message || "Failed to approve course";
+      setError(errorMessage);
+      showToast(errorMessage, "error");
     }
   };
 
@@ -57,8 +61,11 @@ export const AdminPendingCourses = () => {
     try {
       await rejectCourse(id);
       setCourses((prev) => prev.filter((c) => c.id !== id));
-    } catch {
-      setError("Failed to reject course");
+      showToast("Course rejected successfully.", "success");
+    } catch (requestError) {
+      const errorMessage = requestError?.response?.data?.message || "Failed to reject course";
+      setError(errorMessage);
+      showToast(errorMessage, "error");
     }
   };
 

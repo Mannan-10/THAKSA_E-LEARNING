@@ -5,10 +5,10 @@ import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRou
 import PsychologyRoundedIcon from "@mui/icons-material/PsychologyRounded";
 
 const stats = [
-  { title: "Active Learners", value: "12,000+", icon: GroupRoundedIcon },
-  { title: "Guided Courses", value: "140+", icon: MenuBookRoundedIcon },
+  { title: "Active Learners", value: "100+", icon: GroupRoundedIcon },
+  { title: "Guided Courses", value: "6+", icon: MenuBookRoundedIcon },
   { title: "Completion Rate", value: "91%", icon: WorkspacePremiumRoundedIcon },
-  { title: "Mentor Sessions", value: "4,500+", icon: PsychologyRoundedIcon },
+  { title: "Mentor Sessions", value: "100+", icon: PsychologyRoundedIcon },
 ];
 
 export default function StatsSection() {

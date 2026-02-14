@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Alert, Avatar, Box, Button, Card, CardContent, Chip, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, Chip, Grid, Stack, TextField, Typography } from "@mui/material";
+import useToast from "../../hooks/useToast";
 
 export default function InstructorProfile() {
+  const { showToast } = useToast();
   const [profile, setProfile] = useState({
     name: "Dr. Robert Fox",
     email: "robert.fox@thaksa.edu",
@@ -12,11 +14,10 @@ export default function InstructorProfile() {
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [status, setStatus] = useState("");
 
   const handleSave = () => {
     setIsEditing(false);
-    setStatus("Profile updated successfully.");
+    showToast("Profile updated successfully.", "success");
   };
 
   return (
@@ -28,8 +29,6 @@ export default function InstructorProfile() {
 
       <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
         <CardContent sx={{ p: { xs: 2.2, md: 3.2 } }}>
-          {status ? <Alert severity="success" sx={{ mb: 2 }}>{status}</Alert> : null}
-
           <Stack direction={{ xs: "column", md: "row" }} spacing={2.2} alignItems={{ xs: "flex-start", md: "center" }} sx={{ mb: 3 }}>
             <Avatar sx={{ width: 72, height: 72, bgcolor: "#2563eb", fontSize: "1.9rem", fontWeight: 800 }}>
               {(profile.name || "I").charAt(0).toUpperCase()}

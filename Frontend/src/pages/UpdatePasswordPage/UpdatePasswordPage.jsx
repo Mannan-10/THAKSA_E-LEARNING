@@ -15,10 +15,12 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
 import AuthLayout from "../auth/AuthLayout";
 import { resetPasswordWithOtp } from "../../services/userServices";
+import useToast from "../../hooks/useToast";
 
 export default function UpdatePasswordPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showToast } = useToast();
   const email = location.state?.email;
 
   const [formData, setFormData] = useState({
@@ -32,7 +34,7 @@ export default function UpdatePasswordPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "", submit: "" }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
@@ -64,12 +66,10 @@ export default function UpdatePasswordPage() {
         email,
         newPassword: formData.newPassword,
       });
-      alert("Password updated successfully. Please log in.");
+      showToast("Password updated successfully. Please log in.", "success");
       navigate("/login");
     } catch (error) {
-      setErrors({
-        submit: error?.response?.data?.message || "Unable to update password",
-      });
+      showToast(error?.response?.data?.message || "Unable to update password", "error");
     } finally {
       setLoading(false);
     }
@@ -137,9 +137,6 @@ export default function UpdatePasswordPage() {
             ),
           }}
         />
-
-        {errors.submit ? <Alert severity="error">{errors.submit}</Alert> : null}
-
         <Button
           type="submit"
           variant="contained"

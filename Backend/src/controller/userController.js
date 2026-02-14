@@ -2,6 +2,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "../config/db.js";
 import sendMail from "../utils/sendMail.js";
+import { sendLoginAlertMail, sendWelcomeMail } from "../utils/sendAccountMail.js";
+
+const safeSendAccountMail = async (mailAction, email, name, label) => {
+  try {
+    await mailAction(email, name);
+  } catch (mailError) {
+    console.error(`${label} failed:`, mailError.message);
+  }
+};
 
 const register = async (req, res) => {
   try {
@@ -31,7 +40,7 @@ const register = async (req, res) => {
     await sendMail(email, `Thaksa E-Learning - Verify your email`, { name: username, otp});
     res
       .status(200)
-      .json({ message: "OTP sent to email for verification", otp });
+      .json({ message: "OTP sent to email for verification" });
 
     // await db.query(
     //     'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4);',[username, email, hashedPassword, role || 'student']
@@ -53,7 +62,7 @@ const login = async (req, res) => {
     ]);
     const user = response.rows[0];
     if (!user) {
-      return res.status(401).json({ message: "User not found", user });
+      return res.status(401).json({ message: "User not found" });
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
@@ -65,6 +74,8 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" },
     );
+
+    await safeSendAccountMail(sendLoginAlertMail, user.email, user.name, "Login alert mail");
 
     res.json({
       message: "Login successful",
@@ -85,51 +96,59 @@ const login = async (req, res) => {
 const verifyOtp = async (req, res) => {
   const client = await db.connect();
 
-    try {
-        const { email, otp } = req.body;
+  try {
+    const { email, otp } = req.body;
 
-        await client.query("BEGIN")
+    const result = await client.query(
+      "SELECT * FROM otp_verifications WHERE email = $1",
+      [email]
+    );
 
-        const result = await client.query(
-            'SELECT * FROM otp_verifications WHERE email = $1',[email]
-        );
+    const record = result.rows[0];
 
-        const record = result.rows[0];
-        console.log(record)
-
-        if (!record || record.otp !== otp) {
-            return res.status(400).json({ message: "Invalid OTP" });
-        }
-
-        if (new Date() > record.expires_at) {
-            return res.status(400).json({ message: "OTP has expired" });
-        }
-
-        const userResult = await client.query(
-            `INSERT INTO users (name, email, password, role)
-            VALUES ($1, $2, $3, $4) RETURNING id`,
-            [record.username, email, record.password, record.role]
-        )
-
-        const userId = userResult.rows[0].id;
-
-        await client.query(
-          `INSERT INTO user_profiles (user_id) VALUES ($1)`,[userId]
-        )
-
-        await client.query(
-            'DELETE FROM otp_verifications WHERE email = $1',[email]
-        )
-
-        await client.query('COMMIT');
-
-        res.status(201).json({ message: "OTP verified successfully. User registered." });
-    } catch (err) {
-        await client.query('ROLLBACK');
-        res.status(500).json({ message: "Error verifying OTP: " + err.message });
-    } finally {
-        client.release();
+    if (!record || record.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
     }
+
+    if (new Date() > record.expires_at) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    await client.query("BEGIN");
+
+    const userResult = await client.query(
+      `INSERT INTO users (name, email, password, role)
+       VALUES ($1, $2, $3, $4) RETURNING id`,
+      [record.username, email, record.password, record.role]
+    );
+
+    const userId = userResult.rows[0].id;
+
+    await client.query(
+      `INSERT INTO user_profiles (user_id) VALUES ($1)`,
+      [userId]
+    );
+
+    await client.query(
+      "DELETE FROM otp_verifications WHERE email = $1",
+      [email]
+    );
+
+    await client.query("COMMIT");
+
+    await safeSendAccountMail(sendWelcomeMail, email, record.username, "Welcome mail");
+
+    return res.status(201).json({ message: "OTP verified successfully. User registered." });
+  } catch (err) {
+    try {
+      await client.query("ROLLBACK");
+    } catch {
+      // no-op: rollback can fail if transaction did not begin
+    }
+    return res.status(500).json({ message: "Error verifying OTP: " + err.message });
+  } finally {
+    client.release();
+  }
 };
 
 const refreshToken = async (req, res) => {

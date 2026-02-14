@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
   Button,
   CircularProgress,
   IconButton,
@@ -18,9 +17,11 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { register } from "../../services/userServices";
 import AuthLayout from "../auth/AuthLayout";
+import useToast from "../../hooks/useToast";
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -41,7 +42,6 @@ export default function SignupPage() {
     setErrors((prev) => ({
       ...prev,
       [name]: "",
-      submit: "",
     }));
   };
 
@@ -72,21 +72,18 @@ export default function SignupPage() {
       const isExplicitFailure = data?.success === false || data?.status === "error";
 
       if (!isExplicitFailure) {
+        showToast("OTP sent successfully. Please verify your email.", "success");
         navigate("/verify-otp", {
           state: {
             email: formData.email,
           },
         });
       } else {
-        setErrors({
-          submit: data?.message || "Signup failed",
-        });
+        showToast(data?.message || "Signup failed", "error");
       }
     } catch (error) {
       console.error("Signup Error:", error);
-      setErrors({
-        submit: error?.response?.data?.message || "Server error",
-      });
+      showToast(error?.response?.data?.message || "Server error", "error");
     } finally {
       setLoading(false);
     }
@@ -165,9 +162,6 @@ export default function SignupPage() {
             ),
           }}
         />
-
-        {errors.submit ? <Alert severity="error">{errors.submit}</Alert> : null}
-
         <Button
           fullWidth
           type="submit"

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
   Button,
   CircularProgress,
   Link,
@@ -16,36 +15,37 @@ import {
   requestForgotPasswordOtp,
   verifyForgotPasswordOtp,
 } from "../../services/userServices";
+import useToast from "../../hooks/useToast";
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const handleRequestOtp = async (e) => {
     e.preventDefault();
     if (!email.trim()) {
       setError("Email is required");
-      setMessage("");
       return;
     }
 
     try {
       setLoading(true);
       setError("");
-      setMessage("");
       await requestForgotPasswordOtp({ email });
       setOtpSent(true);
-      setMessage("OTP sent successfully. Please check your email.");
+      showToast("OTP sent successfully. Please check your email.", "success");
     } catch (requestError) {
       setOtpSent(false);
-      setError(requestError?.response?.data?.message || "Failed to send OTP");
+      const errorMessage = requestError?.response?.data?.message || "Failed to send OTP";
+      setError(errorMessage);
+      showToast(errorMessage, "error");
     } finally {
       setLoading(false);
     }
@@ -64,11 +64,13 @@ export default function ForgotPasswordPage() {
       setError("");
       await verifyForgotPasswordOtp({ email, otp });
       setOtpVerified(true);
-      setMessage("OTP verified successfully.");
+      showToast("OTP verified successfully.", "success");
       navigate("/update-password", { state: { email } });
     } catch (verifyError) {
       setOtpVerified(false);
-      setError(verifyError?.response?.data?.message || "OTP verification failed");
+      const errorMessage = verifyError?.response?.data?.message || "OTP verification failed";
+      setError(errorMessage);
+      showToast(errorMessage, "error");
     } finally {
       setOtpLoading(false);
     }
@@ -91,7 +93,6 @@ export default function ForgotPasswordPage() {
           onChange={(e) => {
             setEmail(e.target.value);
             setError("");
-            setMessage("");
           }}
           error={Boolean(error)}
           helperText={error}
@@ -103,9 +104,6 @@ export default function ForgotPasswordPage() {
             ),
           }}
         />
-
-        {error ? <Alert severity="error">{error}</Alert> : null}
-        {message ? <Alert severity="success">{message}</Alert> : null}
 
         <Button
           type="submit"

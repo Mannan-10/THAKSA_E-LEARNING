@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Alert, Box, Button, Card, CardContent, CircularProgress, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { getUserById, updateUserRole } from "../../../services/adminServices";
 import { useNavigate, useParams } from "react-router-dom";
+import useToast from "../../../hooks/useToast";
 
 export const RoleUpdateDialog = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [role, setRole] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -34,9 +36,12 @@ export const RoleUpdateDialog = () => {
     try {
       setLoading(true);
       await updateUserRole(id, role);
+      showToast("User role updated successfully.", "success");
       navigate("/admin/students");
     } catch (requestError) {
-      setError(requestError?.response?.data?.message || "Failed to update role");
+      const errorMessage = requestError?.response?.data?.message || "Failed to update role";
+      setError(errorMessage);
+      showToast(errorMessage, "error");
     } finally {
       setLoading(false);
     }

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { changePassword } from "../../services/userServices";
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -17,11 +16,12 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import useToast from "../../hooks/useToast";
 
 export default function Settings() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -35,8 +35,6 @@ export default function Settings() {
     confirm: false,
   });
 
-  const [error, setError] = useState({});
-
   const togglePassword = (field) => {
     setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
   };
@@ -49,34 +47,31 @@ export default function Settings() {
 
   const handlePasswordChange = (e) => {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
-    setError({ ...error, [e.target.name]: "", api: "" });
-    setSuccess("");
   };
 
   const validate = () => {
-    const newErrors = {};
-
     if (!passwordData.currentPassword) {
-      newErrors.currentPassword = "Current password is required";
+      return "Current password is required";
     }
     if (!passwordData.newPassword) {
-      newErrors.newPassword = "New password is required";
+      return "New password is required";
     } else if (passwordData.newPassword.length < 6) {
-      newErrors.newPassword = "New password must be at least 6 characters";
+      return "New password must be at least 6 characters";
     }
     if (!passwordData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your new password";
+      return "Please confirm your new password";
     } else if (passwordData.confirmPassword !== passwordData.newPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      return "Passwords do not match";
     }
-
-    setError(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return "";
   };
 
   const updatePassword = async () => {
-    setSuccess("");
-    if (!validate()) return;
+    const validationError = validate();
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -85,13 +80,10 @@ export default function Settings() {
         newPassword: passwordData.newPassword,
       });
 
-      setSuccess("Password updated successfully.");
+      showToast("Password updated successfully.", "success");
       setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
     } catch (requestError) {
-      setError((prev) => ({
-        ...prev,
-        api: requestError?.response?.data?.message || "Failed to update password",
-      }));
+      showToast(requestError?.response?.data?.message || "Failed to update password", "error");
     } finally {
       setLoading(false);
     }
@@ -117,7 +109,6 @@ export default function Settings() {
               onToggle={() => togglePassword("current")}
               onChange={handlePasswordChange}
             />
-            {error.currentPassword ? <Alert severity="error">{error.currentPassword}</Alert> : null}
 
             <PasswordField
               label="New Password"
@@ -127,7 +118,6 @@ export default function Settings() {
               onToggle={() => togglePassword("new")}
               onChange={handlePasswordChange}
             />
-            {error.newPassword ? <Alert severity="error">{error.newPassword}</Alert> : null}
 
             <PasswordField
               label="Confirm Password"
@@ -137,10 +127,6 @@ export default function Settings() {
               onToggle={() => togglePassword("confirm")}
               onChange={handlePasswordChange}
             />
-            {error.confirmPassword ? <Alert severity="error">{error.confirmPassword}</Alert> : null}
-
-            {error.api ? <Alert severity="error">{error.api}</Alert> : null}
-            {success ? <Alert severity="success">{success}</Alert> : null}
 
             <Button variant="contained" onClick={updatePassword} disabled={loading} sx={{ mt: 0.5, borderRadius: 2.5 }}>
               {loading ? "Updating..." : "Update Password"}

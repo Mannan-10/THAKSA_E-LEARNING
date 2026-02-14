@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
-  Alert,
   Button,
   IconButton,
   InputAdornment,
@@ -16,9 +15,11 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "../../services/userServices";
 import AuthLayout from "../auth/AuthLayout";
+import useToast from "../../hooks/useToast";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -74,15 +75,11 @@ export default function LoginPage() {
           navigate("/dashboard");
         }
       } else {
-        setErrors({
-          submit: data.message || "Login failed",
-        });
+        showToast(data.message || "Login failed", "error");
       }
     } catch (error) {
       console.error(error);
-      setErrors({
-        submit: "Incorrect Password or Email.",
-      });
+      showToast("Incorrect Password or Email.", "error");
     } finally {
       setLoading(false);
     }
@@ -163,9 +160,6 @@ export default function LoginPage() {
                   },
                 }}
               />
-
-              {errors.submit ? <Alert severity="error" sx={{ borderRadius: 2 }}>{errors.submit}</Alert> : null}
-
               <Button
                 type="submit"
                 variant="contained"

@@ -74,7 +74,7 @@ export default function InstructorSection() {
               </Box>
               <Stack direction="row" spacing={1.2} flexWrap="wrap" useFlexGap>
                 <Link
-                  href="https://www.linkedin.com/"
+                  href="https://www.linkedin.com/in/tharunkrishna-kaithoju-185140261/"
                   target="_blank"
                   rel="noreferrer"
                   underline="none"

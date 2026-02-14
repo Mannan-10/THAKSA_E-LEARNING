@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 const tracks = [
   {
-    title: "Frontend Engineering",
+    title: "Software Testing Engineering",
     level: "Beginner to Intermediate",
-    blurb: "Master React, component architecture, state patterns, and UI performance.",
+    blurb: " Learn testing frameworks, automation, and best practices.",
   },
   {
-    title: "Backend & APIs",
+    title: "Aws DevOps",
     level: "Intermediate",
-    blurb: "Build secure APIs, authentication flow, and scalable service logic.",
+    blurb: "Learn CI/CD, containerization, and cloud infrastructure best practices.",
   },
   {
-    title: "Data & AI Foundations",
+    title: "Data Science & AI Foundations",
     level: "Beginner",
     blurb: "Learn data processing, ML basics, and practical model workflows.",
   },

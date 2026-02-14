@@ -10,24 +10,25 @@ import {
 } from "@mui/material";
 import AuthLayout from "../auth/AuthLayout";
 import { verifyOtp } from "../../services/userServices";
+import useToast from "../../hooks/useToast";
 
 export default function VerifyOtpPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showToast } = useToast();
   const email = location.state?.email;
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
 
   const handleVerify = async (e) => {
     e.preventDefault();
-    setError("");
 
     try {
       await verifyOtp({ email, otp });
-      alert("OTP verified successfully!");
+      showToast("OTP verified successfully!", "success");
       navigate("/login");
     } catch (requestError) {
-      setError(requestError?.response?.data?.message || "Invalid OTP");
+      const errorMessage = requestError?.response?.data?.message || "Invalid OTP";
+      showToast(errorMessage, "error");
     }
   };
 
@@ -60,8 +61,6 @@ export default function VerifyOtpPage() {
           onChange={(e) => setOtp(e.target.value)}
           required
         />
-
-        {error ? <Alert severity="error">{error}</Alert> : null}
 
         <Button
           type="submit"

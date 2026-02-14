@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -12,8 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 import { getProfile, updateProfile } from "../../services/userServices";
+import useToast from "../../hooks/useToast";
 
 export default function Profile() {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,8 +25,6 @@ export default function Profile() {
 
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [status, setStatus] = useState("");
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -39,29 +38,33 @@ export default function Profile() {
           date_of_birth: (data.date_of_birth || "").slice(0, 10),
         });
       } catch (requestError) {
-        setError(requestError?.response?.data?.message || requestError.message || "Failed to load profile");
+        showToast(
+          requestError?.response?.data?.message || requestError.message || "Failed to load profile",
+          "error"
+        );
       }
     };
     loadProfile();
-  }, []);
+  }, [showToast]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setStatus("");
-    setError("");
   };
 
   const handleSave = async () => {
     try {
       setLoading(true);
       await updateProfile(formData);
-      setStatus("Profile updated successfully.");
+      showToast("Profile updated successfully.", "success");
       setIsEditing(false);
     } catch (requestError) {
-      setError(requestError?.response?.data?.message || requestError.message || "Failed to update profile");
+      showToast(
+        requestError?.response?.data?.message || requestError.message || "Failed to update profile",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -93,10 +96,6 @@ export default function Profile() {
               {loading ? "Saving..." : isEditing ? "Save Changes" : "Edit Profile"}
             </Button>
           </Stack>
-
-          {status ? <Alert severity="success" sx={{ mb: 2 }}>{status}</Alert> : null}
-          {error ? <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert> : null}
-
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
               <TextField

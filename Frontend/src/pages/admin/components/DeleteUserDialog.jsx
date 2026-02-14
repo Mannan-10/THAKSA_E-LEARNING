@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Alert, Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
 import { deleteUserById } from "../../../services/adminServices";
 import { useNavigate, useParams } from "react-router-dom";
+import useToast from "../../../hooks/useToast";
 
 export const DeleteUserDialog = () => {
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { id } = useParams();
@@ -14,9 +16,12 @@ export const DeleteUserDialog = () => {
       setLoading(true);
       setError("");
       await deleteUserById(id);
+      showToast("User deleted successfully.", "success");
       navigate("/admin/students");
     } catch (requestError) {
-      setError(requestError?.response?.data?.message || "Failed to delete user");
+      const errorMessage = requestError?.response?.data?.message || "Failed to delete user";
+      setError(errorMessage);
+      showToast(errorMessage, "error");
     } finally {
       setLoading(false);
     }
