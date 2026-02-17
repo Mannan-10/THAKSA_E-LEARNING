@@ -1,7 +1,8 @@
 import express from 'express';
-import { getApprovedCourses } from '../controller/courseController.js';
+import { getApprovedCourses, getPublicCourses } from '../controller/courseController.js';
 
 const courseRouter = express.Router();
 courseRouter.get('/', getApprovedCourses);
+courseRouter.get('/public', getPublicCourses);
 
 export default courseRouter;

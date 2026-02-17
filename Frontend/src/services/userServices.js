@@ -44,3 +44,8 @@ export const resetPasswordWithOtp = async (data) => {
     const response = await api.post("/users/forgot-password/reset", data);
     return response.data;
 };
+
+export const getPublicCourses = async (params = {}) => {
+    const response = await api.get("/courses/public", { params });
+    return response.data;
+};

@@ -80,7 +80,7 @@ export default function Navbar() {
                 component={RouterLink}
                 to={item.to}
                 color="inherit"
-                sx={{ color: "#334155", fontWeight: 600 }}
+                sx={{ color: "#334155", fontWeight: 600, fontSize: "1rem", textTransform: "none" }}
               >
                 {item.label}
               </Button>
@@ -94,24 +94,37 @@ export default function Navbar() {
           >
             {!isAuth ? (
               <>
-                <Button component={RouterLink} to="/login" sx={{ color: "#1d4ed8", fontWeight: 700 }}>
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  sx={{ color: "#1d4ed8", fontWeight: 700, fontSize: "1rem", textTransform: "none" }}
+                >
                   Login
                 </Button>
                 <Button
                   component={RouterLink}
                   to="/signup"
                   variant="contained"
-                  sx={{ bgcolor: "#2563eb", "&:hover": { bgcolor: "#1d4ed8" } }}
+                  sx={{ bgcolor: "#2563eb", fontSize: "1rem", textTransform: "none", "&:hover": { bgcolor: "#1d4ed8" } }}
                 >
                   Get Started
                 </Button>
               </>
             ) : (
               <>
-                <Button component={RouterLink} to={dashboardPath} sx={{ color: "#1d4ed8", fontWeight: 700 }}>
+                <Button
+                  component={RouterLink}
+                  to={dashboardPath}
+                  sx={{ color: "#1d4ed8", fontWeight: 700, fontSize: "1rem", textTransform: "none" }}
+                >
                   Dashboard
                 </Button>
-                <Button onClick={handleLogout} color="error" variant="text">
+                <Button
+                  onClick={handleLogout}
+                  color="error"
+                  variant="text"
+                  sx={{ fontSize: "1rem", textTransform: "none" }}
+                >
                   Logout
                 </Button>
               </>
@@ -144,14 +157,25 @@ export default function Navbar() {
                 component={RouterLink}
                 to={item.to}
                 onClick={() => setMobileOpen(false)}
-                sx={{ justifyContent: "flex-start", color: "#334155", fontWeight: 600 }}
+                sx={{
+                  justifyContent: "flex-start",
+                  color: "#334155",
+                  fontWeight: 600,
+                  fontSize: "1rem",
+                  textTransform: "none",
+                }}
               >
                 {item.label}
               </Button>
             ))}
             {!isAuth ? (
               <>
-                <Button component={RouterLink} to="/login" onClick={() => setMobileOpen(false)}>
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  sx={{ fontSize: "1rem", textTransform: "none" }}
+                >
                   Login
                 </Button>
                 <Button
@@ -159,13 +183,19 @@ export default function Navbar() {
                   to="/signup"
                   variant="contained"
                   onClick={() => setMobileOpen(false)}
+                  sx={{ fontSize: "1rem", textTransform: "none" }}
                 >
                   Get Started
                 </Button>
               </>
             ) : (
               <>
-                <Button component={RouterLink} to={dashboardPath} onClick={() => setMobileOpen(false)}>
+                <Button
+                  component={RouterLink}
+                  to={dashboardPath}
+                  onClick={() => setMobileOpen(false)}
+                  sx={{ fontSize: "1rem", textTransform: "none" }}
+                >
                   Dashboard
                 </Button>
                 <Button
@@ -174,6 +204,7 @@ export default function Navbar() {
                     setMobileOpen(false);
                     handleLogout();
                   }}
+                  sx={{ fontSize: "1rem", textTransform: "none" }}
                 >
                   Logout
                 </Button>

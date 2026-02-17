@@ -73,10 +73,23 @@ export default function ContactPage() {
       sx={{
         py: { xs: 6, md: 9 },
         minHeight: "calc(100vh - 80px)",
-        backgroundColor: "#f8fafc",
+        position: "relative",
+        overflow: "hidden",
+        background:
+          "radial-gradient(circle at 15% 20%, rgba(37,99,235,0.16) 0%, rgba(37,99,235,0) 45%), radial-gradient(circle at 85% 0%, rgba(20,184,166,0.14) 0%, rgba(20,184,166,0) 40%), linear-gradient(180deg, #f8fbff 0%, #f1f5f9 100%)",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          backgroundImage:
+            "linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          opacity: 0.25,
+          pointerEvents: "none",
+        },
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <Stack spacing={1} textAlign="center" sx={{ mb: 5 }}>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Contact Us
@@ -88,7 +101,15 @@ export default function ContactPage() {
 
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 5 }}>
-            <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2.5 }}>
+            <Card
+              elevation={0}
+              sx={{
+                border: "1px solid rgba(148,163,184,0.28)",
+                borderRadius: 2.5,
+                backgroundColor: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(2px)",
+              }}
+            >
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
                   Contact Information
@@ -112,7 +133,13 @@ export default function ContactPage() {
 
             <Card
               elevation={0}
-              sx={{ mt: 2, border: "1px solid", borderColor: "divider", borderRadius: 2.5 }}
+              sx={{
+                mt: 2,
+                border: "1px solid rgba(148,163,184,0.28)",
+                borderRadius: 2.5,
+                backgroundColor: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(2px)",
+              }}
             >
               <CardContent sx={{ p: 3 }}>
                 <Typography color="text.secondary">
@@ -124,7 +151,15 @@ export default function ContactPage() {
           </Grid>
 
           <Grid size={{ xs: 12, lg: 7 }}>
-            <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2.5 }}>
+            <Card
+              elevation={0}
+              sx={{
+                border: "1px solid rgba(148,163,184,0.28)",
+                borderRadius: 2.5,
+                backgroundColor: "rgba(255,255,255,0.94)",
+                backdropFilter: "blur(3px)",
+              }}
+            >
               <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
                   Send a Message

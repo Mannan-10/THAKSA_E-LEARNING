@@ -11,6 +11,8 @@ const stats = [
   { title: "Mentor Sessions", value: "100+", icon: PsychologyRoundedIcon },
 ];
 
+const statsFontFamily = "'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+
 export default function StatsSection() {
   return (
     <Grid container spacing={2.2} sx={{ mb: { xs: 6, md: 10 } }}>
@@ -30,10 +32,17 @@ export default function StatsSection() {
               }}
             >
               <Icon sx={{ color: "#1d4ed8", fontSize: 28, mb: 1 }} />
-              <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a" }}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 900, color: "#0f172a", fontFamily: statsFontFamily }}
+              >
                 {item.value}
               </Typography>
-              <Typography sx={{ color: "#475569", fontWeight: 600 }}>{item.title}</Typography>
+              <Typography
+                sx={{ color: "#475569", fontWeight: 600, fontFamily: statsFontFamily }}
+              >
+                {item.title}
+              </Typography>
             </Paper>
           </Grid>
         );

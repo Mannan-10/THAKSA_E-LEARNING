@@ -26,11 +26,11 @@ const getMyCourses = async (req, res) => {
   const userId = req.user.userId;
   
   const result = await db.query(
-    `SELECT * FROM courses WHERE instructor_id = $1`,
+    `SELECT * FROM courses WHERE instructor_id = $1 ORDER BY created_at DESC`,
     [userId],
   );
 
-  res.status(200).json(result.rows[0]);
+  res.status(200).json(result.rows);
 };
 
 export { createCourse, getMyCourses };

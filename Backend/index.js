@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import userRouter from './src/routes/users.js';
+import userDashboardRouter from './src/routes/userDashboardRoutes.js';
 import adminRouter from './src/routes/adminRoutes.js';
 import router from './src/routes/instructorRoutes.js';
 import adminCourseRouter from './src/routes/adminCourseRoutes.js';
@@ -18,6 +19,8 @@ import certificateRouter from './src/routes/certificateRoutes.js';
 import reviewRouter from './src/routes/reviewRoutes.js';
 import instructorDashboardRouter from './src/routes/instructorDashboardRoutes.js';
 import contactRouter from './src/routes/contactRoutes.js';
+import courseContentRouter from './src/routes/courseContentRoutes.js';
+import liveSessionRouter from './src/routes/liveSessionRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -33,11 +36,13 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users', userRouter);
+app.use('/api/users', userDashboardRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/instructor', router);
 app.use('/api/instructor', instructorDashboardRouter);
 app.use('/api/admin', adminCourseRouter);
 app.use('/api/courses', courseRouter);
+app.use('/api/courses', courseContentRouter);
 app.use('/api/admin', adminDashboardRoutes);
 app.use('/api/courses', moduleRouter);
 app.use('/api/modules', lessonRouter);
@@ -48,6 +53,7 @@ app.use('/api', lessonProgressRouter)
 app.use('/api', certificateRouter);
 app.use('/api', reviewRouter);
 app.use('/api', contactRouter);
+app.use('/api', liveSessionRouter);
 
 app.listen(PORT ,() => {
     console.log(`Server is running on http://localhost:${PORT}`);

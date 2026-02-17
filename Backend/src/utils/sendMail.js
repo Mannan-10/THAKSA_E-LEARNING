@@ -1,16 +1,19 @@
 import { createTransport } from "nodemailer";
 
+const createMailer = () =>
+  createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
+
 const sendMail = async (email, subject, data) => {
   try {
-    const transport = createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL,
-        pass: process.env.PASSWORD,
-      },
-    });
+    const transport = createMailer();
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,4 +76,5 @@ const sendMail = async (email, subject, data) => {
   }
 };
 
+export { createMailer };
 export default sendMail;

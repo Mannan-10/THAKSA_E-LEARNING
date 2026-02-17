@@ -1,10 +1,18 @@
-import { createTransport } from "nodemailer";
+import { createMailer } from "../utils/sendMail.js";
 
 const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+const escapeHtml = (value = "") =>
+  String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 const submitContactForm = async (req, res) => {
   try {
     const { name, email, phone, subject, message } = req.body;
+    const submittedAt = new Date().toISOString();
 
     if (!name || !email || !subject || !message) {
       return res.status(400).json({
@@ -16,37 +24,32 @@ const submitContactForm = async (req, res) => {
       return res.status(400).json({ message: "Please enter a valid email address." });
     }
 
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || process.env.GMAIL;
+    const receiverEmail = process.env.GMAIL;
     if (!receiverEmail) {
-      return res.status(500).json({ message: "Contact email receiver is not configured." });
+      return res.status(500).json({
+        message: "Contact email receiver is not configured. Please set GMAIL in server environment.",
+      });
     }
 
-    const transport = createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL,
-        pass: process.env.PASSWORD,
-      },
-    });
+    const transport = createMailer();
 
     const html = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
+        <h2>New Feedback Submitted</h2>
+        <p><strong>Submitted At (UTC):</strong> ${submittedAt}</p>
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p>
+        <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
         <p><strong>Message:</strong></p>
-        <p>${String(message).replace(/\n/g, "<br/>")}</p>
+        <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
       </div>
     `;
 
     await transport.sendMail({
       from: process.env.GMAIL,
       to: receiverEmail,
-      subject: `[Contact] ${subject}`,
+      subject: `[Contact Feedback] ${subject}`,
       replyTo: email,
       html,
     });

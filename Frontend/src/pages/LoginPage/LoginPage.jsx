@@ -208,7 +208,7 @@ export default function LoginPage() {
           type="button"
           underline="hover"
           onClick={() => navigate("/forgot-password")}
-          sx={{ color: "text.secondary", fontWeight: 600 }}
+          sx={{ color: "primary.main", fontWeight: 600 }}
         >
           Forgot password?
         </Link>
