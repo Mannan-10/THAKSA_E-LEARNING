@@ -230,12 +230,14 @@ const getStudentSessions = async (req, res) => {
     const result = await db.query(
       `SELECT ls.id, ls.title, ls.description, ls.provider, ls.status, ls.scheduled_at, ls.duration_minutes,
               b.id AS batch_id, b.batch_name, c.id AS course_id, c.title AS course_title,
-              u.name AS instructor_name
+              u.name AS instructor_name,
+              CASE WHEN sa.id IS NOT NULL THEN true ELSE false END AS is_present
        FROM live_sessions ls
        JOIN batches b ON ls.batch_id = b.id
        JOIN courses c ON b.course_id = c.id
        JOIN users u ON ls.instructor_id = u.id
        JOIN batch_enrollments be ON be.batch_id = b.id
+       LEFT JOIN session_attendance sa ON sa.session_id = ls.id AND sa.user_id = $1
        WHERE be.user_id = $1 AND be.status = true
        ORDER BY ls.scheduled_at DESC`,
       [userId]

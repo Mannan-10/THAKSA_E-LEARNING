@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import useToast from "../hooks/useToast";
 import { enrollBatch, getPublicBatches } from "../services/batchService";
+import RatingStars from "../components/RatingStars";
+import { getCourseRatingSummary } from "../services/reviewService";
+import BatchSkeleton from "../components/skeletons/BatchSkeleton";
 
 const statusLabel = {
   upcoming: "Upcoming",
@@ -55,6 +58,7 @@ export default function BatchesPage() {
   const [error, setError] = useState("");
   const [enrollingId, setEnrollingId] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(toValidStatus(searchParams.get("status")));
+  const [ratings, setRatings] = useState({});
 
   const courseId = searchParams.get("courseId") || "";
 
@@ -71,7 +75,26 @@ export default function BatchesPage() {
           limit: 100,
         });
         if (!active) return;
-        setBatches(Array.isArray(response?.batches) ? response.batches : []);
+        const batchList = Array.isArray(response?.batches) ? response.batches : [];
+        setBatches(batchList);
+
+        // Load ratings for unique courses
+        const uniqueCourseIds = [...new Set(batchList.map(b => b.course_id).filter(Boolean))];
+        const ratingsData = {};
+        await Promise.all(
+          uniqueCourseIds.map(async (id) => {
+            try {
+              const rating = await getCourseRatingSummary(id);
+              ratingsData[id] = {
+                average: parseFloat(rating?.average_rating || 0),
+                count: parseInt(rating?.total_reviews || 0),
+              };
+            } catch {
+              ratingsData[id] = { average: 0, count: 0 };
+            }
+          })
+        );
+        if (active) setRatings(ratingsData);
       } catch (requestError) {
         if (!active) return;
         setError(requestError?.response?.data?.message || "Failed to load batches");
@@ -152,7 +175,13 @@ export default function BatchesPage() {
         {error ? <Alert severity="error" sx={{ mb: 2.5 }}>{error}</Alert> : null}
 
         {loading ? (
-          <Typography color="text.secondary">Loading batches...</Typography>
+          <Grid container spacing={2.2}>
+            {[1, 2, 3, 4].map((item) => (
+              <Grid key={item} size={{ xs: 12, md: 6 }}>
+                <BatchSkeleton />
+              </Grid>
+            ))}
+          </Grid>
         ) : batches.length === 0 ? (
           <Alert severity="info">No batches found for the current filter.</Alert>
         ) : sections.length === 0 ? (
@@ -187,9 +216,28 @@ export default function BatchesPage() {
                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.6 }}>
                           {batch.batch_name}
                         </Typography>
-                        <Typography color="text.secondary" sx={{ mb: 1.4 }}>
+                        <Typography
+                          color="text.secondary"
+                          sx={{
+                            mb: 0.5,
+                            cursor: "pointer",
+                            "&:hover": { color: "primary.main" }
+                          }}
+                          onClick={() => navigate(`/courses/${batch.course_id}`)}
+                        >
                           {batch.course_title}
                         </Typography>
+
+                        {ratings[batch.course_id] && (
+                          <Box sx={{ mb: 1.2 }}>
+                            <RatingStars
+                              rating={ratings[batch.course_id].average}
+                              size="small"
+                              showNumber
+                              reviewCount={ratings[batch.course_id].count}
+                            />
+                          </Box>
+                        )}
 
                         <Typography variant="body2" sx={{ mb: 0.5 }}>
                           <strong>Instructor:</strong> {batch.instructor_name}

@@ -6,9 +6,12 @@ import RouteFallback from "./RouteFallback";
 
 import HomePage from "../pages/HomePage";
 import CoursesPage from "../pages/CoursesPage";
+import CourseDetail from "../pages/CourseDetail";
 import BatchesPage from "../pages/BatchesPage";
 import PricingPage from "../pages/PricingPage/index.js";
 import ContactPage from "../pages/ContactPage/index.js";
+import NotFound from "../pages/NotFound";
+import AccessDenied from "../pages/AccessDenied";
 
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
@@ -19,9 +22,12 @@ import UpdatePasswordPage from "../pages/UpdatePasswordPage";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import UserDashboard from "../pages/dashboard/UserDashboard";
 import MyCourses from "../pages/dashboard/MyCourses";
+import CourseLearning from "../pages/dashboard/CourseLearning";
 import MyBatch from "../pages/dashboard/MyBatch";
 import Profile from "../pages/dashboard/Profile";
 import Settings from "../pages/dashboard/Settings";
+import ViewAttendance from "../pages/dashboard/ViewAttendance";
+import Assessment from "../pages/dashboard/Assessment";
 
 import AdminLayout from "../pages/admin/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -37,6 +43,8 @@ import InstructorLayout from "../pages/instructor/InstructorLayout";
 import InstructorDashboard from "../pages/instructor/InstructorDashboard";
 import ManageBatch from "../pages/instructor/ManageBatch";
 import ManageCourses from "../pages/instructor/ManageCourses";
+import ManageCourseContent from "../pages/instructor/ManageCourseContent";
+import StudentAttendance from "../pages/instructor/StudentAttendance";
 import MyStudents from "../pages/instructor/MyStudents";
 import InstructorProfile from "../pages/instructor/InstructorProfile";
 import InstructorSettings from "../pages/instructor/InstructorSettings";
@@ -65,13 +73,19 @@ export default function AppRoutes() {
         }
       />
       <Route
+        path="/courses/:courseId"
+        element={
+          <PublicLayout>
+            <CourseDetail />
+          </PublicLayout>
+        }
+      />
+      <Route
         path="/batches"
         element={
-          <PublicOnlyRoute>
-            <PublicLayout>
-              <BatchesPage />
-            </PublicLayout>
-          </PublicOnlyRoute>
+          <PublicLayout>
+            <BatchesPage />
+          </PublicLayout>
         }
       />
       <Route
@@ -146,7 +160,10 @@ export default function AppRoutes() {
       >
         <Route index element={<UserDashboard />} />
         <Route path="courses" element={<MyCourses />} />
+        <Route path="courses/:courseId" element={<CourseLearning />} />
         <Route path="batch" element={<MyBatch />} />
+        <Route path="attendance" element={<ViewAttendance />} />
+        <Route path="assessments" element={<Assessment />} />
         <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<Settings />} />
       </Route>
@@ -180,12 +197,16 @@ export default function AppRoutes() {
         <Route index element={<InstructorDashboard />} />
         <Route path="batches" element={<ManageBatch />} />
         <Route path="courses" element={<ManageCourses />} />
+        <Route path="course-content" element={<ManageCourseContent />} />
+        <Route path="attendance" element={<StudentAttendance />} />
         <Route path="students" element={<MyStudents />} />
         <Route path="profile" element={<InstructorProfile />} />
         <Route path="settings" element={<InstructorSettings />} />
       </Route>
 
-      <Route path="*" element={<RouteFallback />} />
+      {/* Error Pages */}
+      <Route path="/access-denied" element={<AccessDenied />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

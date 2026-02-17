@@ -22,6 +22,8 @@ import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import PlayLessonRoundedIcon from "@mui/icons-material/PlayLessonRounded";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 
 const drawerWidth = 268;
 
@@ -29,6 +31,8 @@ const navItems = [
   { to: "/instructor", label: "Dashboard", icon: <DashboardRoundedIcon fontSize="small" /> },
   { to: "/instructor/batches", label: "Manage Batches", icon: <GroupsRoundedIcon fontSize="small" /> },
   { to: "/instructor/courses", label: "Manage Courses", icon: <MenuBookRoundedIcon fontSize="small" /> },
+  { to: "/instructor/course-content", label: "Course Content", icon: <PlayLessonRoundedIcon fontSize="small" /> },
+  { to: "/instructor/attendance", label: "Student Attendance", icon: <EventAvailableRoundedIcon fontSize="small" /> },
   { to: "/instructor/students", label: "Students", icon: <SchoolRoundedIcon fontSize="small" /> },
   { to: "/instructor/profile", label: "Profile", icon: <PersonRoundedIcon fontSize="small" /> },
   { to: "/instructor/settings", label: "Settings", icon: <SettingsRoundedIcon fontSize="small" /> },

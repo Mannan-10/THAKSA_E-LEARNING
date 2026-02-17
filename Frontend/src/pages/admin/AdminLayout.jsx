@@ -18,7 +18,7 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
-import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 
@@ -28,7 +28,7 @@ const navItems = [
   { to: "/admin", label: "Dashboard", icon: <DashboardRoundedIcon fontSize="small" /> },
   { to: "/admin/batches", label: "Batches", icon: <GroupsRoundedIcon fontSize="small" /> },
   { to: "/admin/courses", label: "Courses", icon: <MenuBookRoundedIcon fontSize="small" /> },
-  { to: "/admin/students", label: "Students", icon: <SchoolRoundedIcon fontSize="small" /> },
+  { to: "/admin/students", label: "Users", icon: <PeopleRoundedIcon fontSize="small" /> },
   { to: "/admin/settings", label: "Settings", icon: <SettingsRoundedIcon fontSize="small" /> },
 ];
 

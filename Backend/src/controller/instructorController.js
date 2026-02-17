@@ -24,7 +24,7 @@ const createCourse = async (req, res) => {
 
 const getMyCourses = async (req, res) => {
   const userId = req.user.userId;
-  
+
   const result = await db.query(
     `SELECT * FROM courses WHERE instructor_id = $1 ORDER BY created_at DESC`,
     [userId],
@@ -33,4 +33,32 @@ const getMyCourses = async (req, res) => {
   res.status(200).json(result.rows);
 };
 
-export { createCourse, getMyCourses };
+const toggleCourseActive = async (req, res) => {
+  const { id } = req.params;
+  const { is_active } = req.body;
+  const instructorId = req.user.userId;
+
+  try {
+    // Verify course belongs to this instructor
+    const courseCheck = await db.query(
+      `SELECT * FROM courses WHERE id = $1 AND instructor_id = $2`,
+      [id, instructorId]
+    );
+
+    if (courseCheck.rows.length === 0) {
+      return res.status(403).json({ message: "Not authorized to modify this course" });
+    }
+
+    // Update is_active status
+    await db.query(
+      `UPDATE courses SET is_active = $1 WHERE id = $2`,
+      [is_active, id]
+    );
+
+    res.json({ message: `Course ${is_active ? 'activated' : 'deactivated'} successfully` });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export { createCourse, getMyCourses, toggleCourseActive };

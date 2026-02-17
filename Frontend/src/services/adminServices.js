@@ -49,3 +49,8 @@ export const deleteUserById = async (id) => {
     const response = await api.delete(`/admin/users/${id}`);
     return response.data;
 }
+
+export const getAdminBatches = async () => {
+    const response = await api.get('/admin/batches');
+    return response.data;
+}

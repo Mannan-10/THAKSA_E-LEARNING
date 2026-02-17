@@ -6,13 +6,16 @@ import {
   Card,
   CardContent,
   Chip,
+  FormControlLabel,
   Grid,
   Stack,
+  Switch,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import useToast from "../../hooks/useToast";
-import { createInstructorCourse, getInstructorCourses } from "../../services/instructorService";
+import { createInstructorCourse, getInstructorCourses, toggleInstructorCourseActive } from "../../services/instructorService";
 
 const initialForm = {
   title: "",
@@ -82,6 +85,18 @@ export default function ManageCourses() {
       showToast(requestError?.response?.data?.message || "Failed to create course", "error");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleToggleActive = async (courseId, currentStatus) => {
+    const newStatus = !currentStatus;
+
+    try {
+      await toggleInstructorCourseActive(courseId, newStatus);
+      showToast(`Course ${newStatus ? 'activated' : 'deactivated'} successfully`, "success");
+      await loadCourses();
+    } catch (requestError) {
+      showToast(requestError?.response?.data?.message || "Failed to update course status", "error");
     }
   };
 
@@ -164,7 +179,7 @@ export default function ManageCourses() {
         ) : courses.length === 0 ? (
           <Alert severity="info">No courses found. Create your first course above.</Alert>
         ) : (
-          courses.map((course) => {
+          courses.map((course, index) => {
             const statusKey = (course.approval_status || "pending").toLowerCase();
             const style = statusStyles[statusKey] || statusStyles.pending;
 
@@ -173,19 +188,50 @@ export default function ManageCourses() {
                 <CardContent sx={{ p: 2.4 }}>
                   <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.5}>
                     <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 800, mb: 0.5 }}>{course.title}</Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 800, mb: 0.5 }}>#{index + 1} {course.title}</Typography>
                       <Typography variant="body2" color="text.secondary">
                         Level: {course.level || "N/A"} | Price: INR {course.price} | Created{" "}
                         {course.created_at ? new Date(course.created_at).toLocaleDateString() : "N/A"}
                       </Typography>
                     </Box>
 
-                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+                    <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap" useFlexGap>
                       <Chip
                         label={style.label}
                         size="small"
                         sx={{ fontWeight: 700, bgcolor: style.bg, color: style.color }}
                       />
+                      <Chip
+                        label={course.is_active ? "Active" : "Inactive"}
+                        size="small"
+                        sx={{
+                          fontWeight: 700,
+                          bgcolor: course.is_active ? "#dcfce7" : "#f3f4f6",
+                          color: course.is_active ? "#166534" : "#6b7280"
+                        }}
+                      />
+                      <Tooltip
+                        title={
+                          statusKey === "approved"
+                            ? "Toggle to activate/deactivate this course"
+                            : "Only approved courses can be activated"
+                        }
+                      >
+                        <span>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={course.is_active || false}
+                                onChange={() => handleToggleActive(course.id, course.is_active)}
+                                disabled={statusKey !== "approved"}
+                                size="small"
+                              />
+                            }
+                            label=""
+                            sx={{ m: 0 }}
+                          />
+                        </span>
+                      </Tooltip>
                     </Stack>
                   </Stack>
                 </CardContent>

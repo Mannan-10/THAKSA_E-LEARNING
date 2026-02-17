@@ -6,6 +6,8 @@ import {
   Card,
   CardContent,
   Divider,
+  Dialog,
+  DialogContent,
   Grid,
   MenuItem,
   Stack,
@@ -22,7 +24,13 @@ import {
   getInstructorBatches,
   getInstructorSessions,
   startInstructorSession,
+  getInstructorSessionAttendance,
+  updateInstructorAttendance,
 } from "../../services/instructorService";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import PersonIcon from "@mui/icons-material/Person";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 const initialBatchForm = {
   courseId: "",
@@ -60,22 +68,36 @@ export default function ManageBatch() {
   const [formData, setFormData] = useState(initialForm);
   const [error, setError] = useState("");
 
+  // Attendance State
+  const [attendanceDialog, setAttendanceDialog] = useState(null); // { sessionId, title }
+  const [attendanceList, setAttendanceList] = useState([]);
+  const [attendanceLoading, setAttendanceLoading] = useState(false);
+  const [updatingAttendance, setUpdatingAttendance] = useState(null); // studentId
+
   const batchOptions = useMemo(
     () =>
-      batches.map((batch) => ({
-        id: batch.id,
-        label: `${batch.batch_name || `Batch ${batch.id}`} (Course ID: ${batch.course_id})`,
-      })),
-    [batches]
+      batches.map((batch) => {
+        const course = courses.find((c) => c.id === batch.course_id);
+        return {
+          id: batch.id,
+          label: `${batch.batch_name || `Batch ${batch.id}`} - ${course?.title || "Unknown Course"} (ID: ${batch.course_id})`,
+        };
+      }),
+    [batches, courses]
+  );
+
+  const approvedCourses = useMemo(
+    () => courses.filter((c) => (c.approval_status || "").toLowerCase() === "approved"),
+    [courses]
   );
 
   const courseOptions = useMemo(
     () =>
-      courses.map((course) => ({
+      approvedCourses.map((course) => ({
         id: course.id,
         label: course.title,
       })),
-    [courses]
+    [approvedCourses]
   );
 
   const loadData = useCallback(async () => {
@@ -180,7 +202,7 @@ export default function ManageBatch() {
   const handleStart = async (sessionId) => {
     try {
       await startInstructorSession(sessionId);
-      showToast("Session started", "success");
+      showToast("Session started. Attendance is now open. Don't forget to verify student attendance!", "success");
       await loadData();
     } catch (requestError) {
       showToast(requestError?.response?.data?.message || "Failed to start session", "error");
@@ -204,6 +226,43 @@ export default function ManageBatch() {
       await loadData();
     } catch (requestError) {
       showToast(requestError?.response?.data?.message || "Failed to cancel session", "error");
+    }
+  };
+
+  const handleViewAttendance = async (session) => {
+    try {
+      setAttendanceDialog({ sessionId: session.id, title: session.title });
+      setAttendanceLoading(true);
+      const data = await getInstructorSessionAttendance(session.id);
+      setAttendanceList(Array.isArray(data) ? data : []);
+    } catch (requestError) {
+      showToast(requestError?.response?.data?.message || "Failed to load attendance", "error");
+      setAttendanceList([]);
+    } finally {
+      setAttendanceLoading(false);
+    }
+  };
+
+  const handleToggleAttendance = async (studentId, currentStatus) => {
+    try {
+      setUpdatingAttendance(studentId);
+      const newStatus = currentStatus ? "absent" : "present";
+      await updateInstructorAttendance(attendanceDialog.sessionId, studentId, newStatus);
+
+      // Update local state
+      setAttendanceList((prev) =>
+        prev.map((student) =>
+          student.student_id === studentId
+            ? { ...student, is_present: !currentStatus }
+            : student
+        )
+      );
+
+      showToast(`Attendance marked as ${newStatus}`, "success");
+    } catch (requestError) {
+      showToast(requestError?.response?.data?.message || "Failed to update attendance", "error");
+    } finally {
+      setUpdatingAttendance(null);
     }
   };
 
@@ -378,7 +437,7 @@ export default function ManageBatch() {
                 <Box key={batch.id} sx={{ border: "1px solid #e2e8f0", borderRadius: 2, p: 1.4 }}>
                   <Typography sx={{ fontWeight: 700 }}>{batch.batch_name}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Course ID: {batch.course_id} | Status: {batch.status}
+                    Course: {courses.find((c) => c.id === batch.course_id)?.title || "N/A"} (ID: {batch.course_id}) | Status: {batch.status}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {batch.start_date ? new Date(batch.start_date).toLocaleDateString() : "N/A"} -{" "}
@@ -525,6 +584,15 @@ export default function ManageBatch() {
                     >
                       Cancel
                     </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => handleViewAttendance(session)}
+                      startIcon={<EventAvailableIcon />}
+                      sx={{ textTransform: "none" }}
+                    >
+                      Attendance
+                    </Button>
                   </Stack>
                   <Divider sx={{ my: 1 }} />
                   <Button
@@ -543,6 +611,70 @@ export default function ManageBatch() {
           )}
         </CardContent>
       </Card>
+
+
+      {/* Attendance Dialog */}
+      <Dialog
+        open={Boolean(attendanceDialog)}
+        onClose={() => setAttendanceDialog(null)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ p: 2, borderBottom: "1px solid #e2e8f0" }}>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 800 }}>Session Attendance</Typography>
+            <Typography variant="body2" color="text.secondary">{attendanceDialog?.title}</Typography>
+          </Box>
+          <Button size="small" onClick={() => setAttendanceDialog(null)}>Close</Button>
+        </Stack>
+
+        <DialogContent sx={{ p: 0 }}>
+          {attendanceLoading ? (
+            <Box sx={{ p: 4, textAlign: "center" }}>
+              <Typography>Loading student list...</Typography>
+            </Box>
+          ) : attendanceList.length === 0 ? (
+            <Box sx={{ p: 4, textAlign: "center" }}>
+              <Typography color="text.secondary">No students enrolled in this batch.</Typography>
+            </Box>
+          ) : (
+            <Stack divider={<Divider />}>
+              {attendanceList.map((student) => (
+                <Stack
+                  key={student.student_id}
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ p: 2, bgcolor: student.is_present ? "#f0fdf4" : "white" }}
+                >
+                  <Stack direction="row" spacing={1.5} alignItems="center">
+                    <Box sx={{ p: 1, borderRadius: "50%", bgcolor: "#f1f5f9", color: "#64748b" }}>
+                      <PersonIcon />
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontWeight: 600 }}>{student.name}</Typography>
+                      <Typography variant="caption" color="text.secondary">{student.email}</Typography>
+                    </Box>
+                  </Stack>
+
+                  <Button
+                    size="small"
+                    variant={student.is_present ? "contained" : "outlined"}
+                    color={student.is_present ? "success" : "inherit"}
+                    disabled={updatingAttendance === student.student_id}
+                    onClick={() => handleToggleAttendance(student.student_id, student.is_present)}
+                    startIcon={student.is_present ? <CheckCircleIcon /> : <CancelIcon />}
+                    sx={{ textTransform: "none", borderRadius: 2, minWidth: 110 }}
+                  >
+                    {student.is_present ? "Present" : "Absent"}
+                  </Button>
+                </Stack>
+              ))}
+            </Stack>
+          )}
+        </DialogContent>
+      </Dialog>
+
     </Box>
   );
 }

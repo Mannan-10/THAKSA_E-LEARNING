@@ -1,23 +1,73 @@
-import { useState } from "react";
-import { Avatar, Box, Button, Card, CardContent, Chip, Grid, Stack, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { getProfile, updateProfile } from "../../services/userServices";
 import useToast from "../../hooks/useToast";
 
 export default function InstructorProfile() {
   const { showToast } = useToast();
-  const [profile, setProfile] = useState({
-    name: "Dr. Robert Fox",
-    email: "robert.fox@thaksa.edu",
-    role: "Senior Instructor",
-    bio: "Expert in Cloud Computing and DevOps with over 10 years of industry experience. Passionate about teaching modern software architecture.",
-    expertise: "Cloud Computing, DevOps, Kubernetes, AWS",
-    joinedDate: "January 2023",
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    bio: "",
+    date_of_birth: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleSave = () => {
-    setIsEditing(false);
-    showToast("Profile updated successfully.", "success");
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const data = await getProfile();
+        setFormData({
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          bio: data.bio || "",
+          date_of_birth: (data.date_of_birth || "").slice(0, 10),
+        });
+      } catch (requestError) {
+        showToast(
+          requestError?.response?.data?.message || requestError.message || "Failed to load profile",
+          "error"
+        );
+      }
+    };
+    loadProfile();
+  }, [showToast]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      await updateProfile(formData);
+      showToast("Profile updated successfully.", "success");
+      setIsEditing(false);
+    } catch (requestError) {
+      showToast(
+        requestError?.response?.data?.message || requestError.message || "Failed to update profile",
+        "error"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,63 +81,79 @@ export default function InstructorProfile() {
         <CardContent sx={{ p: { xs: 2.2, md: 3.2 } }}>
           <Stack direction={{ xs: "column", md: "row" }} spacing={2.2} alignItems={{ xs: "flex-start", md: "center" }} sx={{ mb: 3 }}>
             <Avatar sx={{ width: 72, height: 72, bgcolor: "#2563eb", fontSize: "1.9rem", fontWeight: 800 }}>
-              {(profile.name || "I").charAt(0).toUpperCase()}
+              {(formData.name || "I").charAt(0).toUpperCase()}
             </Avatar>
 
             <Box sx={{ flex: 1 }}>
-              <Typography variant="h6" sx={{ fontWeight: 900 }}>{profile.name}</Typography>
-              <Chip label={profile.role} size="small" sx={{ mt: 0.6, fontWeight: 700 }} />
+              <Typography variant="h6" sx={{ fontWeight: 900 }}>{formData.name || "Instructor"}</Typography>
+              <Typography color="text.secondary">Instructor</Typography>
             </Box>
 
-            <Button variant={isEditing ? "contained" : "outlined"} onClick={isEditing ? handleSave : () => setIsEditing(true)}>
-              {isEditing ? "Save Changes" : "Edit Profile"}
+            <Button
+              variant={isEditing ? "contained" : "outlined"}
+              onClick={isEditing ? handleSave : () => setIsEditing(true)}
+              disabled={loading}
+              sx={{ borderRadius: 2.5 }}
+            >
+              {loading ? "Saving..." : isEditing ? "Save Changes" : "Edit Profile"}
             </Button>
           </Stack>
 
-          <Grid container spacing={2} sx={{ maxWidth: 760 }}>
+          <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Full Name"
-                value={profile.name}
+                value={formData.name}
+                onChange={handleChange}
+                name="name"
                 disabled={!isEditing}
                 fullWidth
-                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
               />
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Email Address"
-                value={profile.email}
+                name="email"
+                value={formData.email}
+                disabled
+                fullWidth
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label="Phone Number"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
                 disabled={!isEditing}
                 fullWidth
-                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                type="date"
+                label="Date of Birth"
+                name="date_of_birth"
+                value={formData.date_of_birth}
+                onChange={handleChange}
+                disabled={!isEditing}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <TextField
-                label="Professional Bio"
-                value={profile.bio}
+                label="Bio"
+                name="bio"
+                value={formData.bio}
+                onChange={handleChange}
                 disabled={!isEditing}
                 fullWidth
                 multiline
                 rows={4}
-                onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <TextField
-                label="Expertise (comma separated)"
-                value={profile.expertise}
-                disabled={!isEditing}
-                fullWidth
-                onChange={(e) => setProfile({ ...profile, expertise: e.target.value })}
               />
             </Grid>
           </Grid>
-
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 3 }}>
-            Member since {profile.joinedDate}
-          </Typography>
         </CardContent>
       </Card>
     </Box>

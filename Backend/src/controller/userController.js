@@ -37,7 +37,7 @@ const register = async (req, res) => {
       [email, username, otp, hashedPassword, role || "student", expiresAt],
     );
 
-    await sendMail(email, `Thaksa E-Learning - Verify your email`, { name: username, otp});
+    await sendMail(email, `Thaksa E-Learning - Verify your email`, { name: username, otp });
     res
       .status(200)
       .json({ message: "OTP sent to email for verification" });
@@ -164,7 +164,7 @@ const refreshToken = async (req, res) => {
       process.env.JWT_REFRESH_SECRET
     );
     const dbToken = await db.query(
-      "SELECT * FROM refresh_tokens WHERE token = $1",[refreshToken]
+      "SELECT * FROM refresh_tokens WHERE token = $1", [refreshToken]
     );
 
     if (dbToken.rows.length === 0) {
@@ -190,7 +190,7 @@ const logout = async (req, res) => {
   }
 
   await db.query(
-    "DELETE FROM refresh_tokens WHERE token = $1",[refreshToken]
+    "DELETE FROM refresh_tokens WHERE token = $1", [refreshToken]
   );
 
   res.json({ message: "Logged out successfully" });
@@ -201,7 +201,7 @@ const getProfile = async (req, res) => {
     const userId = req.user.userId;
 
     const result = await db.query(
-      "SELECT u.id, u.name, u.email, u.role, p.phone, p.bio, p.profile_image, p.date_of_birth FROM users u LEFT JOIN user_profiles p ON u.id = p.user_id WHERE u.id = $1;",[userId]
+      "SELECT u.id, u.name, u.email, u.role, p.phone, p.bio, p.profile_image, p.date_of_birth FROM users u LEFT JOIN user_profiles p ON u.id = p.user_id WHERE u.id = $1;", [userId]
     );
 
     res.status(201).json({ profile: result.rows[0] });
@@ -216,15 +216,28 @@ const updateProfile = async (req, res) => {
   const userId = req.user.userId;
   const { name, phone, bio, date_of_birth } = req.body;
 
-  await db.query(
-    `UPDATE users SET name = $1 WHERE id = $2`,[name, userId]
-  );
+  try {
+    await db.query(
+      `UPDATE users SET name = $1 WHERE id = $2`, [name, userId]
+    );
 
-  await db.query(
-    `UPDATE user_profiles SET phone = $1, bio = $2, date_of_birth = $3 WHERE user_id = $4`,[phone, bio, date_of_birth, userId]
-  );
+    // Convert empty string to null for date field
+    const dateValue = date_of_birth === "" || date_of_birth === null ? null : date_of_birth;
 
-  res.status(200).json({ message: "Profile updated successfully" })
+    // Upsert user profile (insert or update)
+    await db.query(
+      `INSERT INTO user_profiles (user_id, phone, bio, date_of_birth)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (user_id) 
+       DO UPDATE SET phone = $2, bio = $3, date_of_birth = $4`,
+      [userId, phone, bio, dateValue]
+    );
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({ message: error.message });
+  }
 }
 
 const changePassword = async (req, res) => {
@@ -232,7 +245,7 @@ const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   const result = await db.query(
-    "SELECT password FROM users WHERE id = $1",[userId]
+    "SELECT password FROM users WHERE id = $1", [userId]
   );
 
   const valid = await bcrypt.compare(
@@ -240,18 +253,18 @@ const changePassword = async (req, res) => {
     result.rows[0].password
   );
 
-  if (!valid ) {
+  if (!valid) {
     return res.status(400).json({ message: "Current password is incorrect" });
   }
 
   const hashed = await bcrypt.hash(newPassword, 10);
 
   await db.query(
-    "UPDATE users SET password = $1 WHERE id = $2",[hashed, userId]
+    "UPDATE users SET password = $1 WHERE id = $2", [hashed, userId]
   );
 
   await db.query(
-    "DELETE FROM refresh_tokens WHERE user_id = $1",[userId]
+    "DELETE FROM refresh_tokens WHERE user_id = $1", [userId]
   );
 
   res.status(200).json({ message: "Password changed successfully. Please log in again." });

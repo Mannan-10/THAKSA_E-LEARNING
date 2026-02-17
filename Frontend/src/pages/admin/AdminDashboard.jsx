@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Alert, Box, Button, Card, CardContent, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 import SchoolIcon from "@mui/icons-material/School";
@@ -9,17 +10,18 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { adminDashboard } from "../../services/adminServices";
 
 const statMeta = [
-  { key: "totalUsers", label: "Total Users", color: "#2563eb", icon: <PeopleIcon fontSize="small" /> },
-  { key: "students", label: "Students", color: "#3b82f6", icon: <SchoolIcon fontSize="small" /> },
-  { key: "instructors", label: "Instructors", color: "#6366f1", icon: <PeopleIcon fontSize="small" /> },
-  { key: "totalCourses", label: "Total Courses", color: "#0ea5e9", icon: <MenuBookIcon fontSize="small" /> },
-  { key: "pendingCourses", label: "Pending Courses", color: "#dc2626", icon: <PendingActionsIcon fontSize="small" /> },
-  { key: "approvedCourses", label: "Approved Courses", color: "#16a34a", icon: <CheckCircleIcon fontSize="small" /> },
-  { key: "enrollments", label: "Total Enrollments", color: "#8b5cf6", icon: <SchoolIcon fontSize="small" /> },
-  { key: "revenue", label: "Total Revenue", color: "#059669", icon: <AttachMoneyIcon fontSize="small" /> },
+  { key: "totalUsers", label: "Total Users", color: "#2563eb", icon: <PeopleIcon fontSize="small" />, path: "/admin/students" },
+  { key: "students", label: "Students", color: "#3b82f6", icon: <SchoolIcon fontSize="small" />, path: "/admin/students" },
+  { key: "instructors", label: "Instructors", color: "#6366f1", icon: <PeopleIcon fontSize="small" />, path: "/admin/students" },
+  { key: "totalCourses", label: "Total Courses", color: "#0ea5e9", icon: <MenuBookIcon fontSize="small" />, path: "/admin/courses" },
+  { key: "pendingCourses", label: "Pending Courses", color: "#dc2626", icon: <PendingActionsIcon fontSize="small" />, path: "/admin/courses" },
+  { key: "approvedCourses", label: "Approved Courses", color: "#16a34a", icon: <CheckCircleIcon fontSize="small" />, path: "/admin/courses" },
+  { key: "enrollments", label: "Total Enrollments", color: "#8b5cf6", icon: <SchoolIcon fontSize="small" />, path: "/admin/batches" },
+  { key: "revenue", label: "Total Revenue", color: "#059669", icon: <AttachMoneyIcon fontSize="small" />, path: null },
 ];
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -98,6 +100,7 @@ export default function AdminDashboard() {
                 icon={item.icon}
                 color={item.color}
                 isCurrency={item.key === "revenue"}
+                onClick={item.path ? () => navigate(item.path) : undefined}
               />
             )}
           </Grid>
@@ -107,7 +110,7 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ label, value, icon, color, isCurrency = false }) {
+function StatCard({ label, value, icon, color, isCurrency = false, onClick }) {
   const [displayValue, setDisplayValue] = useState(0);
   const numericValue = Number(value || 0);
 
@@ -132,11 +135,13 @@ function StatCard({ label, value, icon, color, isCurrency = false }) {
   return (
     <Card
       elevation={0}
+      onClick={onClick}
       sx={{
         borderRadius: 3,
         border: "1px solid #e2e8f0",
         borderTop: `4px solid ${color}`,
         boxShadow: "0 10px 24px rgba(15,23,42,0.05)",
+        cursor: onClick ? "pointer" : "default",
         transition: "transform .22s ease, box-shadow .22s ease",
         "&:hover": {
           transform: "translateY(-4px)",

@@ -7,9 +7,9 @@ export default function AdminStudents() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 0.6 }}>Admin Users</Typography>
+      <Typography variant="h4" sx={{ mb: 0.6 }}>Users</Typography>
       <Typography color="text.secondary" sx={{ mb: 2.2 }}>
-        View user accounts and manage their access roles.
+        View and manage all user accounts and their access roles.
       </Typography>
 
       <UserTable

@@ -14,6 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import { getPublicCourses } from "../services/userServices";
+import RatingStars from "../components/RatingStars";
+import { getCourseRatingSummary } from "../services/reviewService";
+import EmptyState from "../components/EmptyState";
+import CourseSkeleton from "../components/skeletons/CourseSkeleton";
 
 export default function CoursesPage() {
   const navigate = useNavigate();
@@ -22,6 +26,7 @@ export default function CoursesPage() {
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [ratings, setRatings] = useState({});
 
   useEffect(() => {
     let active = true;
@@ -32,8 +37,26 @@ export default function CoursesPage() {
         setError("");
         const response = await getPublicCourses({ page, limit: 9 });
         if (!active) return;
-        setCourses(Array.isArray(response?.courses) ? response.courses : []);
+        const courseList = Array.isArray(response?.courses) ? response.courses : [];
+        setCourses(courseList);
         setTotalPages(Number(response?.totalPages || 1));
+
+        // Load ratings for all courses
+        const ratingsData = {};
+        await Promise.all(
+          courseList.map(async (course) => {
+            try {
+              const rating = await getCourseRatingSummary(course.id);
+              ratingsData[course.id] = {
+                average: parseFloat(rating?.average_rating || 0),
+                count: parseInt(rating?.total_reviews || 0),
+              };
+            } catch {
+              ratingsData[course.id] = { average: 0, count: 0 };
+            }
+          })
+        );
+        if (active) setRatings(ratingsData);
       } catch (requestError) {
         if (!active) return;
         setError(requestError?.response?.data?.message || "Failed to load courses");
@@ -64,9 +87,21 @@ export default function CoursesPage() {
         {error ? <Alert severity="error" sx={{ mb: 2.5 }}>{error}</Alert> : null}
 
         {loading ? (
-          <Typography color="text.secondary">Loading courses...</Typography>
+          <Grid container spacing={2.5}>
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <Grid key={item} size={{ xs: 12, md: 6, lg: 4 }}>
+                <CourseSkeleton />
+              </Grid>
+            ))}
+          </Grid>
         ) : courses.length === 0 ? (
-          <Alert severity="info">No courses available right now.</Alert>
+          <EmptyState
+            icon="search"
+            title="No Courses Available"
+            description="There are no courses available at the moment. Please check back later or contact support if you think this is an error."
+            actionLabel="Go to Homepage"
+            onAction={() => navigate("/")}
+          />
         ) : (
           <>
             <Grid container spacing={2.5}>
@@ -84,9 +119,30 @@ export default function CoursesPage() {
                         variant="outlined"
                         sx={{ alignSelf: "flex-start", mb: 1.4 }}
                       />
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          mb: 0.5,
+                          cursor: "pointer",
+                          "&:hover": { color: "primary.main" }
+                        }}
+                        onClick={() => navigate(`/courses/${course.id}`)}
+                      >
                         {course.title}
                       </Typography>
+
+                      {ratings[course.id] && (
+                        <Box sx={{ mb: 1 }}>
+                          <RatingStars
+                            rating={ratings[course.id].average}
+                            size="small"
+                            showNumber
+                            reviewCount={ratings[course.id].count}
+                          />
+                        </Box>
+                      )}
+
                       <Typography color="text.secondary" sx={{ mb: 1.6 }}>
                         {course.description}
                       </Typography>

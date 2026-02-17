@@ -21,6 +21,7 @@ import instructorDashboardRouter from './src/routes/instructorDashboardRoutes.js
 import contactRouter from './src/routes/contactRoutes.js';
 import courseContentRouter from './src/routes/courseContentRoutes.js';
 import liveSessionRouter from './src/routes/liveSessionRoutes.js';
+import attendanceRouter from './src/routes/attendanceRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -45,7 +46,7 @@ app.use('/api/courses', courseRouter);
 app.use('/api/courses', courseContentRouter);
 app.use('/api/admin', adminDashboardRoutes);
 app.use('/api/courses', moduleRouter);
-app.use('/api/modules', lessonRouter);
+app.use('/api/lessons', lessonRouter);
 app.use('/api', batchRouter);
 app.use('/api', enrollmentRouter);
 app.use('/api', paymentRouter);
@@ -54,7 +55,8 @@ app.use('/api', certificateRouter);
 app.use('/api', reviewRouter);
 app.use('/api', contactRouter);
 app.use('/api', liveSessionRouter);
+app.use('/api', attendanceRouter);
 
-app.listen(PORT ,() => {
+app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 })

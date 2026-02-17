@@ -49,3 +49,33 @@ export const getPublicCourses = async (params = {}) => {
     const response = await api.get("/courses/public", { params });
     return response.data;
 };
+
+export const getUserDashboard = async () => {
+    const response = await api.get("/users/dashboard");
+    return response.data;
+};
+
+export const getStudentSessions = async () => {
+    const response = await api.get("/student/sessions");
+    return response.data;
+};
+
+export const getCourseProgress = async (courseId) => {
+    const response = await api.get(`/student/courses/${courseId}/progress`);
+    return response.data;
+};
+
+export const getMyAttendance = async () => {
+    const response = await api.get("/student/attendance");
+    return response.data;
+};
+
+export const markSessionAttendance = async (sessionId) => {
+    const response = await api.post(`/student/sessions/${sessionId}/attend`);
+    return response.data;
+};
+
+export const getStudentCourseDetail = async (courseId) => {
+    const response = await api.get(`/users/student/courses/${courseId}/detail`);
+    return response.data;
+};

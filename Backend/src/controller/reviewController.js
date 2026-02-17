@@ -12,11 +12,11 @@ const addReview = async (req, res) => {
 
         // Check enrollment via batches
         const enrollmentCheck = await db.query(
-            `SELECT be.id FROM batch_enrollment be
+            `SELECT be.id FROM batch_enrollments be
             JOIN batches b ON be.batch_id = b.id
             JOIN courses c ON b.course_id = c.id
             WHERE be.user_id = $1 AND b.course_id = $2
-            AND be.status = true`,[userId, courseId]
+            AND be.status = true`, [userId, courseId]
         );
 
         if (enrollmentCheck.rows.length === 0) {
@@ -24,7 +24,7 @@ const addReview = async (req, res) => {
         }
 
         const existingReview = await db.query(
-            `SELECT id FROM reviews WHERE user_id = $1 AND course_id = $2`,[userId, courseId]
+            `SELECT id FROM reviews WHERE user_id = $1 AND course_id = $2`, [userId, courseId]
         );
 
         if (existingReview.rows.length > 0) {
@@ -33,12 +33,12 @@ const addReview = async (req, res) => {
 
         // Insert Review
         const result = await db.query(
-            `INSERT INTO reviews (user_id, course_id, rating, comment) VALUES ($1, $2, $3, $4) RETURNING *`,[userId, courseId, rating, comment]
+            `INSERT INTO reviews (user_id, course_id, rating, comment) VALUES ($1, $2, $3, $4) RETURNING *`, [userId, courseId, rating, comment]
         );
 
-        res.status(201).json({ message: "Review submitted successfully", review: result.rows[0]})
+        res.status(201).json({ message: "Review submitted successfully", review: result.rows[0] })
     } catch (error) {
-        res.status(500).json({ message: error.message})
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -55,7 +55,7 @@ const getCourseReviews = async (req, res) => {
         FROM reviews r
         JOIN users u ON r.user_id = u.id
         WHERE r.course_id = $1
-        ORDER BY r.created_at DESC`,[courseId]
+        ORDER BY r.created_at DESC`, [courseId]
     );
 
     res.json(result.rows);
@@ -69,7 +69,7 @@ const getCourseRatingSummary = async (req, res) => {
             COUNT(*) AS total_reviews,
             ROUND(AVG(rating), 1) AS average_rating
         FROM reviews
-        WHERE course_id = $1`,[courseId]
+        WHERE course_id = $1`, [courseId]
     );
 
     res.status(200).json(result.rows[0])
@@ -84,14 +84,14 @@ const updateReview = async (req, res) => {
         `UPDATE reviews
         SET rating = $1, comment = $2
         WHERE id = $3 AND user_id = $4
-        RETURNING *`,[rating, comment, reviewId, userId]
+        RETURNING *`, [rating, comment, reviewId, userId]
     );
 
     if (result.rowCount === 0) {
         return res.status(404).json({ message: "Review not found" });
     }
 
-    res.status(200).json({ message: "Review updated successfully", review: result.rows[0]});
+    res.status(200).json({ message: "Review updated successfully", review: result.rows[0] });
 }
 
 const deleteReview = async (req, res) => {

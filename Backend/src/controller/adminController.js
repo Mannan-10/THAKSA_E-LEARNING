@@ -59,4 +59,26 @@ const deleteUser = async (req, res) => {
     res.json({ message: "User deleted successfully", userId: result.rows[0].id });
 }
 
-export { getAllUsers, getUserById, updateUserRole, deleteUser };
+const getAllBatchesAdmin = async (req, res) => {
+    try {
+        const result = await db.query(
+            `SELECT b.*, c.title AS course_title, u.name AS instructor_name,
+                COALESCE(be.enrolled_count, 0) AS enrolled_count
+             FROM batches b
+             JOIN courses c ON b.course_id = c.id
+             JOIN users u ON c.instructor_id = u.id
+             LEFT JOIN (
+                SELECT batch_id, COUNT(*)::int AS enrolled_count
+                FROM batch_enrollments
+                GROUP BY batch_id
+             ) be ON be.batch_id = b.id
+             ORDER BY b.start_date DESC`
+        );
+
+        res.json({ batches: result.rows });
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching batches: " + err.message });
+    }
+};
+
+export { getAllUsers, getUserById, updateUserRole, deleteUser, getAllBatchesAdmin };

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  Button,
   Card,
   CardContent,
   Chip,
@@ -14,11 +15,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { getRejectedCourses } from "../../services/adminServices";
+import { approveCourse, getRejectedCourses } from "../../services/adminServices";
+import useToast from "../../hooks/useToast";
 
 const toArray = (payload) => (Array.isArray(payload) ? payload : payload?.courses || payload?.data || []);
 
 export const AdminRejectedCourses = () => {
+  const { showToast } = useToast();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -63,6 +66,7 @@ export const AdminRejectedCourses = () => {
                   <TableCell><strong>Title</strong></TableCell>
                   <TableCell><strong>Instructor</strong></TableCell>
                   <TableCell><strong>Status</strong></TableCell>
+                  <TableCell align="right"><strong>Actions</strong></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -72,6 +76,24 @@ export const AdminRejectedCourses = () => {
                     <TableCell>{course.instructor_name}</TableCell>
                     <TableCell>
                       <Chip label="Rejected" size="small" sx={{ bgcolor: "#fee2e2", color: "#991b1b", fontWeight: 700 }} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button
+                        size="small"
+                        color="success"
+                        onClick={async () => {
+                          if (!window.confirm("Approve this course?")) return;
+                          try {
+                            await approveCourse(course.id);
+                            setCourses((prev) => prev.filter((c) => c.id !== course.id));
+                            showToast("Course approved successfully.", "success");
+                          } catch (err) {
+                            showToast(err?.response?.data?.message || "Failed to approve", "error");
+                          }
+                        }}
+                      >
+                        Approve
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
