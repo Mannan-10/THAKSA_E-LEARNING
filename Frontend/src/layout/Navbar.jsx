@@ -18,9 +18,10 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 const navItems = [
   { label: "Home", to: "/" },
+  { label: "Workshops", to: "/workshops" },
+  { label: "Training", to: "/training" },
   { label: "Courses", to: "/courses" },
   { label: "Batches", to: "/batches" },
-  { label: "Pricing", to: "/pricing" },
   { label: "Contact", to: "/contact" },
 ];
 
