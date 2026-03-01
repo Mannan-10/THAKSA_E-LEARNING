@@ -28,6 +28,7 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
 import tharunImg from "../HomePage/sections/cofounder-tharunkrishna.png";
 import sadvishaImg from "../HomePage/sections/cto-sadvisha-reddy.png";
+import logo from "../HomePage/sections/thaksa.jpeg"
 
 // ───────────────────────────────────────────────
 // Utility hook: fade-in when element enters viewport
@@ -189,7 +190,7 @@ function FoundersSection() {
                                     <Typography noWrap variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
                                         K. Tharunkrishna
                                     </Typography>
-                                    <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.98rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                    <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                                         CEO
                                     </Typography>
                                     <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "1.1rem" }}>
@@ -504,34 +505,34 @@ const testimonials = [
         college: "VCE, Warangal",
         rating: 5,
         text: "The THAKSA workshop on Full Stack Development was absolutely mind-blowing! The hands-on sessions helped me build a real project in just 2 days. The mentors were incredibly approachable and explained everything clearly. Highly recommend to every engineering student!",
-        avatar: "PS",
+        avatar: "AM",
         color: "#6366f1",
     },
     {
-        name: "Dr. M. Suresh Kumar",
+        name: "Dr. Ayesha Banu",
         role: "HOD – Computer Science Department",
         college: "VNR VJIET, Hyderabad",
         rating: 5,
         text: "I have collaborated with several training organizations over the years, but THAKSA stands out for their professionalism and curriculum quality. Students who attended their workshops showed remarkable improvement in practical skills. We look forward to future collaborations.",
-        avatar: "SK",
+        avatar: "AB",
         color: "#0f766e",
     },
     {
-        name: "Rahul Venkatesh",
+        name: "Muhammad Minhaj Mahmood",
         role: "B.Tech 3rd Year – ECE",
         college: "JNTU Hyderabad",
         rating: 5,
         text: "I came in with zero Python knowledge and left with a Machine Learning project in hand! The trainers are insanely talented and patient. The certificate also helped me get my first internship. THAKSA is the real deal!",
-        avatar: "RV",
+        avatar: "MM",
         color: "#d97706",
     },
     {
-        name: "Prof. Anjali Reddy",
+        name: "Prof. Zareena Begum",
         role: "Associate Professor",
         college: "Osmania University",
         rating: 5,
         text: "Our college organized a DevOps workshop with THAKSA for 200+ students. The logistics were seamless, the content was industry-relevant, and student feedback was overwhelmingly positive. THAKSA truly delivers on their promises.",
-        avatar: "AR",
+        avatar: "ZB",
         color: "#0891b2",
     },
 ];
@@ -624,12 +625,13 @@ function MissionSection() {
                             width: { xs: 90, md: 120 },
                             height: { xs: 90, md: 120 },
                             borderRadius: "28px",
-                            background: "linear-gradient(135deg,#6366f1,#0891b2)",
+                            background: "#fff",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             mx: "auto",
                             mb: 4,
+                            overflow: "hidden",
                             boxShadow: "0 24px 56px rgba(99,102,241,0.5)",
                             animation: "pulse 3s ease-in-out infinite",
                             "@keyframes pulse": {
@@ -638,9 +640,17 @@ function MissionSection() {
                             },
                         }}
                     >
-                        <Typography sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3rem" }, color: "#fff", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
-                            T
-                        </Typography>
+                        <Box
+                            component="img"
+                            src={logo}
+                            alt="THAKSA Academy Logo"
+                            sx={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                objectPosition: "center",
+                            }}
+                        />
                     </Box>
 
                     <Typography
@@ -665,7 +675,7 @@ function MissionSection() {
                             mb: 4,
                         }}
                     >
-                        Academy
+                        IT Consultancy
                     </Typography>
 
                     <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", mb: 4 }} />
@@ -826,12 +836,12 @@ function ContactSection() {
                                         <Typography sx={{ fontWeight: 700, color: "#0f172a", fontSize: "0.9rem" }}>WhatsApp Us</Typography>
                                         <Typography
                                             component="a"
-                                            href="https://wa.me/919908597337"
+                                            href="https://wa.me/919052515284"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             sx={{ color: "#25D366", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}
                                         >
-                                            +91 99085 97337
+                                            +91 90525 15284
                                         </Typography>
                                     </Box>
                                 </Stack>
@@ -844,10 +854,10 @@ function ContactSection() {
                                         <Typography sx={{ fontWeight: 700, color: "#0f172a", fontSize: "0.9rem" }}>Call Us</Typography>
                                         <Typography
                                             component="a"
-                                            href="tel:+919908597337"
+                                            href="tel:+919052515284"
                                             sx={{ color: "#6366f1", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}
                                         >
-                                            +91 99085 97337
+                                            +91 90525 15284
                                         </Typography>
                                     </Box>
                                 </Stack>
@@ -860,10 +870,10 @@ function ContactSection() {
                                         <Typography sx={{ fontWeight: 700, color: "#0f172a", fontSize: "0.9rem" }}>Email Us</Typography>
                                         <Typography
                                             component="a"
-                                            href="mailto:info@thaksa.in"
+                                            href="mailto:thaksa.academy@gmail.com"
                                             sx={{ color: "#0891b2", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}
                                         >
-                                            info@thaksa.in
+                                            thaksa.academy@gmail.com
                                         </Typography>
                                     </Box>
                                 </Stack>
