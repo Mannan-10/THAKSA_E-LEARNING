@@ -74,7 +74,7 @@ export default function UserDashboard() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 0.6 }}>
+      <Typography variant="h4" sx={{ mb: 0.6, fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}>
         Welcome back
       </Typography>
       <Typography color="text.secondary" sx={{ mb: 3.2 }}>
@@ -104,7 +104,7 @@ export default function UserDashboard() {
                       {session.course_title} • {session.instructor_name}
                     </Typography>
                   </Box>
-                  <Stack direction="row" spacing={1} alignItems="center">
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={1} alignItems={{ xs: "stretch", sm: "center" }}>
                     <Button
                       variant="contained"
                       color="success"
@@ -132,7 +132,7 @@ export default function UserDashboard() {
 
       <Grid container spacing={2.2} sx={{ mb: 3.2 }}>
         {statCards.map((stat) => (
-          <Grid key={stat.title} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={stat.title} size={{ xs: 6, sm: 6, lg: 3 }}>
             <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0", height: "100%" }}>
               <CardContent sx={{ p: 2.4 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1}>

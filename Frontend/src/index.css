@@ -8,10 +8,18 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -19,6 +27,7 @@ body {
   min-width: 320px;
   background-color: #ffffff;
   color: #0f172a;
+  overflow-x: hidden;
 }
 
 h1,
@@ -32,4 +41,5 @@ h6 {
 
 #root {
   min-height: 100vh;
+  overflow-x: hidden;
 }

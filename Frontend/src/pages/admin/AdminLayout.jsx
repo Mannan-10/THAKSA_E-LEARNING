@@ -166,9 +166,9 @@ export default function AdminLayout() {
         </Drawer>
       </Box>
 
-      <Box component="main" sx={{ flexGrow: 1, width: { md: `calc(100% - ${drawerWidth}px)` } }}>
+      <Box component="main" sx={{ flexGrow: 1, width: { md: `calc(100% - ${drawerWidth}px)` }, overflowX: "hidden" }}>
         <Toolbar sx={{ minHeight: 68 }} />
-        <Container maxWidth="xl" sx={{ py: { xs: 2.5, md: 4 } }}>
+        <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 }, px: { xs: 2, sm: 3 } }}>
           <Outlet />
         </Container>
       </Box>

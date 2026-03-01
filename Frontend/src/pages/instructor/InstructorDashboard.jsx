@@ -82,7 +82,7 @@ export default function InstructorDashboard() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 0.6 }}>Instructor Dashboard</Typography>
+      <Typography variant="h4" sx={{ mb: 0.6, fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}>Instructor Dashboard</Typography>
       <Typography color="text.secondary" sx={{ mb: 3.2 }}>
         Overview of your courses, students, and performance.
       </Typography>
@@ -96,7 +96,7 @@ export default function InstructorDashboard() {
 
       <Grid container spacing={2.2} sx={{ mb: 3.2 }}>
         {statMeta.map((item) => (
-          <Grid key={item.key} size={{ xs: 12, sm: 6, lg: 4 }}>
+          <Grid key={item.key} size={{ xs: 6, sm: 6, lg: 4 }}>
             <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
               <CardContent sx={{ p: 2.4 }}>
                 <Stack direction="row" justifyContent="space-between" spacing={1}>

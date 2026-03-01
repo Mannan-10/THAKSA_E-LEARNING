@@ -55,8 +55,8 @@ export default function InstructorSection() {
                   e.currentTarget.src = "/trainer.jpg";
                 }}
                 sx={{
-                  width: { xs: 220, md: 260 },
-                  height: { xs: 300, md: 350 },
+                  width: { xs: 180, sm: 220, md: 260 },
+                  height: { xs: 240, sm: 300, md: 350 },
                   objectFit: "cover",
                   objectPosition: "center top",
                   borderRadius: 3,

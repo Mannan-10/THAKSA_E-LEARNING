@@ -11,8 +11,9 @@ export default function HeroSection() {
       sx={{
         position: "relative",
         overflow: "hidden",
-        py: { xs: 8, md: 14 },
+        py: { xs: 5, sm: 8, md: 14 },
         borderBottom: "1px solid rgba(15, 23, 42, 0.08)",
+        boxShadow: "0 4px 24px rgba(15, 23, 42, 0.06)",
       }}
     >
       <Box
@@ -25,7 +26,7 @@ export default function HeroSection() {
         }}
       />
       <Container maxWidth="lg" sx={{ position: "relative" }}>
-        <Stack spacing={3} sx={{ maxWidth: 760 }}>
+        <Stack spacing={{ xs: 2.5, md: 3 }} sx={{ maxWidth: 760 }}>
           <Chip
             icon={<SchoolRoundedIcon />}
             label="Industry-ready learning platform"
@@ -54,12 +55,13 @@ export default function HeroSection() {
             Structured programs, live mentorship, and practical batches that help
             students become job-ready with measurable progress.
           </Typography>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
             <Button
               size="large"
               variant="contained"
               endIcon={<AutoGraphRoundedIcon />}
               onClick={() => navigate("/courses")}
+              fullWidth={false}
               sx={{
                 py: 1.4,
                 px: 3.2,
@@ -67,7 +69,8 @@ export default function HeroSection() {
                 borderRadius: 3,
                 bgcolor: "#2563eb",
                 boxShadow: "0 14px 28px rgba(37, 99, 235, 0.32)",
-                "&:hover": { bgcolor: "#1d4ed8" },
+                transition: "transform 0.2s ease, background-color 0.2s ease",
+                "&:hover": { bgcolor: "#1d4ed8", transform: "scaleY(1.06)" },
               }}
             >
               Explore Courses
@@ -83,7 +86,8 @@ export default function HeroSection() {
                 borderRadius: 3,
                 borderColor: "#0f766e",
                 color: "#0f766e",
-                "&:hover": { borderColor: "#0d665e", bgcolor: "rgba(15, 118, 110, 0.06)" },
+                transition: "transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease",
+                "&:hover": { borderColor: "#0d665e", bgcolor: "rgba(15, 118, 110, 0.06)", transform: "scaleY(1.06)" },
               }}
             >
               Join Upcoming Batches

@@ -18,6 +18,7 @@ import RatingStars from "../components/RatingStars";
 import { getCourseRatingSummary } from "../services/reviewService";
 import EmptyState from "../components/EmptyState";
 import CourseSkeleton from "../components/skeletons/CourseSkeleton";
+import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
 
 export default function CoursesPage() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function CoursesPage() {
   }, [page]);
 
   return (
-    <Box sx={{ py: { xs: 6, md: 9 }, backgroundColor: "#f8fafc", minHeight: "calc(100vh - 80px)" }}>
+    <Box sx={{ py: { xs: 4, sm: 6, md: 9 }, backgroundColor: "#f8fafc", minHeight: "calc(100vh - 80px)" }}>
       <Container maxWidth="lg">
         <Stack textAlign="center" spacing={1.2} sx={{ mb: { xs: 4.5, md: 6 } }}>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
@@ -89,7 +90,7 @@ export default function CoursesPage() {
         {loading ? (
           <Grid container spacing={2.5}>
             {[1, 2, 3, 4, 5, 6].map((item) => (
-              <Grid key={item} size={{ xs: 12, md: 6, lg: 4 }}>
+              <Grid key={item} size={{ xs: 12, sm: 6, lg: 4 }}>
                 <CourseSkeleton />
               </Grid>
             ))}
@@ -106,26 +107,51 @@ export default function CoursesPage() {
           <>
             <Grid container spacing={2.5}>
               {courses.map((course) => (
-                <Grid key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
+                <Grid key={course.id} size={{ xs: 12, sm: 6, lg: 4 }}>
                   <Card
                     elevation={0}
-                    sx={{ height: "100%", border: "1px solid", borderColor: "divider", borderRadius: 2.5 }}
+                    sx={{
+                      height: "100%",
+                      borderRadius: 4,
+                      border: "1px solid rgba(15, 23, 42, 0.04)",
+                      boxShadow: "0 4px 12px rgba(15, 23, 42, 0.03)",
+                      transition: "transform .3s ease, box-shadow .3s ease",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+                      },
+                    }}
                   >
-                    <CardContent sx={{ p: 2.5, display: "flex", flexDirection: "column", height: "100%" }}>
-                      <Chip
-                        label="Live Program"
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        sx={{ alignSelf: "flex-start", mb: 1.4 }}
-                      />
+                    <CardContent sx={{ p: { xs: 3, md: 3.5 }, display: "flex", flexDirection: "column", height: "100%" }}>
+                      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+                        <Box
+                          sx={{
+                            width: 52,
+                            height: 52,
+                            borderRadius: 3,
+                            bgcolor: "rgba(37, 99, 235, 0.12)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <AutoGraphRoundedIcon sx={{ color: "#2563eb", fontSize: 28 }} />
+                        </Box>
+                        <Chip
+                          label="Live Program"
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                        />
+                      </Stack>
                       <Typography
                         variant="h6"
                         sx={{
-                          fontWeight: 700,
+                          fontWeight: 800,
                           mb: 0.5,
                           cursor: "pointer",
-                          "&:hover": { color: "primary.main" }
+                          color: "#0f172a",
+                          "&:hover": { color: "#1d4ed8" },
                         }}
                         onClick={() => navigate(`/courses/${course.id}`)}
                       >

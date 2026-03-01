@@ -35,7 +35,7 @@ export default function InstructorProfile() {
           email: data.email || "",
           phone: data.phone || "",
           bio: data.bio || "",
-          date_of_birth: (data.date_of_birth || "").slice(0, 10),
+          date_of_birth: data.date_of_birth || "",
         });
       } catch (requestError) {
         showToast(

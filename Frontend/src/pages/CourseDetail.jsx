@@ -127,7 +127,13 @@ export default function CourseDetail() {
                             />
                         </Box>
 
-                        <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)}>
+                        <Tabs
+                            value={tab}
+                            onChange={(e, newValue) => setTab(newValue)}
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            allowScrollButtonsMobile
+                        >
                             <Tab label="Overview" />
                             <Tab label={`Reviews (${ratingSummary.total_reviews})`} />
                         </Tabs>
@@ -149,7 +155,7 @@ export default function CourseDetail() {
                         ) : (
                             <Grid container spacing={2.2}>
                                 {batches.map((batch) => (
-                                    <Grid key={batch.id} size={{ xs: 12, md: 6 }}>
+                                    <Grid key={batch.id} size={{ xs: 12, sm: 6 }}>
                                         <Card elevation={0} sx={{ borderRadius: 2.5, border: "1px solid #e2e8f0" }}>
                                             <CardContent sx={{ p: 2.5 }}>
                                                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>

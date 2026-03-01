@@ -71,7 +71,7 @@ export default function AdminDashboard() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 0.6 }}>Admin Dashboard</Typography>
+      <Typography variant="h4" sx={{ mb: 0.6, fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}>Admin Dashboard</Typography>
       <Typography color="text.secondary" sx={{ mb: 3.2 }}>
         Platform overview and operational metrics.
       </Typography>
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
 
       <Grid container spacing={2.2}>
         {(loading ? Array.from({ length: 8 }).map((_, idx) => ({ loadingKey: idx })) : statMeta).map((item, index) => (
-          <Grid key={item.key || item.loadingKey || index} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={item.key || item.loadingKey || index} size={{ xs: 6, sm: 6, lg: 3 }}>
             {loading ? (
               <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
                 <CardContent>

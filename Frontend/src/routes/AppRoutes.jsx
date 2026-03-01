@@ -24,6 +24,7 @@ import UserDashboard from "../pages/dashboard/UserDashboard";
 import MyCourses from "../pages/dashboard/MyCourses";
 import CourseLearning from "../pages/dashboard/CourseLearning";
 import MyBatch from "../pages/dashboard/MyBatch";
+import BatchDetail from "../pages/dashboard/BatchDetail";
 import Profile from "../pages/dashboard/Profile";
 import Settings from "../pages/dashboard/Settings";
 import ViewAttendance from "../pages/dashboard/ViewAttendance";
@@ -162,6 +163,7 @@ export default function AppRoutes() {
         <Route path="courses" element={<MyCourses />} />
         <Route path="courses/:courseId" element={<CourseLearning />} />
         <Route path="batch" element={<MyBatch />} />
+        <Route path="batch/:batchId" element={<BatchDetail />} />
         <Route path="attendance" element={<ViewAttendance />} />
         <Route path="assessments" element={<Assessment />} />
         <Route path="profile" element={<Profile />} />

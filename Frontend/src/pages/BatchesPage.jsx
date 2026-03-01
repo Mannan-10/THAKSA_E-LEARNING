@@ -17,6 +17,7 @@ import { enrollBatch, getPublicBatches } from "../services/batchService";
 import RatingStars from "../components/RatingStars";
 import { getCourseRatingSummary } from "../services/reviewService";
 import BatchSkeleton from "../components/skeletons/BatchSkeleton";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 
 const statusLabel = {
   upcoming: "Upcoming",
@@ -141,7 +142,7 @@ export default function BatchesPage() {
   };
 
   return (
-    <Box sx={{ py: { xs: 6, md: 9 }, backgroundColor: "#f8fafc", minHeight: "calc(100vh - 80px)" }}>
+    <Box sx={{ py: { xs: 4, sm: 6, md: 9 }, backgroundColor: "#f8fafc", minHeight: "calc(100vh - 80px)" }}>
       <Container maxWidth="lg">
         <Stack textAlign="center" spacing={1.2} sx={{ mb: { xs: 4.5, md: 6 } }}>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
@@ -152,7 +153,7 @@ export default function BatchesPage() {
           </Typography>
         </Stack>
 
-        <Stack direction="row" spacing={1} sx={{ mb: 3, flexWrap: "wrap" }}>
+        <Stack direction="row" spacing={1} sx={{ mb: 3, flexWrap: "wrap", gap: 1 }} useFlexGap>
           <Button
             variant={selectedStatus === "all" ? "contained" : "outlined"}
             onClick={() => setSelectedStatus("all")}
@@ -195,25 +196,48 @@ export default function BatchesPage() {
 
               <Grid container spacing={2.2}>
                 {grouped[status].map((batch) => (
-                  <Grid key={batch.id} size={{ xs: 12, md: 6 }}>
+                  <Grid key={batch.id} size={{ xs: 12, sm: 6 }}>
                     <Card
                       elevation={0}
-                      sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2.5, height: "100%" }}
+                      sx={{
+                        border: "1px solid rgba(15, 23, 42, 0.04)",
+                        borderRadius: 4,
+                        height: "100%",
+                        boxShadow: "0 4px 12px rgba(15, 23, 42, 0.03)",
+                        transition: "transform .3s ease, box-shadow .3s ease",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          boxShadow: "0 14px 28px rgba(15, 23, 42, 0.08)",
+                        },
+                      }}
                     >
-                      <CardContent sx={{ p: 2.5, display: "flex", flexDirection: "column", height: "100%" }}>
-                        <Chip
-                          label={statusLabel[status]}
-                          size="small"
-                          sx={{
-                            alignSelf: "flex-start",
-                            mb: 1.3,
-                            bgcolor: chipStyle[status].bg,
-                            color: chipStyle[status].color,
-                            fontWeight: 700,
-                          }}
-                        />
+                      <CardContent sx={{ p: { xs: 3, md: 3.5 }, display: "flex", flexDirection: "column", height: "100%" }}>
+                        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+                          <Box
+                            sx={{
+                              width: 52,
+                              height: 52,
+                              borderRadius: 3,
+                              bgcolor: chipStyle[status].bg,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <EventAvailableRoundedIcon sx={{ color: chipStyle[status].color, fontSize: 28 }} />
+                          </Box>
+                          <Chip
+                            label={statusLabel[status]}
+                            size="small"
+                            sx={{
+                              bgcolor: chipStyle[status].bg,
+                              color: chipStyle[status].color,
+                              fontWeight: 700,
+                            }}
+                          />
+                        </Stack>
 
-                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.6 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 800, mb: 0.6, color: "#0f172a" }}>
                           {batch.batch_name}
                         </Typography>
                         <Typography

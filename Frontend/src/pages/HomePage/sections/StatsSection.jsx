@@ -19,7 +19,7 @@ export default function StatsSection() {
       {stats.map((item) => {
         const Icon = item.icon;
         return (
-          <Grid key={item.title} size={{ xs: 12, sm: 6, md: 3 }}>
+          <Grid key={item.title} size={{ xs: 6, sm: 6, md: 3 }}>
             <Paper
               elevation={0}
               sx={{
