@@ -186,10 +186,10 @@ function FoundersSection() {
                             <RevealBox direction="up" delay={150}>
                                 <Box>
                                     <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Merriweather', Georgia, serif" }}>
-                                        Tharun Krishna
+                                        TharunKrishna
                                     </Typography>
                                     <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                                        CEO & Co-Founder
+                                        CEO 
                                     </Typography>
                                     <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "0.95rem" }}>
                                         Tharun is a passionate educator and tech entrepreneur with over 5 years of experience bridging academia and industry. His vision sparked THAKSA Academy to transform how students learn practical skills through immersive, industry-led workshops.
@@ -261,7 +261,7 @@ function FoundersSection() {
                                         Sadvisha Reddy
                                     </Typography>
                                     <Typography sx={{ color: "#0f766e", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                                        Chief Technology Officer
+                                        CTO & Founder
                                     </Typography>
                                     <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "0.95rem" }}>
                                         Sadvisha leads the technical direction of THAKSA Academy, building scalable learning infrastructure and curating workshop curricula that stay ahead of industry trends. Her deep expertise in software architecture empowers students with cutting-edge skills.
@@ -399,10 +399,10 @@ const colleges = [
     { name: "JNTU Hyderabad", abbr: "JNTU", color: "#6366f1" },
     { name: "Osmania University", abbr: "OU", color: "#0891b2" },
     { name: "CMR College of Engineering", abbr: "CMR", color: "#d97706" },
-    { name: "VNR VJIET", abbr: "VNR", color: "#0f766e" },
-    { name: "CBIT Osmania", abbr: "CBIT", color: "#7c3aed" },
-    { name: "Vasavi College of Engineering", abbr: "VCE", color: "#dc2626" },
-    { name: "BVRIT Hyderabad", abbr: "BVRIT", color: "#0891b2" },
+    { name: "SR University", abbr: "SRU", color: "#0f766e" },
+    { name: "KITS Warangal", abbr: "KITS", color: "#7c3aed" },
+    { name: "Vaagdevi College of Engineering", abbr: "VCE", color: "#dc2626" },
+    { name: "Mallareddy Institute of Technology", abbr: "MIT", color: "#0891b2" },
     { name: "Sreenidhi Institute of Science and Technology", abbr: "SNIST", color: "#16a34a" },
 ];
 
@@ -498,9 +498,9 @@ function TrustedCollegesSection() {
 // ───────────────────────────────────────────────
 const testimonials = [
     {
-        name: "Priya Sharma",
+        name: "Mohammed Abdul Mannan",
         role: "Final Year CSE Student",
-        college: "CBIT, Hyderabad",
+        college: "VCE, Warangal",
         rating: 5,
         text: "The THAKSA workshop on Full Stack Development was absolutely mind-blowing! The hands-on sessions helped me build a real project in just 2 days. The mentors were incredibly approachable and explained everything clearly. Highly recommend to every engineering student!",
         avatar: "PS",
