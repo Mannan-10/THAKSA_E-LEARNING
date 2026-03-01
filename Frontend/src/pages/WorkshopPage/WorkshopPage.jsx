@@ -160,6 +160,7 @@ function FoundersSection() {
                                                 height: "100%",
                                                 borderRadius: "50%",
                                                 objectFit: "cover",
+                                                objectPosition: "top center",
                                                 border: "4px solid #fff",
                                             }}
                                         />
@@ -174,7 +175,7 @@ function FoundersSection() {
                                             transform: "translateX(-50%)",
                                             bgcolor: "#6366f1",
                                             color: "#fff",
-                                            fontWeight: 700,
+                                            fontWeight: 900,
                                             fontSize: "0.7rem",
                                             whiteSpace: "nowrap",
                                             boxShadow: "0 4px 12px rgba(99,102,241,0.4)",
@@ -185,13 +186,13 @@ function FoundersSection() {
 
                             <RevealBox direction="up" delay={150}>
                                 <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
-                                        TharunKrishna
+                                    <Typography noWrap variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
+                                        K. Tharunkrishna
                                     </Typography>
-                                    <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                                        CEO 
+                                    <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.98rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                        CEO
                                     </Typography>
-                                    <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "0.95rem" }}>
+                                    <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "1.1rem" }}>
                                         Tharun is a passionate educator and tech entrepreneur with over 5 years of experience bridging academia and industry. His vision sparked THAKSA Academy to transform how students learn practical skills through immersive, industry-led workshops.
                                     </Typography>
                                     <Stack direction="row" spacing={1} sx={{ mt: 2 }}>

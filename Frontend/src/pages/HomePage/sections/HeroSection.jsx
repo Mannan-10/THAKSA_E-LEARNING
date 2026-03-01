@@ -1,4 +1,4 @@
-import { Box, Card, Chip, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Card, Chip, Container, Grid, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRounded";
 import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
@@ -194,6 +194,8 @@ function AnimatedCard({ module, index }) {
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
@@ -234,93 +236,171 @@ export default function HeroSection() {
       />
 
       <Container maxWidth="lg" sx={{ position: "relative" }}>
-        {/* Badge */}
-        <Box
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 1,
-            bgcolor: "rgba(99,102,241,0.1)",
-            border: "1px solid rgba(99,102,241,0.2)",
-            borderRadius: 10,
-            px: 2,
-            py: 0.7,
-            mb: 3,
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? "translateY(0)" : "translateY(-12px)",
-            transition: "all 0.5s ease",
-          }}
+        {/* ── Top row: text content + logo ── */}
+        <Grid container spacing={4} alignItems="center"
+          sx={{ mb: { xs: 0, md: 0 } }}
         >
-          <SchoolRoundedIcon sx={{ fontSize: 18, color: "#6366f1" }} />
-          <Typography sx={{ fontWeight: 700, fontSize: "0.82rem", color: "#6366f1" }}>
-            THAKSA Academy — Empowering Future Professionals
-          </Typography>
-        </Box>
+          {/* TEXT COLUMN */}
+          <Grid size={{ xs: 12, md: 7 }}>
+            {/* Mobile logo — shown only on small screens, above the badge */}
+            {isMobile && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: 3,
+                  opacity: mounted ? 1 : 0,
+                  transform: mounted ? "scale(1)" : "scale(0.85)",
+                  transition: "all 0.6s ease",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={new URL("./logo.jpeg", import.meta.url).href}
+                  alt="THAKSA Academy Logo"
+                  sx={{
+                    width: { xs: 120, sm: 150 },
+                    height: { xs: 120, sm: 150 },
+                    objectFit: "contain",
+                    borderRadius: 4,
+                    boxShadow: "0 12px 40px rgba(99,102,241,0.18), 0 4px 16px rgba(15,23,42,0.08)",
+                    border: "2px solid rgba(99,102,241,0.15)",
+                    background: "#fff",
+                  }}
+                />
+              </Box>
+            )}
 
-        {/* Main Headline */}
-        <Typography
-          variant="h1"
-          sx={{
-            fontSize: { xs: "2.2rem", sm: "3rem", md: "4rem" },
-            fontWeight: 900,
-            lineHeight: 1.06,
-            letterSpacing: "-0.04em",
-            color: "#0f172a",
-            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
-            maxWidth: 760,
-            mb: 0.5,
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? "translateY(0)" : "translateY(20px)",
-            transition: "all 0.6s ease 0.1s",
-          }}
-        >
-          Where Skills Meet{" "}
-          <Box
-            component="span"
-            sx={{
-              background: "linear-gradient(90deg, #6366f1, #0891b2)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+            {/* Badge */}
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                bgcolor: "rgba(99,102,241,0.1)",
+                border: "1px solid rgba(99,102,241,0.2)",
+                borderRadius: 10,
+                px: 2,
+                py: 0.7,
+                mb: 3,
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "translateY(0)" : "translateY(-12px)",
+                transition: "all 0.5s ease",
+              }}
+            >
+              <SchoolRoundedIcon sx={{ fontSize: 18, color: "#6366f1" }} />
+              <Typography sx={{ fontWeight: 700, fontSize: "0.82rem", color: "#6366f1" }}>
+                THAKSA Academy — Empowering Future Professionals
+              </Typography>
+            </Box>
+
+            {/* Main Headline */}
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: "2.2rem", sm: "3rem", md: "4rem" },
+                fontWeight: 900,
+                lineHeight: 1.06,
+                letterSpacing: "-0.04em",
+                color: "#0f172a",
+                fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+                mb: 0.5,
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "translateY(0)" : "translateY(20px)",
+                transition: "all 0.6s ease 0.1s",
+              }}
+            >
+              Where Skills Meet{" "}
+              <Box
+                component="span"
+                sx={{
+                  background: "linear-gradient(90deg, #6366f1, #0891b2)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Opportunity
+              </Box>
+            </Typography>
+
+            {/* Sub-headline */}
+            <Typography
+              variant="h4"
+              sx={{
+                fontSize: { xs: "1.15rem", md: "1.5rem" },
+                fontWeight: 700,
+                color: "#334155",
+                mb: 2,
+                mt: 1,
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "translateY(0)" : "translateY(20px)",
+                transition: "all 0.6s ease 0.2s",
+              }}
+            >
+              Workshops · Training & Placement · Final Year Projects
+            </Typography>
+
+            {/* Description */}
+            <Typography
+              sx={{
+                fontSize: { xs: "1rem", md: "1.1rem" },
+                color: "#475569",
+                maxWidth: 560,
+                lineHeight: 1.75,
+                mb: { xs: 6, md: 8 },
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "translateY(0)" : "translateY(20px)",
+                transition: "all 0.6s ease 0.3s",
+              }}
+            >
+              THAKSA Academy bridges the gap between academia and industry with immersive offline
+              workshops, structured placement programs, and expert-guided final year projects — all
+              designed to make you job-ready from day one.
+            </Typography>
+          </Grid>
+
+          {/* LOGO COLUMN — desktop only */}
+          <Grid
+            size={{ xs: 12, md: 5 }}
+            sx={{ display: { xs: "none", md: "flex" }, justifyContent: "center", alignItems: "center" }}
           >
-            Opportunity
-          </Box>
-        </Typography>
-
-        {/* Sub-headline */}
-        <Typography
-          variant="h4"
-          sx={{
-            fontSize: { xs: "1.15rem", md: "1.5rem" },
-            fontWeight: 700,
-            color: "#334155",
-            mb: 2,
-            mt: 1,
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? "translateY(0)" : "translateY(20px)",
-            transition: "all 0.6s ease 0.2s",
-          }}
-        >
-          Workshops · Training & Placement · Final Year Projects
-        </Typography>
-
-        {/* Description */}
-        <Typography
-          sx={{
-            fontSize: { xs: "1rem", md: "1.1rem" },
-            color: "#475569",
-            maxWidth: 640,
-            lineHeight: 1.75,
-            mb: { xs: 6, md: 8 },
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? "translateY(0)" : "translateY(20px)",
-            transition: "all 0.6s ease 0.3s",
-          }}
-        >
-          THAKSA Academy bridges the gap between academia and industry with immersive offline
-          workshops, structured placement programs, and expert-guided final year projects — all
-          designed to make you job-ready from day one.
-        </Typography>
+            <Box
+              sx={{
+                position: "relative",
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "scale(1) translateY(0)" : "scale(0.85) translateY(20px)",
+                transition: "all 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.25s",
+              }}
+            >
+              {/* Decorative glow ring behind logo */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  inset: -24,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)",
+                  filter: "blur(20px)",
+                  pointerEvents: "none",
+                }}
+              />
+              <Box
+                component="img"
+                src={new URL("./logo.jpeg", import.meta.url).href}
+                alt="THAKSA Academy Logo"
+                sx={{
+                  width: { md: 280, lg: 340 },
+                  height: { md: 280, lg: 340 },
+                  objectFit: "contain",
+                  borderRadius: 6,
+                  boxShadow: "0 24px 64px rgba(99,102,241,0.2), 0 8px 32px rgba(15,23,42,0.1)",
+                  border: "2px solid rgba(99,102,241,0.18)",
+                  background: "#fff",
+                  position: "relative",
+                }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
 
         {/* Module Cards */}
         <Box
