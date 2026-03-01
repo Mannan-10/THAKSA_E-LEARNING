@@ -19,7 +19,7 @@ let authTheme = createTheme({
     borderRadius: 14,
   },
   typography: {
-    fontFamily: "'IBM Plex Sans', 'Trebuchet MS', 'Segoe UI', sans-serif",
+    fontFamily: "'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif",
     fontSize: 17,
     body1: {
       fontSize: "1.05rem",
@@ -30,12 +30,12 @@ let authTheme = createTheme({
       lineHeight: 1.7,
     },
     h4: {
-      fontFamily: "'Merriweather', Georgia, serif",
+      fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
       fontWeight: 800,
       letterSpacing: "-0.02em",
     },
     h5: {
-      fontFamily: "'Merriweather', Georgia, serif",
+      fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
       fontWeight: 800,
       letterSpacing: "-0.02em",
     },

@@ -82,7 +82,7 @@ export default function FinalYearProjectsPage() {
                             <RocketLaunchRoundedIcon sx={{ color: "#fff", fontSize: 40 }} />
                         </Box>
                         <Chip label="Industry Grade · IEEE Standard · Expert Mentored" sx={{ bgcolor: "rgba(217,119,6,0.1)", color: "#d97706", fontWeight: 700, mb: 2 }} />
-                        <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.5rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", lineHeight: 1.1, mb: 2 }}>
+                        <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.5rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", lineHeight: 1.1, mb: 2 }}>
                             Final Year{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#d97706,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                                 Projects
@@ -123,7 +123,7 @@ export default function FinalYearProjectsPage() {
                 <Container maxWidth="lg">
                     <RevealBox sx={{ mb: { xs: 5, md: 7 } }}>
                         <Typography sx={{ fontWeight: 800, fontSize: "0.75rem", color: "#d97706", textTransform: "uppercase", letterSpacing: "0.12em", mb: 1.5 }}>Project Domains</Typography>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                             Pick Your{" "}
                             <Box component="span" sx={{ color: "#d97706" }}>Domain of Interest</Box>
                         </Typography>
@@ -157,7 +157,7 @@ export default function FinalYearProjectsPage() {
                 <Container maxWidth="lg">
                     <RevealBox sx={{ mb: { xs: 5, md: 7 } }}>
                         <Typography sx={{ fontWeight: 800, fontSize: "0.75rem", color: "#0f766e", textTransform: "uppercase", letterSpacing: "0.12em", mb: 1.5 }}>How It Works</Typography>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                             From Idea to{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#0f766e,#0891b2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Viva-Ready</Box>
                         </Typography>
@@ -189,7 +189,7 @@ export default function FinalYearProjectsPage() {
             <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: "#fff7ed" }}>
                 <Container maxWidth="lg">
                     <RevealBox sx={{ textAlign: "center", mb: { xs: 5, md: 6 } }}>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.8rem", md: "2.6rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.8rem", md: "2.6rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1 }}>
                             Project{" "}
                             <Box component="span" sx={{ color: "#d97706" }}>Success Stories</Box>
                         </Typography>
@@ -221,7 +221,7 @@ export default function FinalYearProjectsPage() {
             <Box sx={{ py: { xs: 8, md: 12 }, background: "linear-gradient(135deg,#0f172a 0%,#1c1007 100%)", textAlign: "center" }}>
                 <Container maxWidth="sm">
                     <RevealBox>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2rem", md: "2.8rem" }, color: "#fff", fontFamily: "'Merriweather', Georgia, serif", mb: 2 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2rem", md: "2.8rem" }, color: "#fff", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 2 }}>
                             Start Your{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#fcd34d,#fb923c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Project Journey</Box>
                         </Typography>

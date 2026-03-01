@@ -63,7 +63,7 @@ export default function DashboardLayout() {
           fontSize: "1.35rem",
           fontWeight: 900,
           color: "#0f172a",
-          fontFamily: "'Merriweather', Georgia, serif",
+          fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
         }}
       >
         Thaksa

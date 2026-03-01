@@ -154,7 +154,7 @@ function AnimatedCard({ module, index }) {
           sx={{
             fontWeight: 900,
             color: "#0f172a",
-            fontFamily: "'Merriweather', Georgia, serif",
+            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
             mb: 0.5,
             lineHeight: 1.2,
           }}
@@ -266,7 +266,7 @@ export default function HeroSection() {
             lineHeight: 1.06,
             letterSpacing: "-0.04em",
             color: "#0f172a",
-            fontFamily: "'Merriweather', Georgia, serif",
+            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
             maxWidth: 760,
             mb: 0.5,
             opacity: mounted ? 1 : 0,

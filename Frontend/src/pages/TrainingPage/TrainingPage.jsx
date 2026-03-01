@@ -80,7 +80,7 @@ export default function TrainingPage() {
                             <WorkspacePremiumRoundedIcon sx={{ color: "#fff", fontSize: 40 }} />
                         </Box>
                         <Chip label="Career Launch Program" sx={{ bgcolor: "rgba(15,118,110,0.1)", color: "#0f766e", fontWeight: 700, mb: 2 }} />
-                        <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.5rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", lineHeight: 1.1, mb: 2 }}>
+                        <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.5rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", lineHeight: 1.1, mb: 2 }}>
                             Training &{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#0f766e,#0891b2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                                 Placement
@@ -116,7 +116,7 @@ export default function TrainingPage() {
                 <Container maxWidth="lg">
                     <RevealBox sx={{ mb: { xs: 5, md: 7 } }}>
                         <Typography sx={{ fontWeight: 800, fontSize: "0.75rem", color: "#0f766e", textTransform: "uppercase", letterSpacing: "0.12em", mb: 1.5 }}>Program Roadmap</Typography>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                             Your Journey to{" "}
                             <Box component="span" sx={{ color: "#0f766e" }}>Getting Placed</Box>
                         </Typography>
@@ -150,7 +150,7 @@ export default function TrainingPage() {
                 <Container maxWidth="lg">
                     <RevealBox sx={{ textAlign: "center", mb: { xs: 5, md: 7 } }}>
                         <Typography sx={{ fontWeight: 800, fontSize: "0.75rem", color: "#0891b2", textTransform: "uppercase", letterSpacing: "0.12em", mb: 1.5 }}>Our Network</Typography>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                             Hiring{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#0891b2,#0f766e)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Partners</Box>
                         </Typography>
@@ -179,7 +179,7 @@ export default function TrainingPage() {
             <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: "#f8faff" }}>
                 <Container maxWidth="lg">
                     <RevealBox sx={{ textAlign: "center", mb: { xs: 5, md: 6 } }}>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.8rem", md: "2.6rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.8rem", md: "2.6rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1 }}>
                             Placement{" "}
                             <Box component="span" sx={{ color: "#0f766e" }}>Success Stories</Box>
                         </Typography>
@@ -211,7 +211,7 @@ export default function TrainingPage() {
             <Box sx={{ py: { xs: 8, md: 12 }, background: "linear-gradient(135deg,#0f172a 0%,#134e4a 100%)", textAlign: "center" }}>
                 <Container maxWidth="sm">
                     <RevealBox>
-                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2rem", md: "2.8rem" }, color: "#fff", fontFamily: "'Merriweather', Georgia, serif", mb: 2 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "2rem", md: "2.8rem" }, color: "#fff", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 2 }}>
                             Ready to Get{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#6ee7b7,#67e8f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Placed?</Box>
                         </Typography>

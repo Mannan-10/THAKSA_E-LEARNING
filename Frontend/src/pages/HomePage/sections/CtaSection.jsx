@@ -22,7 +22,7 @@ export default function CtaSection() {
           color: "#0f172a",
           mb: 1.2,
           fontSize: { xs: "1.6rem", md: "2rem" },
-          fontFamily: "'Merriweather', Georgia, serif",
+          fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
         }}
       >
         Start Your Career-Oriented Learning Journey

@@ -71,7 +71,7 @@ export default function Navbar() {
               fontWeight: 900,
               fontSize: { xs: "1.2rem", md: "1.35rem" },
               letterSpacing: "-0.02em",
-              fontFamily: "'Merriweather', Georgia, serif",
+              fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
             }}
           >
             Thaksa
@@ -199,7 +199,7 @@ export default function Navbar() {
                 fontWeight: 900,
                 fontSize: "1.25rem",
                 color: "#0f172a",
-                fontFamily: "'Merriweather', Georgia, serif",
+                fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
               }}
             >
               Thaksa

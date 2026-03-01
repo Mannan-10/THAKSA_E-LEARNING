@@ -43,7 +43,7 @@ export default function TracksSection() {
             sx={{
               fontWeight: 900,
               color: "#0f172a",
-              fontFamily: "'Merriweather', Georgia, serif",
+              fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
             }}
           >
             Learning Tracks

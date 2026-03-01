@@ -116,7 +116,7 @@ function FoundersSection() {
                             fontWeight: 900,
                             fontSize: { xs: "2rem", md: "3rem" },
                             color: "#0f172a",
-                            fontFamily: "'Merriweather', Georgia, serif",
+                            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
                             mb: 1.5,
                         }}
                     >
@@ -185,7 +185,7 @@ function FoundersSection() {
 
                             <RevealBox direction="up" delay={150}>
                                 <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Merriweather', Georgia, serif" }}>
+                                    <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
                                         TharunKrishna
                                     </Typography>
                                     <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -257,7 +257,7 @@ function FoundersSection() {
 
                             <RevealBox direction="up" delay={300}>
                                 <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Merriweather', Georgia, serif" }}>
+                                    <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
                                         Sadvisha Reddy
                                     </Typography>
                                     <Typography sx={{ color: "#0f766e", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -332,7 +332,7 @@ function WorkshopDetailsSection() {
             <Container maxWidth="lg">
                 <RevealBox>
                     <SectionLabel text="Our Workshops" color="#0891b2" />
-                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                         Conducted <Box component="span" sx={{ color: "#0891b2" }}>Offline</Box>, Built for Impact
                     </Typography>
                     <Typography sx={{ color: "#475569", maxWidth: 580, lineHeight: 1.75, mb: { xs: 5, md: 7 } }}>
@@ -417,7 +417,7 @@ function TrustedCollegesSection() {
             <Container maxWidth="lg">
                 <RevealBox sx={{ textAlign: "center", mb: { xs: 5, md: 7 } }}>
                     <SectionLabel text="Our Reach" color="#6366f1" />
-                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                         Trusted by{" "}
                         <Box component="span" sx={{ background: "linear-gradient(90deg,#6366f1,#0891b2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                             Leading Colleges
@@ -541,7 +541,7 @@ function TestimonialsSection() {
             <Container maxWidth="lg">
                 <RevealBox sx={{ textAlign: "center", mb: { xs: 5, md: 7 } }}>
                     <SectionLabel text="What People Say" color="#d97706" />
-                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                         Students & Educators{" "}
                         <Box component="span" sx={{ color: "#d97706" }}>Love Us</Box>
                     </Typography>
@@ -637,7 +637,7 @@ function MissionSection() {
                             },
                         }}
                     >
-                        <Typography sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3rem" }, color: "#fff", fontFamily: "'Merriweather', Georgia, serif" }}>
+                        <Typography sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3rem" }, color: "#fff", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
                             T
                         </Typography>
                     </Box>
@@ -647,7 +647,7 @@ function MissionSection() {
                             fontWeight: 900,
                             fontSize: { xs: "2.5rem", md: "4rem" },
                             color: "#fff",
-                            fontFamily: "'Merriweather', Georgia, serif",
+                            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
                             letterSpacing: "-0.02em",
                             mb: 1,
                         }}
@@ -753,7 +753,7 @@ function FaqsSection() {
             <Container maxWidth="md">
                 <RevealBox sx={{ textAlign: "center", mb: { xs: 5, md: 7 } }}>
                     <SectionLabel text="Frequently Asked Questions" color="#0f766e" />
-                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                    <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                         Got Questions?{" "}
                         <Box component="span" sx={{ color: "#0f766e" }}>We Have Answers.</Box>
                     </Typography>
@@ -808,7 +808,7 @@ function ContactSection() {
                     <Grid size={{ xs: 12, md: 6 }}>
                         <RevealBox direction="left">
                             <SectionLabel text="Get In Touch" color="#6366f1" />
-                            <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Merriweather', Georgia, serif", mb: 1.5 }}>
+                            <Typography variant="h2" sx={{ fontWeight: 900, fontSize: { xs: "1.9rem", md: "2.8rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", mb: 1.5 }}>
                                 Let's Bring a Workshop{" "}
                                 <Box component="span" sx={{ color: "#6366f1" }}>to Your Campus</Box>
                             </Typography>
@@ -915,7 +915,7 @@ function ContactSection() {
                                 >
                                     <WhatsAppIcon sx={{ color: "#25D366", fontSize: 36 }} />
                                 </Box>
-                                <Typography sx={{ fontWeight: 900, fontSize: "1.5rem", color: "#fff", mb: 1, fontFamily: "'Merriweather', Georgia, serif" }}>
+                                <Typography sx={{ fontWeight: 900, fontSize: "1.5rem", color: "#fff", mb: 1, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
                                     Start a Conversation
                                 </Typography>
                                 <Typography sx={{ color: "rgba(255,255,255,0.6)", mb: 3.5, lineHeight: 1.7 }}>
@@ -1061,7 +1061,7 @@ function PageHero() {
                         fontWeight: 900,
                         fontSize: { xs: "2.2rem", md: "3.4rem" },
                         color: "#0f172a",
-                        fontFamily: "'Merriweather', Georgia, serif",
+                        fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
                         lineHeight: 1.12,
                         mb: 1.5,
                     }}

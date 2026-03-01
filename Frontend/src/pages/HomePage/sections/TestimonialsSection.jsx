@@ -27,7 +27,7 @@ export default function TestimonialsSection() {
           fontWeight: 900,
           color: "#0f172a",
           mb: 3,
-          fontFamily: "'Merriweather', Georgia, serif",
+          fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
         }}
       >
         Learner Outcomes
