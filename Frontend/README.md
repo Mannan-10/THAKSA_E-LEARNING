@@ -169,9 +169,9 @@ The app will start at **http://localhost:5173**
 ## 🎨 Key Features
 
 - ✅ **Role-based access control** — Student, Instructor, Admin
-- ✅ **Animated hero section** with 3 module cards
+- ✅ **Animated hero section** — logo on right (desktop) / centered (mobile) + 3 module cards
 - ✅ **Workshop Page** — 7 sections (founders, details, colleges, testimonials, FAQ, contact)
-- ✅ **WhatsApp floating button** (9908597337) on all module pages
+- ✅ **WhatsApp floating button** (+91 90525 15284) on all module pages
 - ✅ **Responsive** — mobile-first layout
 - ✅ **Dark-mode-ready** component architecture
 - ✅ **Live session tracking** and attendance management

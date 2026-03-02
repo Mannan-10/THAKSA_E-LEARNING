@@ -48,7 +48,7 @@ npm run dev     # starts on http://localhost:5173
 - 🚀 **Final Year Projects** — IEEE-standard guided project execution
 - 📚 **Courses & Batches** — Structured learning tracks with live sessions
 - 🔐 **Role-Based Dashboards** — Student · Instructor · Admin portals
-- 📱 **WhatsApp Integration** — Floating contact button (+91 99085 97337)
+- 📱 **WhatsApp Integration** — Floating contact button (+91 90525 15284)
 
 ---
 
