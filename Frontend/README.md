@@ -18,14 +18,14 @@
 ### 🔧 Workshops Page
 ![Workshops](./public/screenshots/workshops.png)
 
+### 👥 Workshop Founders
+![Workshop Founders](./public/screenshots/workshops_founders.png)
+
 ### 💼 Training & Placement Page
 ![Training](./public/screenshots/training.png)
 
 ### 🚀 Final Year Projects Page
 ![Final Year Projects](./public/screenshots/fyp.png)
-
-### 📚 Courses Page
-![Courses](./public/screenshots/courses.png)
 
 ### 🔐 Login Page
 ![Login](./public/screenshots/login.png)
