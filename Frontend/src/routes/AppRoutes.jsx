@@ -13,6 +13,7 @@ import ContactPage from "../pages/ContactPage/index.js";
 import WorkshopPage from "../pages/WorkshopPage";
 import TrainingPage from "../pages/TrainingPage";
 import FinalYearProjectsPage from "../pages/FinalYearProjectsPage";
+import PlacementsPage from "../pages/PlacementsPage";
 import NotFound from "../pages/NotFound";
 import AccessDenied from "../pages/AccessDenied";
 
@@ -133,6 +134,14 @@ export default function AppRoutes() {
         element={
           <PublicLayout>
             <FinalYearProjectsPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/placements"
+        element={
+          <PublicLayout>
+            <PlacementsPage />
           </PublicLayout>
         }
       />

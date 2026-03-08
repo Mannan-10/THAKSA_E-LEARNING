@@ -4,12 +4,18 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Container,
   Grid,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { submitContactMessage } from "../../services/contactService";
 import useToast from "../../hooks/useToast";
 
@@ -71,98 +77,137 @@ export default function ContactPage() {
   return (
     <Box
       sx={{
-        py: { xs: 6, md: 9 },
+        py: { xs: 7, md: 10 },
         minHeight: "calc(100vh - 80px)",
         position: "relative",
         overflow: "hidden",
         background:
-          "radial-gradient(circle at 15% 20%, rgba(37,99,235,0.16) 0%, rgba(37,99,235,0) 45%), radial-gradient(circle at 85% 0%, rgba(20,184,166,0.14) 0%, rgba(20,184,166,0) 40%), linear-gradient(180deg, #f8fbff 0%, #f1f5f9 100%)",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-          opacity: 0.25,
-          pointerEvents: "none",
-        },
+          "radial-gradient(circle at 12% 15%, rgba(15,118,110,0.13) 0%, rgba(15,118,110,0) 45%), radial-gradient(circle at 90% 10%, rgba(37,99,235,0.14) 0%, rgba(37,99,235,0) 40%), linear-gradient(180deg, #f8fbff 0%, #eef2f7 100%)",
       }}
     >
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-        <Stack spacing={1} textAlign="center" sx={{ mb: 5 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Contact Us
+        <Stack spacing={1.2} textAlign="center" sx={{ mb: 5.5 }}>
+          <Chip
+            icon={<SchoolRoundedIcon sx={{ color: "#0f766e !important" }} />}
+            label="Training Support Desk"
+            sx={{
+              alignSelf: "center",
+              bgcolor: "rgba(15,118,110,0.1)",
+              color: "#0f766e",
+              fontWeight: 700,
+            }}
+          />
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 900,
+              color: "#0f172a",
+              fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+              fontSize: { xs: "1.9rem", md: "2.5rem" },
+            }}
+          >
+            Contact the Training Team
           </Typography>
-          <Typography color="text.secondary" sx={{ maxWidth: 720, mx: "auto" }}>
-            Reach out for course guidance, enrollment details, and learning support.
+          <Typography color="text.secondary" sx={{ maxWidth: 760, mx: "auto" }}>
+            Reach out for course roadmap guidance, batch schedules, and enrollment help.
+            Share your background and we will suggest the best training path.
           </Typography>
         </Stack>
 
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 5 }}>
-            <Card
-              elevation={0}
-              sx={{
-                border: "1px solid rgba(148,163,184,0.28)",
-                borderRadius: 2.5,
-                backgroundColor: "rgba(255,255,255,0.9)",
-                backdropFilter: "blur(2px)",
-              }}
-            >
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-                  Contact Information
-                </Typography>
-                <Stack spacing={1.5}>
-                  <Typography>
-                    <strong>Email:</strong> support@thaksa.com
+            <Stack spacing={2}>
+              <Card
+                elevation={0}
+                sx={{
+                  border: "1px solid rgba(148,163,184,0.25)",
+                  borderRadius: 3,
+                  backgroundColor: "rgba(255,255,255,0.92)",
+                }}
+              >
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 800, mb: 2.2, color: "#0f172a" }}>
+                    Contact Information
                   </Typography>
-                  <Typography>
-                    <strong>Phone / WhatsApp:</strong> +91 99999 99999
-                  </Typography>
-                  <Typography>
-                    <strong>Response Time:</strong> Within 24-48 hours
-                  </Typography>
-                  <Typography>
-                    <strong>Availability:</strong> Monday to Saturday
-                  </Typography>
-                </Stack>
-              </CardContent>
-            </Card>
+                  <Stack spacing={1.8}>
+                    <Stack direction="row" spacing={1.2} alignItems="center">
+                      <EmailRoundedIcon sx={{ color: "#1d4ed8", fontSize: 20 }} />
+                      <Typography sx={{ color: "#334155" }}>
+                        <strong>Email:</strong> thaksa.academy@gmail.com
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1.2} alignItems="center">
+                      <PhoneRoundedIcon sx={{ color: "#0f766e", fontSize: 20 }} />
+                      <Typography sx={{ color: "#334155" }}>
+                        <strong>Phone:</strong> +91 90525 15284
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1.2} alignItems="center">
+                      <WhatsAppIcon sx={{ color: "#25D366", fontSize: 20 }} />
+                      <Typography sx={{ color: "#334155" }}>
+                        <strong>WhatsApp:</strong> +91 90525 15284
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1.2} alignItems="center">
+                      <AccessTimeRoundedIcon sx={{ color: "#d97706", fontSize: 20 }} />
+                      <Typography sx={{ color: "#334155" }}>
+                        <strong>Support Hours:</strong> Mon-Sat, 9 AM-7 PM IST
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </CardContent>
+              </Card>
 
-            <Card
-              elevation={0}
-              sx={{
-                mt: 2,
-                border: "1px solid rgba(148,163,184,0.28)",
-                borderRadius: 2.5,
-                backgroundColor: "rgba(255,255,255,0.9)",
-                backdropFilter: "blur(2px)",
-              }}
-            >
-              <CardContent sx={{ p: 3 }}>
-                <Typography color="text.secondary">
-                  Share your learning goals and background. We will suggest the most
-                  suitable path and next steps.
-                </Typography>
-              </CardContent>
-            </Card>
+              <Card
+                elevation={0}
+                sx={{
+                  border: "1px solid rgba(148,163,184,0.25)",
+                  borderRadius: 3,
+                  background: "linear-gradient(135deg, rgba(15,118,110,0.08) 0%, rgba(37,99,235,0.08) 100%)",
+                }}
+              >
+                <CardContent sx={{ p: 3 }}>
+                  <Typography sx={{ fontWeight: 700, color: "#0f172a", mb: 1 }}>
+                    Best way to get quick guidance
+                  </Typography>
+                  <Typography sx={{ color: "#475569", mb: 2 }}>
+                    Send your current skill level, preferred domain, and available timings.
+                    Our team will recommend suitable courses and upcoming batches.
+                  </Typography>
+                  <Button
+                    component="a"
+                    href="https://wa.me/919052515284?text=Hi%20THAKSA%2C%20I%20need%20training%20guidance."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="contained"
+                    startIcon={<WhatsAppIcon />}
+                    sx={{
+                      bgcolor: "#25D366",
+                      textTransform: "none",
+                      fontWeight: 800,
+                      borderRadius: 2,
+                      "&:hover": { bgcolor: "#1ebe58" },
+                    }}
+                  >
+                    Chat on WhatsApp
+                  </Button>
+                </CardContent>
+              </Card>
+            </Stack>
           </Grid>
 
           <Grid size={{ xs: 12, lg: 7 }}>
             <Card
               elevation={0}
               sx={{
-                border: "1px solid rgba(148,163,184,0.28)",
-                borderRadius: 2.5,
-                backgroundColor: "rgba(255,255,255,0.94)",
-                backdropFilter: "blur(3px)",
+                border: "1px solid rgba(148,163,184,0.25)",
+                borderRadius: 3,
+                backgroundColor: "rgba(255,255,255,0.95)",
               }}
             >
-              <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-                  Send a Message
+              <CardContent sx={{ p: { xs: 2.5, md: 3.2 } }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 2.3, color: "#0f172a" }}>
+                  Send an Enquiry
                 </Typography>
                 <Stack component="form" spacing={2} onSubmit={handleSubmit} noValidate>
                   <Grid container spacing={2}>
@@ -217,8 +262,8 @@ export default function ContactPage() {
                     error={Boolean(errors.message)}
                     helperText={errors.message}
                   />
-                  <Button type="submit" variant="contained" sx={{ py: 1.2 }} disabled={loading}>
-                    {loading ? "Sending..." : "Send Message"}
+                  <Button type="submit" variant="contained" sx={{ py: 1.25 }} disabled={loading}>
+                    {loading ? "Sending..." : "Submit Enquiry"}
                   </Button>
                 </Stack>
               </CardContent>

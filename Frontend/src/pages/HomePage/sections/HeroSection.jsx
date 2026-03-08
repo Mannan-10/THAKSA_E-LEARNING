@@ -27,7 +27,7 @@ const modules = [
   {
     id: "training",
     icon: WorkspacePremiumRoundedIcon,
-    title: "Training & Placement",
+    title: "Training",
     subtitle: "Career Launch Program",
     description:
       "Structured training tracks with aptitude, technical, and soft-skill modules, followed by dedicated placement support with top hiring companies.",
@@ -56,6 +56,22 @@ const modules = [
     tagColor: "#d97706",
     tagBg: "rgba(217,119,6,0.1)",
   },
+  {
+    id: "placements",
+    icon: WorkspacePremiumRoundedIcon,
+    title: "Placements",
+    subtitle: "Career Opportunities",
+    description:
+      "Get dedicated placement guidance with resume support, interview preparation, and hiring connections to launch your career with confidence.",
+    color: "#0b4f8c",
+    gradient: "linear-gradient(135deg, #0b4f8c 0%, #2563eb 100%)",
+    bgGlow: "rgba(37,99,235,0.14)",
+    borderColor: "rgba(37,99,235,0.28)",
+    route: "/placements",
+    tag: "Hiring Support",
+    tagColor: "#1d4ed8",
+    tagBg: "rgba(37,99,235,0.1)",
+  },
 ];
 
 function AnimatedCard({ module, index }) {
@@ -76,7 +92,15 @@ function AnimatedCard({ module, index }) {
   const Icon = module.icon;
 
   return (
-    <Grid ref={ref} size={{ xs: 12, sm: 6, md: 4 }}>
+    <Grid
+      ref={ref}
+      sx={{
+        minWidth: { xs: "86vw", sm: "46vw", md: "32vw", lg: "24vw" },
+        maxWidth: { xs: "86vw", sm: "46vw", md: "32vw", lg: "24vw" },
+        scrollSnapAlign: "start",
+        flexShrink: 0,
+      }}
+    >
       <Card
         onClick={() => navigate(module.route)}
         onMouseEnter={() => setHovered(true)}
@@ -99,7 +123,7 @@ function AnimatedCard({ module, index }) {
           transition: `all 0.55s cubic-bezier(0.34,1.56,0.64,1) ${index * 120}ms`,
           position: "relative",
           overflow: "hidden",
-          p: { xs: 3, md: 3.5 },
+          p: { xs: 2.6, sm: 3, md: 3.2 },
         }}
       >
         {/* Glow blob */}
@@ -173,7 +197,7 @@ function AnimatedCard({ module, index }) {
         >
           {module.subtitle}
         </Typography>
-        <Typography sx={{ color: "#475569", fontSize: "0.92rem", lineHeight: 1.6, mb: 2.5 }}>
+        <Typography sx={{ color: "#475569", fontSize: { xs: "0.9rem", md: "0.92rem" }, lineHeight: 1.6, mb: 2.5 }}>
           {module.description}
         </Typography>
 
@@ -337,7 +361,7 @@ export default function HeroSection() {
                 transition: "all 0.6s ease 0.2s",
               }}
             >
-              Workshops · Training & Placement · Final Year Projects
+              Workshops · Training · Final Year Projects · Placements
             </Typography>
 
             {/* Description */}
@@ -421,7 +445,33 @@ export default function HeroSection() {
           >
             ⚡ Explore Our Programmes
           </Typography>
-          <Grid container spacing={2.5}>
+          <Grid
+            container
+            wrap="nowrap"
+            sx={{
+              gap: { xs: 2, md: 2.5 },
+              overflowX: "auto",
+              overflowY: "hidden",
+              pb: 1,
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "thin",
+              "&::-webkit-scrollbar": {
+                height: 8,
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "rgba(15,23,42,0.06)",
+                borderRadius: 999,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "rgba(99,102,241,0.45)",
+                borderRadius: 999,
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                background: "rgba(99,102,241,0.6)",
+              },
+            }}
+          >
             {modules.map((mod, i) => (
               <AnimatedCard key={mod.id} module={mod} index={i} />
             ))}

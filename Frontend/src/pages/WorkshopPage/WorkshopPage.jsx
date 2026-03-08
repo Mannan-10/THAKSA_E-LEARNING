@@ -26,8 +26,6 @@ import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
-import tharunImg from "../HomePage/sections/cofounder-tharunkrishna.png";
-import sadvishaImg from "../HomePage/sections/cto-sadvisha-reddy.png";
 import logo from "../HomePage/sections/thaksa.jpeg"
 
 // ───────────────────────────────────────────────
@@ -92,199 +90,6 @@ function SectionLabel({ text, color = "#6366f1" }) {
 
 // ───────────────────────────────────────────────
 // SECTION 1 — FOUNDERS
-// ───────────────────────────────────────────────
-function FoundersSection() {
-    return (
-        <Box
-            sx={{
-                py: { xs: 8, md: 12 },
-                background:
-                    "linear-gradient(135deg, #f0f4ff 0%, #fafbff 50%, #f0fdf9 100%)",
-                position: "relative",
-                overflow: "hidden",
-            }}
-        >
-            {/* decorative circles */}
-            <Box sx={{ position: "absolute", top: -80, left: -80, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
-            <Box sx={{ position: "absolute", bottom: -60, right: -60, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(15,118,110,0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-            <Container maxWidth="lg">
-                <RevealBox>
-                    <SectionLabel text="Meet Our Leadership" />
-                    <Typography
-                        variant="h2"
-                        sx={{
-                            fontWeight: 900,
-                            fontSize: { xs: "2rem", md: "3rem" },
-                            color: "#0f172a",
-                            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
-                            mb: 1.5,
-                        }}
-                    >
-                        Driven by Passion,{" "}
-                        <Box component="span" sx={{ background: "linear-gradient(90deg,#6366f1,#0891b2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                            Built on Purpose
-                        </Box>
-                    </Typography>
-                    <Typography sx={{ color: "#475569", fontSize: "1.05rem", maxWidth: 580, mb: { xs: 6, md: 8 }, lineHeight: 1.7 }}>
-                        THAKSA Academy is led by industry professionals who believe real education happens when passion meets practice.
-                    </Typography>
-                </RevealBox>
-
-                <Grid container spacing={{ xs: 5, md: 8 }} alignItems="center">
-                    {/* Tharun Krishna – CEO */}
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Stack direction={{ xs: "column", sm: "row" }} spacing={4} alignItems={{ xs: "center", sm: "flex-start" }}>
-                            <RevealBox direction="left" delay={0}>
-                                <Box sx={{ position: "relative", flexShrink: 0 }}>
-                                    {/* Floating ring animation */}
-                                    <Box
-                                        sx={{
-                                            width: { xs: 160, md: 190 },
-                                            height: { xs: 160, md: 190 },
-                                            borderRadius: "50%",
-                                            background: "linear-gradient(135deg,#6366f1,#7c3aed)",
-                                            p: "4px",
-                                            animation: "floatBob 4s ease-in-out infinite",
-                                            "@keyframes floatBob": {
-                                                "0%,100%": { transform: "translateY(0px)" },
-                                                "50%": { transform: "translateY(-12px)" },
-                                            },
-                                        }}
-                                    >
-                                        <Box
-                                            component="img"
-                                            src={tharunImg}
-                                            alt="Tharun Krishna – CEO & Co-Founder"
-                                            sx={{
-                                                width: "100%",
-                                                height: "100%",
-                                                borderRadius: "50%",
-                                                objectFit: "cover",
-                                                objectPosition: "top center",
-                                                border: "4px solid #fff",
-                                            }}
-                                        />
-                                    </Box>
-                                    <Chip
-                                        label="CEO & Co-Founder"
-                                        size="small"
-                                        sx={{
-                                            position: "absolute",
-                                            bottom: 4,
-                                            left: "50%",
-                                            transform: "translateX(-50%)",
-                                            bgcolor: "#6366f1",
-                                            color: "#fff",
-                                            fontWeight: 900,
-                                            fontSize: "0.7rem",
-                                            whiteSpace: "nowrap",
-                                            boxShadow: "0 4px 12px rgba(99,102,241,0.4)",
-                                        }}
-                                    />
-                                </Box>
-                            </RevealBox>
-
-                            <RevealBox direction="up" delay={150}>
-                                <Box>
-                                    <Typography noWrap variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
-                                        K. Tharunkrishna
-                                    </Typography>
-                                    <Typography sx={{ color: "#6366f1", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                                        CEO
-                                    </Typography>
-                                    <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "1.1rem" }}>
-                                        Tharun is a passionate educator and tech entrepreneur with over 5 years of experience bridging academia and industry. His vision sparked THAKSA Academy to transform how students learn practical skills through immersive, industry-led workshops.
-                                    </Typography>
-                                    <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                                        {["Educator", "Technologist", "Mentor"].map((t) => (
-                                            <Chip key={t} label={t} size="small" sx={{ bgcolor: "rgba(99,102,241,0.1)", color: "#6366f1", fontWeight: 700, fontSize: "0.72rem" }} />
-                                        ))}
-                                    </Stack>
-                                </Box>
-                            </RevealBox>
-                        </Stack>
-                    </Grid>
-
-                    {/* Sadvisha Reddy – CTO */}
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Stack direction={{ xs: "column", sm: "row" }} spacing={4} alignItems={{ xs: "center", sm: "flex-start" }}>
-                            <RevealBox direction="left" delay={200}>
-                                <Box sx={{ position: "relative", flexShrink: 0 }}>
-                                    <Box
-                                        sx={{
-                                            width: { xs: 160, md: 190 },
-                                            height: { xs: 160, md: 190 },
-                                            borderRadius: "50%",
-                                            background: "linear-gradient(135deg,#0f766e,#0891b2)",
-                                            p: "4px",
-                                            animation: "floatBob2 4s ease-in-out infinite 0.8s",
-                                            "@keyframes floatBob2": {
-                                                "0%,100%": { transform: "translateY(0px)" },
-                                                "50%": { transform: "translateY(-12px)" },
-                                            },
-                                        }}
-                                    >
-                                        <Box
-                                            component="img"
-                                            src={sadvishaImg}
-                                            alt="Sadvisha Reddy – CTO"
-                                            sx={{
-                                                width: "100%",
-                                                height: "100%",
-                                                borderRadius: "50%",
-                                                objectFit: "cover",
-                                                objectPosition: "top",
-                                                border: "4px solid #fff",
-                                            }}
-                                        />
-                                    </Box>
-                                    <Chip
-                                        label="CTO"
-                                        size="small"
-                                        sx={{
-                                            position: "absolute",
-                                            bottom: 4,
-                                            left: "50%",
-                                            transform: "translateX(-50%)",
-                                            bgcolor: "#0f766e",
-                                            color: "#fff",
-                                            fontWeight: 700,
-                                            fontSize: "0.7rem",
-                                            boxShadow: "0 4px 12px rgba(15,118,110,0.4)",
-                                        }}
-                                    />
-                                </Box>
-                            </RevealBox>
-
-                            <RevealBox direction="up" delay={300}>
-                                <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: 900, color: "#0f172a", mb: 0.5, fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif" }}>
-                                        Sadvisha Reddy
-                                    </Typography>
-                                    <Typography sx={{ color: "#0f766e", fontWeight: 700, fontSize: "0.88rem", mb: 1.5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                                        CTO & Founder
-                                    </Typography>
-                                    <Typography sx={{ color: "#475569", lineHeight: 1.75, fontSize: "0.95rem" }}>
-                                        Sadvisha leads the technical direction of THAKSA Academy, building scalable learning infrastructure and curating workshop curricula that stay ahead of industry trends. Her deep expertise in software architecture empowers students with cutting-edge skills.
-                                    </Typography>
-                                    <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                                        {["Full-Stack", "AI/ML", "Systems"].map((t) => (
-                                            <Chip key={t} label={t} size="small" sx={{ bgcolor: "rgba(15,118,110,0.1)", color: "#0f766e", fontWeight: 700, fontSize: "0.72rem" }} />
-                                        ))}
-                                    </Stack>
-                                </Box>
-                            </RevealBox>
-                        </Stack>
-                    </Grid>
-                </Grid>
-            </Container>
-        </Box>
-    );
-}
-
-// ───────────────────────────────────────────────
-// SECTION 2 — WORKSHOP DETAILS
 // ───────────────────────────────────────────────
 const workshopDetails = [
     {
@@ -1094,7 +899,6 @@ export default function WorkshopPage() {
     return (
         <Box sx={{ bgcolor: "#fff" }}>
             <PageHero />
-            <FoundersSection />
             <WorkshopDetailsSection />
             <TrustedCollegesSection />
             <TestimonialsSection />
@@ -1105,3 +909,4 @@ export default function WorkshopPage() {
         </Box>
     );
 }
+

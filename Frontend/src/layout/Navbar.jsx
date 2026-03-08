@@ -15,10 +15,39 @@ import {
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import brandLogo from "../pages/HomePage/sections/logo.jpeg";
 
-const navItems = [
+const baseNavItems = [
   { label: "Home", to: "/" },
   { label: "Workshops", to: "/workshops" },
+  { label: "Training", to: "/training" },
+];
+
+const homeStickyNavItems = [
+  { label: "Home", to: "/" },
+  { label: "Workshops", to: "/workshops" },
+  { label: "Training", to: "/training" },
+  { label: "Projects", to: "/final-year-projects" },
+  { label: "Placement", to: "/placements" },
+];
+
+const workshopStickyNavItems = [
+  { label: "Home", to: "/" },
+  { label: "Workshops", to: "/workshops" },
+];
+
+const projectsStickyNavItems = [
+  { label: "Home", to: "/" },
+  { label: "Projects", to: "/final-year-projects" },
+];
+
+const placementsStickyNavItems = [
+  { label: "Home", to: "/" },
+  { label: "Placement", to: "/placements" },
+];
+
+const trainingPageNavItems = [
+  { label: "Home", to: "/" },
   { label: "Training", to: "/training" },
   { label: "Courses", to: "/courses" },
   { label: "Batches", to: "/batches" },
@@ -40,6 +69,31 @@ export default function Navbar() {
   const token = localStorage.getItem("token");
   const isAuth = Boolean(token);
   const dashboardPath = user?.role === "admin" ? "/admin" : user?.role === "instructor" ? "/instructor" : "/dashboard";
+  const isHomePage = location.pathname === "/";
+  const isWorkshopPage = location.pathname === "/workshops" || location.pathname.startsWith("/workshops/");
+  const isProjectsPage = location.pathname === "/final-year-projects" || location.pathname.startsWith("/final-year-projects/");
+  const isPlacementsPage = location.pathname === "/placements" || location.pathname.startsWith("/placements/");
+  const isTrainingContext =
+    location.pathname === "/training" ||
+    location.pathname.startsWith("/training/") ||
+    location.pathname === "/courses" ||
+    location.pathname.startsWith("/courses/") ||
+    location.pathname === "/batches" ||
+    location.pathname.startsWith("/batches/") ||
+    location.pathname === "/contact" ||
+    location.pathname.startsWith("/contact/");
+  const isFixedNav = isHomePage || isWorkshopPage || isProjectsPage || isPlacementsPage || isTrainingContext;
+  const navItems = isHomePage
+    ? homeStickyNavItems
+    : isWorkshopPage
+      ? workshopStickyNavItems
+      : isProjectsPage
+        ? projectsStickyNavItems
+        : isPlacementsPage
+          ? placementsStickyNavItems
+    : isTrainingContext
+      ? trainingPageNavItems
+      : baseNavItems;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -50,32 +104,54 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        bgcolor: "rgba(255,255,255,0.92)",
-        backdropFilter: "blur(8px)",
-        borderBottom: "1px solid rgba(15,23,42,0.08)",
-        boxShadow: "0 2px 12px rgba(15, 23, 42, 0.06)",
-      }}
-    >
+    <>
+      <AppBar
+        position={isFixedNav ? "fixed" : "static"}
+        elevation={0}
+        sx={{
+          bgcolor: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(8px)",
+          borderBottom: "1px solid rgba(15,23,42,0.08)",
+          boxShadow: "0 2px 12px rgba(15, 23, 42, 0.06)",
+        }}
+      >
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ minHeight: { xs: 64, md: 72 } }}>
-          <Typography
+          <Box
             component={RouterLink}
             to="/"
             sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 1.1,
               textDecoration: "none",
               color: "#0f172a",
-              fontWeight: 900,
-              fontSize: { xs: "1.2rem", md: "1.35rem" },
-              letterSpacing: "-0.02em",
-              fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
             }}
           >
-            Thaksa
-          </Typography>
+            <Box
+              component="img"
+              src={brandLogo}
+              alt="Thaksa Logo"
+              sx={{
+                width: { xs: 34, md: 40 },
+                height: { xs: 34, md: 40 },
+                borderRadius: 1.5,
+                objectFit: "cover",
+                border: "1px solid rgba(15,23,42,0.12)",
+              }}
+            />
+            <Typography
+              sx={{
+                fontWeight: 900,
+                fontSize: { xs: "1.2rem", md: "1.35rem" },
+                letterSpacing: "-0.02em",
+                fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+                color: "#0f172a",
+              }}
+            >
+              Thaksa
+            </Typography>
+          </Box>
 
           <Stack
             direction="row"
@@ -124,7 +200,7 @@ export default function Navbar() {
           <Stack
             direction="row"
             spacing={1.2}
-            sx={{ ml: "auto", display: { xs: "none", md: "flex" } }}
+            sx={{ ml: "auto", display: { xs: "none", md: isAuth || isTrainingContext ? "flex" : "none" } }}
           >
             {!isAuth ? (
               <>
@@ -194,16 +270,30 @@ export default function Navbar() {
       >
         <Box sx={{ p: 2.5, height: "100%", display: "flex", flexDirection: "column" }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-            <Typography
-              sx={{
-                fontWeight: 900,
-                fontSize: "1.25rem",
-                color: "#0f172a",
-                fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
-              }}
-            >
-              Thaksa
-            </Typography>
+            <Stack direction="row" spacing={1.1} alignItems="center">
+              <Box
+                component="img"
+                src={brandLogo}
+                alt="Thaksa Logo"
+                sx={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 1.2,
+                  objectFit: "cover",
+                  border: "1px solid rgba(15,23,42,0.12)",
+                }}
+              />
+              <Typography
+                sx={{
+                  fontWeight: 900,
+                  fontSize: "1.25rem",
+                  color: "#0f172a",
+                  fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                Thaksa
+              </Typography>
+            </Stack>
             <IconButton
               onClick={() => setMobileOpen(false)}
               sx={{ width: 44, height: 44 }}
@@ -265,7 +355,7 @@ export default function Navbar() {
 
           <Divider sx={{ my: 1.5 }} />
 
-          <Stack spacing={1}>
+          <Stack spacing={1} sx={{ display: isAuth || isTrainingContext ? "flex" : "none" }}>
             {!isAuth ? (
               <>
                 <Button
@@ -351,5 +441,7 @@ export default function Navbar() {
         </Box>
       </Drawer>
     </AppBar>
+      {isFixedNav && <Toolbar sx={{ minHeight: { xs: 64, md: 72 } }} />}
+    </>
   );
 }
