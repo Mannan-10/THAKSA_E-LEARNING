@@ -21,6 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import useToast from "../../hooks/useToast";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import {
   getBatchStudents,
   getInstructorBatches,
@@ -37,6 +38,7 @@ export default function MyStudents() {
   const [students, setStudents] = useState([]);
   const [studentsLoading, setStudentsLoading] = useState(false);
   const [profileDialog, setProfileDialog] = useState(null);
+  const [confirmRemoveStudentId, setConfirmRemoveStudentId] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -74,7 +76,6 @@ export default function MyStudents() {
   }, [showToast]);
 
   const handleRemove = async (studentId) => {
-    if (!window.confirm("Remove this student from the batch?")) return;
     try {
       await removeStudentFromBatch(selectedBatch, studentId);
       showToast("Student removed from batch", "success");
@@ -82,6 +83,13 @@ export default function MyStudents() {
     } catch (err) {
       showToast(err?.response?.data?.message || "Failed to remove student", "error");
     }
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!confirmRemoveStudentId) return;
+    const studentId = confirmRemoveStudentId;
+    setConfirmRemoveStudentId(null);
+    await handleRemove(studentId);
   };
 
   if (loading) {
@@ -174,7 +182,7 @@ export default function MyStudents() {
                             <Button size="small" variant="outlined" onClick={() => setProfileDialog(student)}>
                               View Profile
                             </Button>
-                            <Button size="small" variant="outlined" color="error" onClick={() => handleRemove(student.id)}>
+                            <Button size="small" variant="outlined" color="error" onClick={() => setConfirmRemoveStudentId(student.id)}>
                               Remove
                             </Button>
                           </Stack>
@@ -213,6 +221,16 @@ export default function MyStudents() {
           <Button onClick={() => setProfileDialog(null)}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      <ConfirmDialog
+        open={Boolean(confirmRemoveStudentId)}
+        onClose={() => setConfirmRemoveStudentId(null)}
+        onConfirm={handleConfirmRemove}
+        title="Remove Student"
+        description="Are you sure you want to remove this student from the batch?"
+        confirmText="Remove"
+        confirmColor="error"
+      />
     </Box>
   );
 }

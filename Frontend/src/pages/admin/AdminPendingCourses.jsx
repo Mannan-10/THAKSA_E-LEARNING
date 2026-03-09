@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { approveCourse, getPendingCourses, rejectCourse } from "../../services/adminServices";
 import useToast from "../../hooks/useToast";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const toArray = (payload) => (Array.isArray(payload) ? payload : payload?.courses || payload?.data || []);
 
@@ -25,6 +26,7 @@ export const AdminPendingCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmState, setConfirmState] = useState({ open: false, action: null, courseId: null });
 
   useEffect(() => {
     fetchPending();
@@ -44,7 +46,6 @@ export const AdminPendingCourses = () => {
   };
 
   const handleApprove = async (id) => {
-    if (!window.confirm("Approve this course?")) return;
     try {
       await approveCourse(id);
       setCourses((prev) => prev.filter((c) => c.id !== id));
@@ -57,7 +58,6 @@ export const AdminPendingCourses = () => {
   };
 
   const handleReject = async (id) => {
-    if (!window.confirm("Reject this course?")) return;
     try {
       await rejectCourse(id);
       setCourses((prev) => prev.filter((c) => c.id !== id));
@@ -70,6 +70,22 @@ export const AdminPendingCourses = () => {
   };
 
   const noData = useMemo(() => !loading && courses.length === 0, [loading, courses]);
+
+  const openConfirm = (action, courseId) => setConfirmState({ open: true, action, courseId });
+  const closeConfirm = () => setConfirmState({ open: false, action: null, courseId: null });
+
+  const handleConfirmAction = async () => {
+    const { action, courseId } = confirmState;
+    closeConfirm();
+    if (!courseId) return;
+    if (action === "approve") {
+      await handleApprove(courseId);
+      return;
+    }
+    if (action === "reject") {
+      await handleReject(courseId);
+    }
+  };
 
   return (
     <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
@@ -106,10 +122,10 @@ export const AdminPendingCourses = () => {
                       <Chip label={course.approval_status || "pending"} size="small" sx={{ bgcolor: "#fef3c7", color: "#92400e", fontWeight: 700 }} />
                     </TableCell>
                     <TableCell align="right">
-                      <Button size="small" color="success" onClick={() => handleApprove(course.id)} sx={{ mr: 1 }}>
+                      <Button size="small" color="success" onClick={() => openConfirm("approve", course.id)} sx={{ mr: 1 }}>
                         Approve
                       </Button>
-                      <Button size="small" color="error" onClick={() => handleReject(course.id)}>
+                      <Button size="small" color="error" onClick={() => openConfirm("reject", course.id)}>
                         Reject
                       </Button>
                     </TableCell>
@@ -120,6 +136,19 @@ export const AdminPendingCourses = () => {
           </TableContainer>
         )}
       </CardContent>
+      <ConfirmDialog
+        open={confirmState.open}
+        onClose={closeConfirm}
+        onConfirm={handleConfirmAction}
+        title={confirmState.action === "approve" ? "Approve Course" : "Reject Course"}
+        description={
+          confirmState.action === "approve"
+            ? "Are you sure you want to approve this course?"
+            : "Are you sure you want to reject this course?"
+        }
+        confirmText={confirmState.action === "approve" ? "Approve" : "Reject"}
+        confirmColor={confirmState.action === "approve" ? "success" : "error"}
+      />
     </Card>
   );
 };

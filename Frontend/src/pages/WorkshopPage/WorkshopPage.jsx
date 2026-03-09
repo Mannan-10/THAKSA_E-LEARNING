@@ -26,7 +26,8 @@ import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
-import logo from "../HomePage/sections/thaksa.jpeg"
+import logo from "../HomePage/sections/thaksa-no-border.png";
+import { useLocation } from "react-router-dom";
 
 // ───────────────────────────────────────────────
 // Utility hook: fade-in when element enters viewport
@@ -89,7 +90,7 @@ function SectionLabel({ text, color = "#6366f1" }) {
 }
 
 // ───────────────────────────────────────────────
-// SECTION 1 — FOUNDERS
+// SECTION 1 - FOUNDERS
 // ───────────────────────────────────────────────
 const workshopDetails = [
     {
@@ -102,7 +103,7 @@ const workshopDetails = [
     {
         icon: AccessTimeRoundedIcon,
         title: "1-Day to 3-Day Formats",
-        desc: "Choose from flexible formats — single-day intensive workshops or multi-day deep dives tailored to your college schedule.",
+        desc: "Choose from flexible formats - single-day intensive workshops or multi-day deep dives tailored to your college schedule.",
         color: "#0891b2",
         bg: "rgba(8,145,178,0.08)",
     },
@@ -143,7 +144,7 @@ function WorkshopDetailsSection() {
                         Conducted <Box component="span" sx={{ color: "#0891b2" }}>Offline</Box>, Built for Impact
                     </Typography>
                     <Typography sx={{ color: "#475569", maxWidth: 580, lineHeight: 1.75, mb: { xs: 5, md: 7 } }}>
-                        Every THAKSA workshop is a live, in-person experience at your campus — interactive, practical, and packed with industry insights that no online course can replicate.
+                        Each workshop is conducted in person at your campus with hands-on practice, Q&A, and mentor-led demonstrations.
                     </Typography>
                 </RevealBox>
 
@@ -200,7 +201,7 @@ function WorkshopDetailsSection() {
 }
 
 // ───────────────────────────────────────────────
-// SECTION 3 — TRUSTED COLLEGES
+// SECTION 3 - TRUSTED COLLEGES
 // ───────────────────────────────────────────────
 const colleges = [
     { name: "JNTU Hyderabad", abbr: "JNTU", color: "#6366f1" },
@@ -211,6 +212,14 @@ const colleges = [
     { name: "Vaagdevi College of Engineering", abbr: "VCE", color: "#dc2626" },
     { name: "Mallareddy Institute of Technology", abbr: "MIT", color: "#0891b2" },
     { name: "Sreenidhi Institute of Science and Technology", abbr: "SNIST", color: "#16a34a" },
+];
+
+const workshopProofImages = [
+    { src: "/ws-img/1.jpeg", alt: "Workshop session with students" },
+    { src: "/ws-img/2.jpeg", alt: "Hands-on workshop classroom activity" },
+    { src: "/ws-img/3.jpeg", alt: "Mentor guiding students during workshop" },
+    { src: "/ws-img/honor.jpeg", alt: "Workshop recognition moment" },
+    { src: "/ws-img/not.jpeg", alt: "Workshop participants with trainers" },
 ];
 
 function TrustedCollegesSection() {
@@ -301,21 +310,102 @@ function TrustedCollegesSection() {
 }
 
 // ───────────────────────────────────────────────
-// SECTION 4 — TESTIMONIALS
+// SECTION 4 - TESTIMONIALS
 // ───────────────────────────────────────────────
+function WorkshopProofSection() {
+    const loopImages = [...workshopProofImages, ...workshopProofImages];
+
+    return (
+        <Box sx={{ py: { xs: 7, md: 10 }, bgcolor: "#fff" }}>
+            <Container maxWidth="lg">
+                <RevealBox sx={{ textAlign: "center", mb: { xs: 4, md: 5 } }}>
+                    <SectionLabel text="Workshop Highlights" color="#0f766e" />
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontWeight: 900,
+                            fontSize: { xs: "1.8rem", md: "2.4rem" },
+                            color: "#0f172a",
+                            fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+                            mb: 1.2,
+                        }}
+                    >
+                        Campus Workshop Moments
+                    </Typography>
+                    <Typography sx={{ color: "#475569", maxWidth: 620, mx: "auto", lineHeight: 1.7 }}>
+                        Photos from recent sessions conducted with our college partners.
+                    </Typography>
+                </RevealBox>
+
+                <Box
+                    sx={{
+                        position: "relative",
+                        overflow: "hidden",
+                        borderRadius: 4,
+                        border: "1.5px solid rgba(15,23,42,0.08)",
+                        bgcolor: "#f8fafc",
+                        py: { xs: 2, md: 2.5 },
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            width: "max-content",
+                            animation: "proofMarquee 32s linear infinite",
+                            "@keyframes proofMarquee": {
+                                "0%": { transform: "translateX(0)" },
+                                "100%": { transform: "translateX(-50%)" },
+                            },
+                        }}
+                    >
+                        {loopImages.map((img, index) => (
+                            <Box
+                                key={`${img.src}-${index}`}
+                                sx={{
+                                    flex: "0 0 auto",
+                                    width: { xs: 240, sm: 280, md: 340 },
+                                    mx: { xs: 1, md: 1.25 },
+                                    borderRadius: 3,
+                                    overflow: "hidden",
+                                    border: "1.5px solid rgba(15,23,42,0.1)",
+                                    boxShadow: "0 12px 24px rgba(15,23,42,0.08)",
+                                    bgcolor: "#fff",
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src={img.src}
+                                    alt={img.alt}
+                                    loading="lazy"
+                                    sx={{
+                                        display: "block",
+                                        width: "100%",
+                                        height: { xs: 170, sm: 190, md: 220 },
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            </Box>
+                        ))}
+                    </Box>
+                </Box>
+            </Container>
+        </Box>
+    );
+}
+
 const testimonials = [
     {
         name: "Mohammed Abdul Mannan",
         role: "Final Year CSE Student",
         college: "VCE, Warangal",
         rating: 5,
-        text: "The THAKSA workshop on Full Stack Development was absolutely mind-blowing! The hands-on sessions helped me build a real project in just 2 days. The mentors were incredibly approachable and explained everything clearly. Highly recommend to every engineering student!",
+        text: "The Full Stack workshop was clear and practical. We built a working mini-project in two days, and the mentors explained each step in a way we could follow.",
         avatar: "AM",
         color: "#6366f1",
     },
     {
         name: "Dr. Ayesha Banu",
-        role: "HOD – Computer Science Department",
+        role: "HOD - Computer Science Department",
         college: "VNR VJIET, Hyderabad",
         rating: 5,
         text: "I have collaborated with several training organizations over the years, but THAKSA stands out for their professionalism and curriculum quality. Students who attended their workshops showed remarkable improvement in practical skills. We look forward to future collaborations.",
@@ -324,10 +414,10 @@ const testimonials = [
     },
     {
         name: "Muhammad Minhaj Mahmood",
-        role: "B.Tech 3rd Year – ECE",
+        role: "B.Tech 3rd Year - ECE",
         college: "JNTU Hyderabad",
         rating: 5,
-        text: "I came in with zero Python knowledge and left with a Machine Learning project in hand! The trainers are insanely talented and patient. The certificate also helped me get my first internship. THAKSA is the real deal!",
+        text: "I joined with limited Python knowledge and completed a basic machine learning project with guidance. The trainers were patient, and the workshop gave me confidence for my internship applications.",
         avatar: "MM",
         color: "#d97706",
     },
@@ -406,7 +496,7 @@ function TestimonialsSection() {
 }
 
 // ───────────────────────────────────────────────
-// SECTION 5 — THAKSA LOGO & MISSION
+// SECTION 5 - THAKSA LOGO & MISSION
 // ───────────────────────────────────────────────
 function MissionSection() {
     return (
@@ -427,10 +517,10 @@ function MissionSection() {
                 <RevealBox>
                     <Box
                         sx={{
-                            width: { xs: 90, md: 120 },
-                            height: { xs: 90, md: 120 },
-                            borderRadius: "28px",
-                            background: "#fff",
+                            width: { xs: 92, md: 124 },
+                            height: { xs: 92, md: 124 },
+                            borderRadius: "50%",
+                            background: "transparent",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -454,6 +544,8 @@ function MissionSection() {
                                 height: "100%",
                                 objectFit: "cover",
                                 objectPosition: "center",
+                                borderRadius: "50%",
+                                transform: "scale(1.04)",
                             }}
                         />
                     </Box>
@@ -530,7 +622,7 @@ function MissionSection() {
 }
 
 // ───────────────────────────────────────────────
-// SECTION 6 — FAQs
+// SECTION 6 - FAQs
 // ───────────────────────────────────────────────
 const faqs = [
     {
@@ -543,7 +635,7 @@ const faqs = [
     },
     {
         q: "What is the minimum batch size for a workshop?",
-        a: "We typically conduct workshops for groups of 30–300+ students. We can customize the format and content based on your batch size and the specific requirements of your department.",
+        a: "We typically conduct workshops for groups of 30-300+ students. We can customize the format and content based on your batch size and the specific requirements of your department.",
     },
     {
         q: "What topics/domains does THAKSA cover?",
@@ -555,7 +647,7 @@ const faqs = [
     },
     {
         q: "What is the cost of conducting a workshop?",
-        a: "Workshop pricing depends on the duration (1-day, 2-day, or 3-day), the topic, and the number of students. Please contact us for a customized quote — we offer very competitive pricing tailored to educational institutions.",
+        a: "Workshop pricing depends on the duration (1-day, 2-day, or 3-day), the topic, and the number of students. Please contact us for a customized quote - we offer very competitive pricing tailored to educational institutions.",
     },
     {
         q: "Can students join individually if their college hasn't partnered with THAKSA?",
@@ -614,11 +706,11 @@ function FaqsSection() {
 }
 
 // ───────────────────────────────────────────────
-// SECTION 7 — CONTACT
+// SECTION 7 - CONTACT
 // ───────────────────────────────────────────────
 function ContactSection() {
     return (
-        <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "#fff" }}>
+        <Box id="workshop-contact" sx={{ py: { xs: 8, md: 12 }, bgcolor: "#fff", scrollMarginTop: "90px" }}>
             <Container maxWidth="lg">
                 <Grid container spacing={{ xs: 5, md: 8 }} alignItems="center">
                     <Grid size={{ xs: 12, md: 6 }}>
@@ -629,7 +721,7 @@ function ContactSection() {
                                 <Box component="span" sx={{ color: "#6366f1" }}>to Your Campus</Box>
                             </Typography>
                             <Typography sx={{ color: "#475569", lineHeight: 1.75, mb: 4 }}>
-                                Ready to transform how your students learn? Reach out and our team will plan the perfect workshop tailored to your college's needs — within 24 hours.
+                                If your college wants a practical workshop, contact us. We will share available topics, format, and schedule options.
                             </Typography>
 
                             <Stack spacing={2.5}>
@@ -763,7 +855,7 @@ function ContactSection() {
                                     Chat on WhatsApp
                                 </Box>
                                 <Typography sx={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", mt: 2.5 }}>
-                                    +91 99085 97337 · Mon–Sat, 9 AM–7 PM IST
+                                    +91 99085 97337 | Mon-Sat, 9 AM-7 PM IST
                                 </Typography>
                             </Box>
                         </RevealBox>
@@ -868,7 +960,7 @@ function PageHero() {
         >
             <Container maxWidth="md">
                 <Chip
-                    label="Offline · Hands-On · Industry-Led"
+                    label="Offline | Hands-On | Industry-Led"
                     sx={{ bgcolor: "rgba(99,102,241,0.1)", color: "#6366f1", fontWeight: 700, mb: 2, fontSize: "0.82rem" }}
                 />
                 <Typography
@@ -885,7 +977,7 @@ function PageHero() {
                     THAKSA Workshops
                 </Typography>
                 <Typography sx={{ color: "#475569", fontSize: { xs: "1rem", md: "1.1rem" }, lineHeight: 1.75, maxWidth: 560, mx: "auto" }}>
-                    Immersive, offline workshop experiences delivered at your college campus by industry professionals. Built to make students genuinely job-ready.
+                    Offline workshops delivered at your campus with practical sessions, mentor interaction, and clear learning outcomes.
                 </Typography>
             </Container>
         </Box>
@@ -896,11 +988,24 @@ function PageHero() {
 // MAIN PAGE
 // ───────────────────────────────────────────────
 export default function WorkshopPage() {
+    const location = useLocation();
+
+    useEffect(() => {
+        if (!location.hash) return;
+        const id = location.hash.replace("#", "");
+        const el = document.getElementById(id);
+        if (!el) return;
+        setTimeout(() => {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 0);
+    }, [location]);
+
     return (
         <Box sx={{ bgcolor: "#fff" }}>
             <PageHero />
             <WorkshopDetailsSection />
             <TrustedCollegesSection />
+            <WorkshopProofSection />
             <TestimonialsSection />
             <MissionSection />
             <FaqsSection />
@@ -909,4 +1014,8 @@ export default function WorkshopPage() {
         </Box>
     );
 }
+
+
+
+
 

@@ -8,51 +8,15 @@ import {
   Divider,
   Drawer,
   IconButton,
-  Slide,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import brandLogo from "../pages/HomePage/sections/logo.jpeg";
-
-const baseNavItems = [
-  { label: "Home", to: "/" },
-  { label: "Workshops", to: "/workshops" },
-  { label: "Training", to: "/training" },
-];
-
-const homeStickyNavItems = [
-  { label: "Home", to: "/" },
-  { label: "Workshops", to: "/workshops" },
-  { label: "Training", to: "/training" },
-  { label: "Projects", to: "/final-year-projects" },
-  { label: "Placement", to: "/placements" },
-];
-
-const workshopStickyNavItems = [
-  { label: "Home", to: "/" },
-  { label: "Workshops", to: "/workshops" },
-];
-
-const projectsStickyNavItems = [
-  { label: "Home", to: "/" },
-  { label: "Projects", to: "/final-year-projects" },
-];
-
-const placementsStickyNavItems = [
-  { label: "Home", to: "/" },
-  { label: "Placement", to: "/placements" },
-];
-
-const trainingPageNavItems = [
-  { label: "Home", to: "/" },
-  { label: "Training", to: "/training" },
-  { label: "Courses", to: "/courses" },
-  { label: "Batches", to: "/batches" },
-  { label: "Contact", to: "/contact" },
-];
+import brandLogo from "../pages/HomePage/sections/thaksa-no-border.png";
+import { getNavContext } from "../config/navConfig";
+import { siteConfig } from "../config/siteConfig";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -69,31 +33,8 @@ export default function Navbar() {
   const token = localStorage.getItem("token");
   const isAuth = Boolean(token);
   const dashboardPath = user?.role === "admin" ? "/admin" : user?.role === "instructor" ? "/instructor" : "/dashboard";
-  const isHomePage = location.pathname === "/";
-  const isWorkshopPage = location.pathname === "/workshops" || location.pathname.startsWith("/workshops/");
-  const isProjectsPage = location.pathname === "/final-year-projects" || location.pathname.startsWith("/final-year-projects/");
-  const isPlacementsPage = location.pathname === "/placements" || location.pathname.startsWith("/placements/");
-  const isTrainingContext =
-    location.pathname === "/training" ||
-    location.pathname.startsWith("/training/") ||
-    location.pathname === "/courses" ||
-    location.pathname.startsWith("/courses/") ||
-    location.pathname === "/batches" ||
-    location.pathname.startsWith("/batches/") ||
-    location.pathname === "/contact" ||
-    location.pathname.startsWith("/contact/");
-  const isFixedNav = isHomePage || isWorkshopPage || isProjectsPage || isPlacementsPage || isTrainingContext;
-  const navItems = isHomePage
-    ? homeStickyNavItems
-    : isWorkshopPage
-      ? workshopStickyNavItems
-      : isProjectsPage
-        ? projectsStickyNavItems
-        : isPlacementsPage
-          ? placementsStickyNavItems
-    : isTrainingContext
-      ? trainingPageNavItems
-      : baseNavItems;
+  const navContext = getNavContext(location.pathname);
+  const navItems = navContext.menu;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -106,7 +47,7 @@ export default function Navbar() {
   return (
     <>
       <AppBar
-        position={isFixedNav ? "fixed" : "static"}
+        position={navContext.fixed ? "fixed" : "static"}
         elevation={0}
         sx={{
           bgcolor: "rgba(255,255,255,0.92)",
@@ -137,7 +78,6 @@ export default function Navbar() {
                 height: { xs: 34, md: 40 },
                 borderRadius: 1.5,
                 objectFit: "cover",
-                border: "1px solid rgba(15,23,42,0.12)",
               }}
             />
             <Typography
@@ -149,7 +89,7 @@ export default function Navbar() {
                 color: "#0f172a",
               }}
             >
-              Thaksa
+              {siteConfig.shortBrandName}
             </Typography>
           </Box>
 
@@ -200,7 +140,7 @@ export default function Navbar() {
           <Stack
             direction="row"
             spacing={1.2}
-            sx={{ ml: "auto", display: { xs: "none", md: isAuth || isTrainingContext ? "flex" : "none" } }}
+            sx={{ ml: "auto", display: { xs: "none", md: isAuth || navContext.authVisible ? "flex" : "none" } }}
           >
             {!isAuth ? (
               <>
@@ -271,16 +211,15 @@ export default function Navbar() {
         <Box sx={{ p: 2.5, height: "100%", display: "flex", flexDirection: "column" }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
             <Stack direction="row" spacing={1.1} alignItems="center">
-              <Box
-                component="img"
-                src={brandLogo}
-                alt="Thaksa Logo"
+                <Box
+                  component="img"
+                  src={brandLogo}
+                  alt="Thaksa Logo"
                 sx={{
                   width: 34,
                   height: 34,
                   borderRadius: 1.2,
                   objectFit: "cover",
-                  border: "1px solid rgba(15,23,42,0.12)",
                 }}
               />
               <Typography
@@ -291,7 +230,7 @@ export default function Navbar() {
                   fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
                 }}
               >
-                Thaksa
+                {siteConfig.shortBrandName}
               </Typography>
             </Stack>
             <IconButton
@@ -355,7 +294,7 @@ export default function Navbar() {
 
           <Divider sx={{ my: 1.5 }} />
 
-          <Stack spacing={1} sx={{ display: isAuth || isTrainingContext ? "flex" : "none" }}>
+          <Stack spacing={1} sx={{ display: isAuth || navContext.authVisible ? "flex" : "none" }}>
             {!isAuth ? (
               <>
                 <Button
@@ -441,7 +380,7 @@ export default function Navbar() {
         </Box>
       </Drawer>
     </AppBar>
-      {isFixedNav && <Toolbar sx={{ minHeight: { xs: 64, md: 72 } }} />}
+      {navContext.fixed && <Toolbar sx={{ minHeight: { xs: 64, md: 72 } }} />}
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { Box, Container, Grid, Link, Stack, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import logo from "../pages/HomePage/sections/logo.jpeg";
+import logo from "../pages/HomePage/sections/thaksa-no-border.png";
+import { siteConfig } from "../config/siteConfig";
 
 const quickLinks = [
   { label: "Home", to: "/" },
@@ -59,7 +60,6 @@ export default function Footer() {
                     height: 38,
                     borderRadius: 1.5,
                     objectFit: "cover",
-                    border: "1px solid rgba(15,23,42,0.12)",
                   }}
                 />
                 <Typography
@@ -70,7 +70,7 @@ export default function Footer() {
                     fontSize: "1.12rem",
                   }}
                 >
-                  Thaksa E-Learning
+                  {siteConfig.brandName}
                 </Typography>
               </Stack>
               <Typography sx={{ color: "#475569", lineHeight: 1.75, maxWidth: 360 }}>
@@ -102,13 +102,13 @@ export default function Footer() {
             <Stack spacing={1.2}>
               <Typography sx={{ fontWeight: 800, color: "#0f172a" }}>Contact</Typography>
               <Typography sx={{ color: "#64748b", fontSize: "0.95rem" }}>
-                thaksa.academy@gmail.com
+                {siteConfig.contact.email}
               </Typography>
               <Typography sx={{ color: "#64748b", fontSize: "0.95rem" }}>
-                +91 90525 15284
+                {siteConfig.contact.phone}
               </Typography>
               <Typography sx={{ color: "#64748b", fontSize: "0.95rem" }}>
-                Hyderabad, Telangana, India
+                {siteConfig.contact.location}
               </Typography>
             </Stack>
           </Grid>
@@ -127,7 +127,7 @@ export default function Footer() {
           }}
         >
           <Typography sx={{ color: "#64748b", fontSize: "0.9rem" }}>
-            Copyright {new Date().getFullYear()} Thaksa. All rights reserved.
+            Copyright {new Date().getFullYear()} {siteConfig.shortBrandName}. All rights reserved.
           </Typography>
           <Typography sx={{ color: "#94a3b8", fontSize: "0.86rem" }}>
             Built for skill-first careers

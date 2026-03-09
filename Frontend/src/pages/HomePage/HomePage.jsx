@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material";
 import HeroSection from "./sections/HeroSection";
-import StatsSection from "./sections/StatsSection";
+import TrustStripSection from "./sections/TrustStripSection";
 import TestimonialsSection from "./sections/TestimonialsSection";
 import InstructorSection from "./sections/InstructorSection";
 
@@ -9,12 +9,12 @@ export default function HomePage() {
     <Box
       sx={{
         background:
-          "linear-gradient(180deg, #eef6ff 0%, #f8fbff 32%, #ffffff 58%, #f6fffb 100%)",
+          "linear-gradient(180deg, #f8fbff 0%, #fffefb 45%, #f7fcff 100%)",
       }}
     >
       <HeroSection />
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
-        <StatsSection />
+        <TrustStripSection />
         <InstructorSection />
         <TestimonialsSection />
       </Container>

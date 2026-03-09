@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { approveCourse, getRejectedCourses } from "../../services/adminServices";
 import useToast from "../../hooks/useToast";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const toArray = (payload) => (Array.isArray(payload) ? payload : payload?.courses || payload?.data || []);
 
@@ -25,6 +26,7 @@ export const AdminRejectedCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmCourseId, setConfirmCourseId] = useState(null);
 
   useEffect(() => {
     fetchRejected();
@@ -44,6 +46,19 @@ export const AdminRejectedCourses = () => {
   };
 
   const noData = useMemo(() => !loading && courses.length === 0, [loading, courses]);
+
+  const handleApprove = async () => {
+    if (!confirmCourseId) return;
+    const courseId = confirmCourseId;
+    setConfirmCourseId(null);
+    try {
+      await approveCourse(courseId);
+      setCourses((prev) => prev.filter((c) => c.id !== courseId));
+      showToast("Course approved successfully.", "success");
+    } catch (err) {
+      showToast(err?.response?.data?.message || "Failed to approve", "error");
+    }
+  };
 
   return (
     <Card elevation={0} sx={{ borderRadius: 3, border: "1px solid #e2e8f0" }}>
@@ -81,16 +96,7 @@ export const AdminRejectedCourses = () => {
                       <Button
                         size="small"
                         color="success"
-                        onClick={async () => {
-                          if (!window.confirm("Approve this course?")) return;
-                          try {
-                            await approveCourse(course.id);
-                            setCourses((prev) => prev.filter((c) => c.id !== course.id));
-                            showToast("Course approved successfully.", "success");
-                          } catch (err) {
-                            showToast(err?.response?.data?.message || "Failed to approve", "error");
-                          }
-                        }}
+                        onClick={() => setConfirmCourseId(course.id)}
                       >
                         Approve
                       </Button>
@@ -102,6 +108,15 @@ export const AdminRejectedCourses = () => {
           </TableContainer>
         )}
       </CardContent>
+      <ConfirmDialog
+        open={Boolean(confirmCourseId)}
+        onClose={() => setConfirmCourseId(null)}
+        onConfirm={handleApprove}
+        title="Approve Course"
+        description="Are you sure you want to approve this course?"
+        confirmText="Approve"
+        confirmColor="success"
+      />
     </Card>
   );
 };

@@ -74,7 +74,8 @@ export default function InstructorSection() {
       sx={{
         py: { xs: 8, md: 12 },
         mb: { xs: 6, md: 10 },
-        background: "linear-gradient(135deg, #f0f4ff 0%, #fafbff 50%, #f0fdf9 100%)",
+        background: "linear-gradient(135deg, #f3fffb 0%, #eef8ff 100%)",
+        border: "1px solid rgba(15,23,42,0.08)",
         position: "relative",
         overflow: "hidden",
         borderRadius: { xs: 4, md: 5 },
@@ -88,7 +89,7 @@ export default function InstructorSection() {
           width: 300,
           height: 300,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -100,7 +101,7 @@ export default function InstructorSection() {
           width: 250,
           height: 250,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(15,118,110,0.1) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(15,23,42,0.04) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />

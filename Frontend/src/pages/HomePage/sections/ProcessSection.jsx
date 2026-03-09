@@ -2,31 +2,40 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
 import CastForEducationRoundedIcon from "@mui/icons-material/CastForEducationRounded";
 import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
+import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 
 const steps = [
   {
     step: "01",
-    title: "Choose a Path",
-    text: "Pick a track based on your goal and current skill level.",
+    title: "Assess",
+    text: "We understand your current level and career goal.",
     icon: ExploreRoundedIcon,
     color: "#6366f1",
     bgColor: "rgba(99, 102, 241, 0.12)",
   },
   {
     step: "02",
-    title: "Join Live Batches",
-    text: "Attend mentor-led sessions and complete guided practical tasks.",
+    title: "Learn",
+    text: "You attend structured sessions with mentor support.",
     icon: CastForEducationRoundedIcon,
     color: "#f97316",
     bgColor: "rgba(249, 115, 22, 0.12)",
   },
   {
     step: "03",
-    title: "Ship Portfolio Work",
-    text: "Build real projects and showcase outcomes with confidence.",
+    title: "Build",
+    text: "You complete practical tasks and project work step by step.",
     icon: RocketLaunchRoundedIcon,
     color: "#3b82f6",
     bgColor: "rgba(59, 130, 246, 0.12)",
+  },
+  {
+    step: "04",
+    title: "Apply",
+    text: "You prepare for interviews and apply with clear guidance.",
+    icon: TaskAltRoundedIcon,
+    color: "#0f766e",
+    bgColor: "rgba(15, 118, 110, 0.12)",
   },
 ];
 
@@ -44,12 +53,15 @@ export default function ProcessSection() {
       >
         How Learning Works
       </Typography>
+      <Typography sx={{ color: "#475569", mb: 3 }}>
+        Assess - Learn - Build - Apply
+      </Typography>
 
       <Grid container spacing={2.2}>
         {steps.map((item) => {
           const Icon = item.icon;
           return (
-            <Grid key={item.step} size={{ xs: 12, md: 4 }}>
+            <Grid key={item.step} size={{ xs: 12, sm: 6, md: 3 }}>
               <Paper
                 elevation={0}
                 sx={{

@@ -1,9 +1,11 @@
-import { Box, Card, Chip, Container, Grid, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Card, Chip, Container, Grid, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRounded";
 import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
 import BuildRoundedIcon from "@mui/icons-material/BuildRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
@@ -14,7 +16,7 @@ const modules = [
     title: "Workshops",
     subtitle: "Hands-On Learning",
     description:
-      "Industry-led offline workshops designed to give students real-world exposure through live projects, expert sessions, and collaborative problem-solving.",
+      "Offline workshops with direct mentor guidance, practical exercises, and clear takeaways you can apply immediately.",
     color: "#6366f1",
     gradient: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
     bgGlow: "rgba(99,102,241,0.12)",
@@ -23,30 +25,32 @@ const modules = [
     tag: "Offline Mode",
     tagColor: "#6366f1",
     tagBg: "rgba(99,102,241,0.1)",
+    whoFor: "College students who want practical exposure",
   },
   {
     id: "training",
     icon: WorkspacePremiumRoundedIcon,
     title: "Training",
-    subtitle: "Career Launch Program",
+    subtitle: "Structured Program",
     description:
-      "Structured training tracks with aptitude, technical, and soft-skill modules, followed by dedicated placement support with top hiring companies.",
+      "Step-by-step training in aptitude, technical skills, and communication with regular mentor reviews and practice tasks.",
     color: "#0f766e",
     gradient: "linear-gradient(135deg, #0f766e 0%, #0891b2 100%)",
     bgGlow: "rgba(15,118,110,0.12)",
     borderColor: "rgba(15,118,110,0.25)",
     route: "/training",
-    tag: "Placement Assured",
+    tag: "Structured tranind sessions",
     tagColor: "#0f766e",
     tagBg: "rgba(15,118,110,0.1)",
+    whoFor: "Students and fresh graduates building core skills",
   },
   {
     id: "fyp",
     icon: RocketLaunchRoundedIcon,
     title: "Final Year Projects",
-    subtitle: "Build Real-World Solutions",
+    subtitle: "Guided Project Work",
     description:
-      "Guided project execution with domain experts, documentation support, IEEE-standard reporting, and live demos that stand out in interviews.",
+      "End-to-end project guidance with documentation support, review checkpoints, and viva preparation.",
     color: "#d97706",
     gradient: "linear-gradient(135deg, #d97706 0%, #ea580c 100%)",
     bgGlow: "rgba(217,119,6,0.12)",
@@ -55,14 +59,15 @@ const modules = [
     tag: "Industry Grade",
     tagColor: "#d97706",
     tagBg: "rgba(217,119,6,0.1)",
+    whoFor: "Final-year students preparing academic projects",
   },
   {
     id: "placements",
     icon: WorkspacePremiumRoundedIcon,
     title: "Placements",
-    subtitle: "Career Opportunities",
+    subtitle: "Job Support",
     description:
-      "Get dedicated placement guidance with resume support, interview preparation, and hiring connections to launch your career with confidence.",
+      "Practical support for resumes, interviews, and job applications with clear preparation plans.",
     color: "#0b4f8c",
     gradient: "linear-gradient(135deg, #0b4f8c 0%, #2563eb 100%)",
     bgGlow: "rgba(37,99,235,0.14)",
@@ -71,6 +76,7 @@ const modules = [
     tag: "Hiring Support",
     tagColor: "#1d4ed8",
     tagBg: "rgba(37,99,235,0.1)",
+    whoFor: "Learners ready to prepare for interviews and jobs",
   },
 ];
 
@@ -114,16 +120,26 @@ function AnimatedCard({ module, index }) {
           background: "rgba(255,255,255,0.85)",
           backdropFilter: "blur(12px)",
           boxShadow: hovered
-            ? `0 24px 48px ${module.bgGlow}, 0 8px 24px rgba(15,23,42,0.08)`
+            ? `0 28px 56px ${module.bgGlow}, 0 12px 26px rgba(15,23,42,0.12)`
             : "0 4px 16px rgba(15,23,42,0.05)",
           transform: visible
-            ? hovered ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)"
+            ? hovered ? "translateY(-10px) scale(1.018)" : "translateY(0) scale(1)"
             : "translateY(40px) scale(0.97)",
           opacity: visible ? 1 : 0,
-          transition: `all 0.55s cubic-bezier(0.34,1.56,0.64,1) ${index * 120}ms`,
+          transition: `all 0.45s cubic-bezier(0.22,0.61,0.36,1) ${index * 120}ms`,
           position: "relative",
           overflow: "hidden",
           p: { xs: 2.6, sm: 3, md: 3.2 },
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            borderRadius: 4,
+            border: `1.5px solid ${module.borderColor}`,
+            opacity: hovered ? 1 : 0,
+            transition: "opacity 0.35s ease",
+            pointerEvents: "none",
+          },
         }}
       >
         {/* Glow blob */}
@@ -136,9 +152,10 @@ function AnimatedCard({ module, index }) {
             height: 120,
             borderRadius: "50%",
             background: module.gradient,
-            opacity: hovered ? 0.15 : 0.07,
-            filter: "blur(30px)",
-            transition: "opacity 0.4s ease",
+            opacity: hovered ? 0.2 : 0.07,
+            filter: hovered ? "blur(26px)" : "blur(30px)",
+            transform: hovered ? "scale(1.08)" : "scale(1)",
+            transition: "all 0.35s ease",
             pointerEvents: "none",
           }}
         />
@@ -155,6 +172,8 @@ function AnimatedCard({ module, index }) {
             justifyContent: "center",
             mb: 2.5,
             boxShadow: `0 8px 20px ${module.bgGlow}`,
+            transform: hovered ? "translateY(-2px) rotate(-4deg)" : "translateY(0) rotate(0deg)",
+            transition: "transform 0.35s ease",
           }}
         >
           <Icon sx={{ color: "#fff", fontSize: 30 }} />
@@ -200,14 +219,26 @@ function AnimatedCard({ module, index }) {
         <Typography sx={{ color: "#475569", fontSize: { xs: "0.9rem", md: "0.92rem" }, lineHeight: 1.6, mb: 2.5 }}>
           {module.description}
         </Typography>
+        <Typography sx={{ color: "#334155", fontSize: "0.86rem", mb: 2.2 }}>
+          <Box component="span" sx={{ fontWeight: 700 }}>Who it's for:</Box> {module.whoFor}
+        </Typography>
 
         <Stack direction="row" alignItems="center" spacing={0.5} sx={{ color: module.color }}>
-          <Typography sx={{ fontWeight: 700, fontSize: "0.88rem" }}>Learn More</Typography>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              fontSize: "0.88rem",
+              transform: hovered ? "translateX(1px)" : "translateX(0)",
+              transition: "transform 0.25s ease",
+            }}
+          >
+            Learn More
+          </Typography>
           <ArrowForwardRoundedIcon
             sx={{
               fontSize: 18,
-              transform: hovered ? "translateX(4px)" : "translateX(0)",
-              transition: "transform 0.3s ease",
+              transform: hovered ? "translateX(6px)" : "translateX(0)",
+              transition: "transform 0.25s ease",
             }}
           />
         </Stack>
@@ -218,19 +249,61 @@ function AnimatedCard({ module, index }) {
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
+  const programsRef = useRef(null);
+  const cardsScrollerRef = useRef(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    const scroller = cardsScrollerRef.current;
+    if (!scroller) return;
+
+    const updateScrollState = () => {
+      const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth - 1;
+      setCanScrollLeft(scroller.scrollLeft > 0);
+      setCanScrollRight(scroller.scrollLeft < maxScrollLeft);
+    };
+
+    updateScrollState();
+    scroller.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      scroller.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, []);
+
+  const scrollToPrograms = () => {
+    if (!programsRef.current) return;
+    const top = programsRef.current.getBoundingClientRect().top + window.scrollY - 88;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
+  const scrollProgramsBy = (direction) => {
+    if (!cardsScrollerRef.current) return;
+    const amount = Math.min(cardsScrollerRef.current.clientWidth * 0.86, 420);
+    cardsScrollerRef.current.scrollBy({
+      left: direction === "right" ? amount : -amount,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <Box
       sx={{
         position: "relative",
         overflow: "hidden",
+        background:
+          "linear-gradient(135deg, #eef5ff 0%, #f5efff 55%, #fffdf8 100%)",
         pt: { xs: 7, sm: 9, md: 14 },
         pb: { xs: 6, sm: 8, md: 12 },
         borderBottom: "1px solid rgba(15,23,42,0.08)",
@@ -242,7 +315,7 @@ export default function HeroSection() {
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(circle at 10% 15%, rgba(99,102,241,0.18) 0%, transparent 45%), radial-gradient(circle at 90% 80%, rgba(15,118,110,0.16) 0%, transparent 45%), radial-gradient(circle at 55% 50%, rgba(217,119,6,0.08) 0%, transparent 50%)",
+            "radial-gradient(circle at 12% 12%, rgba(37,99,235,0.08) 0%, transparent 42%), radial-gradient(circle at 88% 84%, rgba(15,23,42,0.05) 0%, transparent 46%)",
           pointerEvents: "none",
         }}
       />
@@ -253,7 +326,7 @@ export default function HeroSection() {
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "linear-gradient(rgba(15,23,42,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.03) 1px, transparent 1px)",
+            "linear-gradient(rgba(15,23,42,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.018) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
           pointerEvents: "none",
         }}
@@ -266,7 +339,7 @@ export default function HeroSection() {
         >
           {/* TEXT COLUMN */}
           <Grid size={{ xs: 12, md: 7 }}>
-            {/* Mobile logo — shown only on small screens, above the badge */}
+            {/* Mobile logo - shown only on small screens, above the badge */}
             {isMobile && (
               <Box
                 sx={{
@@ -287,8 +360,8 @@ export default function HeroSection() {
                     height: { xs: 120, sm: 150 },
                     objectFit: "contain",
                     borderRadius: 4,
-                    boxShadow: "0 12px 40px rgba(99,102,241,0.18), 0 4px 16px rgba(15,23,42,0.08)",
-                    border: "2px solid rgba(99,102,241,0.15)",
+                  boxShadow: "0 12px 32px rgba(15,23,42,0.12)",
+                    border: "1px solid rgba(15,23,42,0.12)",
                     background: "#fff",
                   }}
                 />
@@ -314,7 +387,7 @@ export default function HeroSection() {
             >
               <SchoolRoundedIcon sx={{ fontSize: 18, color: "#6366f1" }} />
               <Typography sx={{ fontWeight: 700, fontSize: "0.82rem", color: "#6366f1" }}>
-                THAKSA Academy — Empowering Future Professionals
+                THAKSA Academy | Skill-first learning
               </Typography>
             </Box>
 
@@ -338,9 +411,9 @@ export default function HeroSection() {
               <Box
                 component="span"
                 sx={{
-                  background: "linear-gradient(90deg, #6366f1, #0891b2)",
+                  color: "#1d4ed8",
                   WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  WebkitTextFillColor: "currentColor",
                 }}
               >
                 Opportunity
@@ -361,7 +434,7 @@ export default function HeroSection() {
                 transition: "all 0.6s ease 0.2s",
               }}
             >
-              Workshops · Training · Final Year Projects · Placements
+              Workshops | Training | Final Year Projects | Placements
             </Typography>
 
             {/* Description */}
@@ -371,19 +444,65 @@ export default function HeroSection() {
                 color: "#475569",
                 maxWidth: 560,
                 lineHeight: 1.75,
-                mb: { xs: 6, md: 8 },
+                mb: { xs: 3.5, md: 4.5 },
                 opacity: mounted ? 1 : 0,
                 transform: mounted ? "translateY(0)" : "translateY(20px)",
                 transition: "all 0.6s ease 0.3s",
               }}
             >
-              THAKSA Academy bridges the gap between academia and industry with immersive offline
-              workshops, structured placement programs, and expert-guided final year projects — all
-              designed to make you job-ready from day one.
+              Learn practical skills with guided mentors, real project work, and clear support
+              from learning to placement preparation.
             </Typography>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={1.8}
+              sx={{
+                mb: { xs: 4.5, md: 6.5 },
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "translateY(0)" : "translateY(16px)",
+                transition: "all 0.6s ease 0.35s",
+              }}
+            >
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate("/workshops#workshop-contact")}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 800,
+                  px: 3,
+                  py: 1.2,
+                  borderRadius: 2.5,
+                  bgcolor: "#2563eb",
+                  "&:hover": { bgcolor: "#1d4ed8" },
+                }}
+              >
+                Talk to Advisor
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={scrollToPrograms}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 800,
+                  px: 3,
+                  py: 1.2,
+                  borderRadius: 2.5,
+                  borderColor: "rgba(15,23,42,0.24)",
+                  color: "#0f172a",
+                  "&:hover": {
+                    borderColor: "rgba(37,99,235,0.5)",
+                    bgcolor: "rgba(37,99,235,0.05)",
+                  },
+                }}
+              >
+                View Programs
+              </Button>
+            </Stack>
           </Grid>
 
-          {/* LOGO COLUMN — desktop only */}
+          {/* LOGO COLUMN - desktop only */}
           <Grid
             size={{ xs: 12, md: 5 }}
             sx={{ display: { xs: "none", md: "flex" }, justifyContent: "center", alignItems: "center" }}
@@ -402,7 +521,7 @@ export default function HeroSection() {
                   position: "absolute",
                   inset: -24,
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%)",
                   filter: "blur(20px)",
                   pointerEvents: "none",
                 }}
@@ -416,8 +535,8 @@ export default function HeroSection() {
                   height: { md: 280, lg: 340 },
                   objectFit: "contain",
                   borderRadius: 6,
-                  boxShadow: "0 24px 64px rgba(99,102,241,0.2), 0 8px 32px rgba(15,23,42,0.1)",
-                  border: "2px solid rgba(99,102,241,0.18)",
+                  boxShadow: "0 20px 48px rgba(15,23,42,0.14)",
+                  border: "1px solid rgba(15,23,42,0.12)",
                   background: "#fff",
                   position: "relative",
                 }}
@@ -428,9 +547,12 @@ export default function HeroSection() {
 
         {/* Module Cards */}
         <Box
+          ref={programsRef}
+          id="home-programs"
           sx={{
             opacity: mounted ? 1 : 0,
             transition: "opacity 0.5s ease 0.4s",
+            scrollMarginTop: "90px",
           }}
         >
           <Typography
@@ -443,9 +565,52 @@ export default function HeroSection() {
               mb: 2.5,
             }}
           >
-            ⚡ Explore Our Programmes
+            Explore Our Programs
           </Typography>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mb: 1.8 }}
+          >
+            <Typography sx={{ color: "#475569", fontSize: "0.9rem", fontWeight: 600 }}>
+              Choose a path and explore details.
+            </Typography>
+            <Stack direction="row" spacing={1}>
+              <IconButton
+                onClick={() => scrollProgramsBy("left")}
+                disabled={!canScrollLeft}
+                sx={{
+                  width: 38,
+                  height: 38,
+                  border: "1px solid rgba(15,23,42,0.16)",
+                  bgcolor: "#fff",
+                  color: "#0f172a",
+                  "&:hover": { bgcolor: "rgba(15,23,42,0.04)" },
+                  "&.Mui-disabled": { opacity: 0.35, borderColor: "rgba(15,23,42,0.12)" },
+                }}
+              >
+                <ChevronLeftRoundedIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => scrollProgramsBy("right")}
+                disabled={!canScrollRight}
+                sx={{
+                  width: 38,
+                  height: 38,
+                  border: "1px solid rgba(15,23,42,0.16)",
+                  bgcolor: "#fff",
+                  color: "#0f172a",
+                  "&:hover": { bgcolor: "rgba(15,23,42,0.04)" },
+                  "&.Mui-disabled": { opacity: 0.35, borderColor: "rgba(15,23,42,0.12)" },
+                }}
+              >
+                <ChevronRightRoundedIcon />
+              </IconButton>
+            </Stack>
+          </Stack>
           <Grid
+            ref={cardsScrollerRef}
             container
             wrap="nowrap"
             sx={{
@@ -464,11 +629,11 @@ export default function HeroSection() {
                 borderRadius: 999,
               },
               "&::-webkit-scrollbar-thumb": {
-                background: "rgba(99,102,241,0.45)",
+                background: "rgba(51,65,85,0.35)",
                 borderRadius: 999,
               },
               "&::-webkit-scrollbar-thumb:hover": {
-                background: "rgba(99,102,241,0.6)",
+                background: "rgba(51,65,85,0.5)",
               },
             }}
           >
@@ -481,3 +646,6 @@ export default function HeroSection() {
     </Box>
   );
 }
+
+
+

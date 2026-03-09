@@ -37,7 +37,7 @@ function RevealBox({ children, delay = 0, direction = "up", sx = {} }) {
 
 const domains = [
     { icon: SmartToyRoundedIcon, title: "Artificial Intelligence & ML", desc: "Build smart models, recommendation systems, NLP apps, and computer vision projects with real datasets.", color: "#6366f1", bg: "rgba(99,102,241,0.08)" },
-    { icon: DataObjectRoundedIcon, title: "Full Stack Web Development", desc: "End-to-end web applications with React, Node.js, MongoDB — production-grade code with deployment.", color: "#0891b2", bg: "rgba(8,145,178,0.08)" },
+    { icon: DataObjectRoundedIcon, title: "Full Stack Web Development", desc: "End-to-end web applications with React, Node.js, MongoDB - production-grade code with deployment.", color: "#0891b2", bg: "rgba(8,145,178,0.08)" },
     { icon: CloudRoundedIcon, title: "Cloud & DevOps", desc: "AWS/Azure-hosted projects with CI/CD pipelines, containerization, and infrastructure as code.", color: "#0f766e", bg: "rgba(15,118,110,0.08)" },
     { icon: SecurityRoundedIcon, title: "Cybersecurity", desc: "Penetration testing tools, vulnerability scanners, network security monitors, and ethical hacking projects.", color: "#dc2626", bg: "rgba(220,38,38,0.08)" },
     { icon: MemoryRoundedIcon, title: "IoT & Embedded Systems", desc: "Smart home automation, sensor networks, Arduino/Raspberry Pi-based systems with real-time dashboards.", color: "#d97706", bg: "rgba(217,119,6,0.08)" },
@@ -81,7 +81,7 @@ export default function FinalYearProjectsPage() {
                         <Box sx={{ width: 80, height: 80, borderRadius: "24px", background: "linear-gradient(135deg,#d97706,#ea580c)", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 3, boxShadow: "0 16px 40px rgba(217,119,6,0.4)" }}>
                             <RocketLaunchRoundedIcon sx={{ color: "#fff", fontSize: 40 }} />
                         </Box>
-                        <Chip label="Industry Grade · IEEE Standard · Expert Mentored" sx={{ bgcolor: "rgba(217,119,6,0.1)", color: "#d97706", fontWeight: 700, mb: 2 }} />
+                        <Chip label="Guided Build | Documentation | Viva Support" sx={{ bgcolor: "rgba(217,119,6,0.1)", color: "#d97706", fontWeight: 700, mb: 2 }} />
                         <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.5rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", lineHeight: 1.1, mb: 2 }}>
                             Final Year{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#d97706,#ea580c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -89,7 +89,7 @@ export default function FinalYearProjectsPage() {
                             </Box>
                         </Typography>
                         <Typography sx={{ color: "#475569", fontSize: { xs: "1rem", md: "1.1rem" }, maxWidth: 560, mx: "auto", lineHeight: 1.75 }}>
-                            Don't just submit a project — build something that makes an impression. THAKSA guides you from idea to implementation to viva, creating projects that stand out to hiring managers and evaluators alike.
+                            Build your final year project with clear guidance from topic selection to implementation, documentation, and viva preparation.
                         </Typography>
                     </RevealBox>
                 </Container>
@@ -103,7 +103,7 @@ export default function FinalYearProjectsPage() {
                             { value: "200+", label: "Project Topics", color: "#d97706" },
                             { value: "300+", label: "Projects Delivered", color: "#ea580c" },
                             { value: "100%", label: "On-Time Delivery", color: "#0f766e" },
-                            { value: "4.9★", label: "Student Rating", color: "#6366f1" },
+                            { value: "4.9/5", label: "Student Rating", color: "#6366f1" },
                         ].map((s, i) => (
                             <Grid key={s.label} size={{ xs: 6, md: 3 }}>
                                 <RevealBox delay={i * 80}>
@@ -128,7 +128,7 @@ export default function FinalYearProjectsPage() {
                             <Box component="span" sx={{ color: "#d97706" }}>Domain of Interest</Box>
                         </Typography>
                         <Typography sx={{ color: "#475569", maxWidth: 540, lineHeight: 1.75 }}>
-                            We offer expert-guided final year projects across 6 major technology domains — each aligned with current industry demands and hiring trends.
+                            Choose from six practical project domains based on your interest, available timeline, and academic requirements.
                         </Typography>
                     </RevealBox>
                     <Grid container spacing={2.5}>
@@ -161,7 +161,7 @@ export default function FinalYearProjectsPage() {
                             From Idea to{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#0f766e,#0891b2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Viva-Ready</Box>
                         </Typography>
-                        <Typography sx={{ color: "#475569", maxWidth: 520, lineHeight: 1.75 }}>A structured 5-step process ensuring your project meets university standards while genuinely impressing evaluators and interviewers.</Typography>
+                        <Typography sx={{ color: "#475569", maxWidth: 520, lineHeight: 1.75 }}>A simple 5-step process to keep your work organized, reviewable, and ready for final evaluation.</Typography>
                     </RevealBox>
                     <Stack spacing={2.5}>
                         {process.map((p, i) => (
@@ -226,7 +226,7 @@ export default function FinalYearProjectsPage() {
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#fcd34d,#fb923c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Project Journey</Box>
                         </Typography>
                         <Typography sx={{ color: "rgba(255,255,255,0.65)", mb: 4, lineHeight: 1.75 }}>
-                            Don't leave your final year project to the last minute. Contact THAKSA today and let's build something amazing together!
+                            If you need support for your final year project, contact us and we will guide you step by step.
                         </Typography>
                         <Box component="a" href="https://wa.me/919908597337?text=Hi%20THAKSA%2C%20I%20need%20help%20with%20my%20Final%20Year%20Project!" target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", alignItems: "center", gap: 1.5, bgcolor: "#25D366", color: "#fff", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", px: 4, py: 1.8, borderRadius: 3, boxShadow: "0 12px 28px rgba(37,211,102,0.4)", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 20px 40px rgba(37,211,102,0.5)" } }}>
                             <WhatsAppIcon sx={{ fontSize: 24 }} /> Chat on WhatsApp
@@ -239,3 +239,5 @@ export default function FinalYearProjectsPage() {
         </Box>
     );
 }
+
+

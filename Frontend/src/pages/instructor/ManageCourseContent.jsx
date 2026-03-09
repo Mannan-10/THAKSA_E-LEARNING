@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import useToast from "../../hooks/useToast";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import {
     getInstructorCourses,
     getInstructorCourseModules,
@@ -47,6 +48,7 @@ export default function ManageCourseContent() {
     // Lesson state
     const [lessonDialog, setLessonDialog] = useState({ open: false, mode: "create", data: null, moduleId: null });
     const [lessonForm, setLessonForm] = useState({ title: "", video_url: "", duration: "", order_number: "" });
+    const [confirmState, setConfirmState] = useState({ open: false, type: null, id: null });
 
     const loadCourses = useCallback(async () => {
         try {
@@ -132,10 +134,6 @@ export default function ManageCourseContent() {
     };
 
     const handleDeleteModule = async (moduleId) => {
-        if (!window.confirm("Are you sure you want to delete this module? This will also delete all lessons in it.")) {
-            return;
-        }
-
         try {
             await deleteInstructorModule(moduleId);
             showToast("Module deleted successfully", "success");
@@ -195,16 +193,33 @@ export default function ManageCourseContent() {
     };
 
     const handleDeleteLesson = async (lessonId) => {
-        if (!window.confirm("Are you sure you want to delete this lesson?")) {
-            return;
-        }
-
         try {
             await deleteInstructorLesson(lessonId);
             showToast("Lesson deleted successfully", "success");
             await loadModules(selectedCourseId);
         } catch (err) {
             showToast(err?.response?.data?.message || "Failed to delete lesson", "error");
+        }
+    };
+
+    const openDeleteConfirm = (type, id) => {
+        setConfirmState({ open: true, type, id });
+    };
+
+    const closeDeleteConfirm = () => {
+        setConfirmState({ open: false, type: null, id: null });
+    };
+
+    const handleConfirmDelete = async () => {
+        const { type, id } = confirmState;
+        closeDeleteConfirm();
+        if (!id) return;
+        if (type === "module") {
+            await handleDeleteModule(id);
+            return;
+        }
+        if (type === "lesson") {
+            await handleDeleteLesson(id);
         }
     };
 
@@ -289,7 +304,7 @@ export default function ManageCourseContent() {
                                                         <IconButton
                                                             size="small"
                                                             color="error"
-                                                            onClick={() => handleDeleteModule(module.id)}
+                                                            onClick={() => openDeleteConfirm("module", module.id)}
                                                         >
                                                             <DeleteIcon />
                                                         </IconButton>
@@ -355,7 +370,7 @@ export default function ManageCourseContent() {
                                                                         <IconButton
                                                                             size="small"
                                                                             color="error"
-                                                                            onClick={() => handleDeleteLesson(lesson.id)}
+                                                                            onClick={() => openDeleteConfirm("lesson", lesson.id)}
                                                                         >
                                                                             <DeleteIcon fontSize="small" />
                                                                         </IconButton>
@@ -451,6 +466,20 @@ export default function ManageCourseContent() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <ConfirmDialog
+                open={confirmState.open}
+                onClose={closeDeleteConfirm}
+                onConfirm={handleConfirmDelete}
+                title={confirmState.type === "module" ? "Delete Module" : "Delete Lesson"}
+                description={
+                    confirmState.type === "module"
+                        ? "Are you sure you want to delete this module? This will also delete all lessons in it."
+                        : "Are you sure you want to delete this lesson?"
+                }
+                confirmText="Delete"
+                confirmColor="error"
+            />
         </Box>
     );
 }

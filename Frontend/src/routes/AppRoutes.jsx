@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import PublicLayout from "../layout/PublicLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
-import RouteFallback from "./RouteFallback";
 
 import HomePage from "../pages/HomePage";
 import CoursesPage from "../pages/CoursesPage";

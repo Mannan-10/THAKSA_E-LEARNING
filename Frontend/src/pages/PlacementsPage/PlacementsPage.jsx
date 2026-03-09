@@ -94,7 +94,7 @@ export default function PlacementsPage() {
         <Container maxWidth="md">
           <Reveal>
             <Chip
-              label="Career Acceleration Program"
+              label="Placement Support"
               sx={{
                 mb: 2.2,
                 fontWeight: 700,
@@ -210,7 +210,7 @@ export default function PlacementsPage() {
                   "&:hover": { bgcolor: "#1e40af" },
                 }}
               >
-                Go to Training and Placement
+                Go to Training Program
               </Button>
             </Stack>
           </Reveal>
@@ -219,3 +219,4 @@ export default function PlacementsPage() {
     </Box>
   );
 }
+

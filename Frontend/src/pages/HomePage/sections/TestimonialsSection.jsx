@@ -2,17 +2,17 @@ import { Box, Grid, Paper, Rating, Typography } from "@mui/material";
 
 const testimonials = [
   {
-    name: "xyz",
+    name: "Abdul Mannan",
     role: "Frontend Developer",
     quote: "The batch workflow made me consistent. I shipped projects that helped me land interviews.",
   },
   {
-    name: "Abc.",
+    name: "Abdul Rehman.",
     role: "Software Engineer Intern",
     quote: "Mentor feedback was practical and direct. It improved my API and system design thinking.",
   },
   {
-    name: "Def",
+    name: "sathwik",
     role: "CS Student",
     quote: "The structure feels professional, not random tutorials. Every week had a measurable outcome.",
   },
@@ -20,7 +20,15 @@ const testimonials = [
 
 export default function TestimonialsSection() {
   return (
-    <Box sx={{ mb: { xs: 6, md: 10 } }}>
+    <Box
+      sx={{
+        mb: { xs: 6, md: 10 },
+        p: { xs: 2.5, md: 3.5 },
+        borderRadius: 4,
+        background: "linear-gradient(135deg, #f2f8ff 0%, #f4f0ff 100%)",
+        border: "1px solid rgba(15,23,42,0.08)",
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
@@ -43,6 +51,7 @@ export default function TestimonialsSection() {
                 borderRadius: 3.5,
                 border: "1px solid rgba(30, 41, 59, 0.12)",
                 height: "100%",
+                backgroundColor: "#ffffff",
               }}
             >
               <Rating value={5} readOnly size="small" sx={{ mb: 1 }} />

@@ -75,7 +75,7 @@ export default function TrainingPage() {
                         <Box sx={{ width: 80, height: 80, borderRadius: "24px", background: "linear-gradient(135deg,#0f766e,#0891b2)", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 3, boxShadow: "0 16px 40px rgba(15,118,110,0.4)" }}>
                             <WorkspacePremiumRoundedIcon sx={{ color: "#fff", fontSize: 40 }} />
                         </Box>
-                        <Chip label="Career Launch Program" sx={{ bgcolor: "rgba(15,118,110,0.1)", color: "#0f766e", fontWeight: 700, mb: 2 }} />
+                        <Chip label="Structured Learning Program" sx={{ bgcolor: "rgba(15,118,110,0.1)", color: "#0f766e", fontWeight: 700, mb: 2 }} />
                         <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2.2rem", md: "3.5rem" }, color: "#0f172a", fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif", lineHeight: 1.1, mb: 2 }}>
                             Training{" "}
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#0f766e,#0891b2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -83,7 +83,7 @@ export default function TrainingPage() {
                             </Box>
                         </Typography>
                         <Typography sx={{ color: "#475569", fontSize: { xs: "1rem", md: "1.1rem" }, maxWidth: 540, mx: "auto", lineHeight: 1.75 }}>
-                            A comprehensive training experience that transforms students into confident professionals with strong fundamentals and practical project skills.
+                            A clear, structured program that builds aptitude, technical skills, communication, and practical project experience.
                         </Typography>
                     </RevealBox>
                 </Container>
@@ -122,7 +122,7 @@ export default function TrainingPage() {
                             <Box component="span" sx={{ color: "#0f766e" }}>Skill Mastery</Box>
                         </Typography>
                         <Typography sx={{ color: "#475569", maxWidth: 560, lineHeight: 1.75 }}>
-                            A structured 5-phase program designed to take you from where you are today to practical, job-ready skill confidence.
+                            A practical 5-phase learning path with clear milestones and regular mentor feedback.
                         </Typography>
                     </RevealBox>
                     <Stack spacing={2.5}>
@@ -189,7 +189,7 @@ export default function TrainingPage() {
                             <Box component="span" sx={{ background: "linear-gradient(90deg,#6ee7b7,#67e8f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Learning?</Box>
                         </Typography>
                         <Typography sx={{ color: "rgba(255,255,255,0.65)", mb: 4, lineHeight: 1.75 }}>
-                            Join THAKSA's Training program and start building practical, real-world skills with structured mentor support.
+                            Join the training program to build practical skills with mentor support and consistent practice.
                         </Typography>
                         <Box component="a" href="https://wa.me/919908597337?text=Hi%20THAKSA%2C%20I'm%20interested%20in%20the%20Training%20program!" target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", alignItems: "center", gap: 1.5, bgcolor: "#25D366", color: "#fff", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", px: 4, py: 1.8, borderRadius: 3, boxShadow: "0 12px 28px rgba(37,211,102,0.4)", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 20px 40px rgba(37,211,102,0.5)" } }}>
                             <WhatsAppIcon sx={{ fontSize: 24 }} /> Chat on WhatsApp
@@ -202,3 +202,5 @@ export default function TrainingPage() {
         </Box>
     );
 }
+
+
