@@ -1,4 +1,4 @@
-# THAKSA E-Learning — Frontend
+# SkillForge E-Learning — Frontend
 
 <div align="center">
   <h3>🎓 A modern, full-featured e-learning platform built with React + Vite + Material UI</h3>
@@ -100,8 +100,8 @@ Make sure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/THAKSA_E-LEARNING.git
-cd THAKSA_E-LEARNING/Frontend
+git clone https://github.com/your-username/SkillForge_E-LEARNING.git
+cd SkillForge_E-LEARNING/Frontend
 ```
 
 ### 2. Install Dependencies
@@ -187,4 +187,4 @@ The backend API server runs separately. See [`../Backend/README.md`](../Backend/
 
 ## 📄 License
 
-© 2025 THAKSA Academy. All rights reserved.
+© 2025 SkillForge Academy. All rights reserved.

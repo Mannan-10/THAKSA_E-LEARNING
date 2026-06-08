@@ -1,11 +1,10 @@
 import { Box, Container, Grid, Link, Stack, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import logo from "../pages/HomePage/sections/thaksa-no-border.png";
+import logo from "../pages/HomePage/sections/skillforge-no-border.png";
 import { siteConfig } from "../config/siteConfig";
 
 const quickLinks = [
   { label: "Home", to: "/" },
-  { label: "Workshops", to: "/workshops" },
   { label: "Training", to: "/training" },
   { label: "Contact", to: "/contact" },
 ];
@@ -13,8 +12,6 @@ const quickLinks = [
 const programs = [
   { label: "Courses", to: "/courses" },
   { label: "Batches", to: "/batches" },
-  { label: "Projects", to: "/final-year-projects" },
-  { label: "Placements", to: "/placements" },
 ];
 
 function FooterLink({ label, to }) {
@@ -54,7 +51,7 @@ export default function Footer() {
                 <Box
                   component="img"
                   src={logo}
-                  alt="Thaksa Logo"
+                  alt="SkillForge Logo"
                   sx={{
                     width: 38,
                     height: 38,

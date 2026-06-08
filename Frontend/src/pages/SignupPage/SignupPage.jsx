@@ -101,7 +101,7 @@ export default function SignupPage() {
         Create Account
       </Typography>
       <Typography variant="body1" color="text.secondary" textAlign="center" sx={{ mb: 4 }}>
-        Start your learning journey with Thaksa.
+        Start your learning journey with SkillForge.
       </Typography>
 
       <Stack component="form" onSubmit={handleSignup} spacing={2.5} noValidate>

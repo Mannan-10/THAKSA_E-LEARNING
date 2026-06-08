@@ -1,9 +1,9 @@
-# THAKSA E-Learning Platform
+# SkillForge E-Learning Platform
 
 <div align="center">
   <h3>🎓 Full-Stack E-Learning Platform for Workshops, Training & Final Year Projects</h3>
   <br/>
-  <img src="./Frontend/public/screenshots/home_hero.png" alt="THAKSA Homepage" width="100%"/>
+  <img src="./Frontend/public/screenshots/home_hero.png" alt="SkillForge Homepage" width="100%"/>
 </div>
 
 ---
@@ -11,7 +11,7 @@
 ## 📂 Repository Structure
 
 ```
-THAKSA_E-LEARNING/
+SKILLFORGE_E-LEARNING/
 ├── Frontend/    # React + Vite + MUI — User interface
 └── Backend/     # Node.js + Express + PostgreSQL — REST API
 ```
@@ -52,4 +52,4 @@ npm run dev     # starts on http://localhost:5173
 
 ---
 
-© 2025 THAKSA Academy. All rights reserved.
+© 2025 SkillForge Academy. All rights reserved.

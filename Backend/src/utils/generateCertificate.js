@@ -2,7 +2,7 @@
 
 const generateCertificate = async (userId, courseId) => {
     // Later: PDF generation
-    return `https://thaksa.com/certificates/${userId}-${courseId}.pdf`
+    return `https://skillforge.com/certificates/${userId}-${courseId}.pdf`
 };
 
 export default generateCertificate;

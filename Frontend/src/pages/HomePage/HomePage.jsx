@@ -1,8 +1,8 @@
 import { Box, Container } from "@mui/material";
 import HeroSection from "./sections/HeroSection";
 import TrustStripSection from "./sections/TrustStripSection";
+import AboutSection from "./sections/AboutSection";
 import TestimonialsSection from "./sections/TestimonialsSection";
-import InstructorSection from "./sections/InstructorSection";
 
 export default function HomePage() {
   return (
@@ -15,7 +15,7 @@ export default function HomePage() {
       <HeroSection />
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
         <TrustStripSection />
-        <InstructorSection />
+        <AboutSection />
         <TestimonialsSection />
       </Container>
     </Box>

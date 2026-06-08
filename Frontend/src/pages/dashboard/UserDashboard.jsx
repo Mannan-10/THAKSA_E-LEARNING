@@ -78,7 +78,7 @@ export default function UserDashboard() {
         Welcome back
       </Typography>
       <Typography color="text.secondary" sx={{ mb: 3.2 }}>
-        Continue your learning journey with Thaksa.
+        Continue your learning journey with SkillForge.
       </Typography>
 
 

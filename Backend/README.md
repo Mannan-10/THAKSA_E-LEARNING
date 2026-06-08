@@ -1,7 +1,7 @@
-# THAKSA E-Learning — Backend
+# SkillForge E-Learning — Backend
 
 <div align="center">
-  <h3>⚙️ RESTful API server powering the THAKSA E-Learning platform</h3>
+  <h3>⚙️ RESTful API server powering the SkillForge E-Learning platform</h3>
   <p>Node.js · Express · PostgreSQL · JWT · Nodemailer</p>
 </div>
 
@@ -72,8 +72,8 @@ Make sure the following are installed:
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/THAKSA_E-LEARNING.git
-cd THAKSA_E-LEARNING/Backend
+git clone https://github.com/your-username/SkillForge_E-LEARNING.git
+cd SkillForge_E-LEARNING/Backend
 ```
 
 ### Step 2 — Install Dependencies
@@ -240,4 +240,4 @@ The React frontend runs separately. See [`../Frontend/README.md`](../Frontend/RE
 
 ## 📄 License
 
-© 2025 THAKSA Academy. All rights reserved.
+© 2025 SkillForge Academy. All rights reserved.

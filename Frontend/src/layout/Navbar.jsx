@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import brandLogo from "../pages/HomePage/sections/thaksa-no-border.png";
+import brandLogo from "../pages/HomePage/sections/skillforge-no-border.png";
 import { getNavContext } from "../config/navConfig";
 import { siteConfig } from "../config/siteConfig";
 
@@ -72,7 +72,7 @@ export default function Navbar() {
             <Box
               component="img"
               src={brandLogo}
-              alt="Thaksa Logo"
+              alt="SkillForge Logo"
               sx={{
                 width: { xs: 34, md: 40 },
                 height: { xs: 34, md: 40 },
@@ -214,7 +214,7 @@ export default function Navbar() {
                 <Box
                   component="img"
                   src={brandLogo}
-                  alt="Thaksa Logo"
+                  alt="SkillForge Logo"
                 sx={{
                   width: 34,
                   height: 34,

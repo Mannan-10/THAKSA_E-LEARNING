@@ -9,10 +9,7 @@ import CourseDetail from "../pages/CourseDetail";
 import BatchesPage from "../pages/BatchesPage";
 import PricingPage from "../pages/PricingPage/index.js";
 import ContactPage from "../pages/ContactPage/index.js";
-import WorkshopPage from "../pages/WorkshopPage";
 import TrainingPage from "../pages/TrainingPage";
-import FinalYearProjectsPage from "../pages/FinalYearProjectsPage";
-import PlacementsPage from "../pages/PlacementsPage";
 import NotFound from "../pages/NotFound";
 import AccessDenied from "../pages/AccessDenied";
 
@@ -113,34 +110,10 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/workshops"
-        element={
-          <PublicLayout>
-            <WorkshopPage />
-          </PublicLayout>
-        }
-      />
-      <Route
         path="/training"
         element={
           <PublicLayout>
             <TrainingPage />
-          </PublicLayout>
-        }
-      />
-      <Route
-        path="/final-year-projects"
-        element={
-          <PublicLayout>
-            <FinalYearProjectsPage />
-          </PublicLayout>
-        }
-      />
-      <Route
-        path="/placements"
-        element={
-          <PublicLayout>
-            <PlacementsPage />
           </PublicLayout>
         }
       />

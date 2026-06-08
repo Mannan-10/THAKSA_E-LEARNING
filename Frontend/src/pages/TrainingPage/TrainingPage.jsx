@@ -47,7 +47,7 @@ const outcomes = [
 ];
 
 const testimonials = [
-    { name: "Aditya Kumar", role: "ECE Graduate", text: "THAKSA's training program completely changed my learning approach. From weak fundamentals to confident problem solving in 3 months - the mentor feedback was incredibly practical.", rating: 5, avatar: "AK", color: "#6366f1" },
+    { name: "Aditya Kumar", role: "ECE Graduate", text: "SkillForge's training program completely changed my learning approach. From weak fundamentals to confident problem solving in 3 months - the mentor feedback was incredibly practical.", rating: 5, avatar: "AK", color: "#6366f1" },
     { name: "Keerthi Nair", role: "CSE Graduate", text: "The structured approach to aptitude and technical modules was game-changing. Every session had clear outcomes and I could see measurable progress each week.", rating: 5, avatar: "KN", color: "#0f766e" },
 ];
 
@@ -57,7 +57,7 @@ function WhatsAppFloat() {
             <IconButton component="a" href="tel:+919908597337" sx={{ width: 50, height: 50, bgcolor: "#6366f1", color: "#fff", boxShadow: "0 8px 24px rgba(99,102,241,0.45)", "&:hover": { bgcolor: "#4f46e5", transform: "scale(1.12)" }, transition: "transform 0.2s" }}>
                 <PhoneRoundedIcon sx={{ fontSize: 22 }} />
             </IconButton>
-            <IconButton component="a" href="https://wa.me/919908597337?text=Hi%20THAKSA%2C%20I'm%20interested%20in%20the%20Training%20program!" target="_blank" rel="noopener noreferrer" sx={{ width: 60, height: 60, bgcolor: "#25D366", color: "#fff", boxShadow: "0 8px 28px rgba(37,211,102,0.5)", "&:hover": { bgcolor: "#1ebe58", transform: "scale(1.12)" }, transition: "transform 0.2s" }}>
+            <IconButton component="a" href="https://wa.me/919908597337?text=Hi%20SkillForge%2C%20I'm%20interested%20in%20the%20Training%20program!" target="_blank" rel="noopener noreferrer" sx={{ width: 60, height: 60, bgcolor: "#25D366", color: "#fff", boxShadow: "0 8px 28px rgba(37,211,102,0.5)", "&:hover": { bgcolor: "#1ebe58", transform: "scale(1.12)" }, transition: "transform 0.2s" }}>
                 <WhatsAppIcon sx={{ fontSize: 30 }} />
             </IconButton>
         </Box>
@@ -191,7 +191,7 @@ export default function TrainingPage() {
                         <Typography sx={{ color: "rgba(255,255,255,0.65)", mb: 4, lineHeight: 1.75 }}>
                             Join the training program to build practical skills with mentor support and consistent practice.
                         </Typography>
-                        <Box component="a" href="https://wa.me/919908597337?text=Hi%20THAKSA%2C%20I'm%20interested%20in%20the%20Training%20program!" target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", alignItems: "center", gap: 1.5, bgcolor: "#25D366", color: "#fff", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", px: 4, py: 1.8, borderRadius: 3, boxShadow: "0 12px 28px rgba(37,211,102,0.4)", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 20px 40px rgba(37,211,102,0.5)" } }}>
+                        <Box component="a" href="https://wa.me/919908597337?text=Hi%20SkillForge%2C%20I'm%20interested%20in%20the%20Training%20program!" target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", alignItems: "center", gap: 1.5, bgcolor: "#25D366", color: "#fff", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", px: 4, py: 1.8, borderRadius: 3, boxShadow: "0 12px 28px rgba(37,211,102,0.4)", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 20px 40px rgba(37,211,102,0.5)" } }}>
                             <WhatsAppIcon sx={{ fontSize: 24 }} /> Chat on WhatsApp
                         </Box>
                     </RevealBox>

@@ -67,7 +67,7 @@ const createGoogleMeetLink = async ({
     },
     conferenceData: {
       createRequest: {
-        requestId: `thaksa-${crypto.randomUUID()}`,
+        requestId: `skillforge-${crypto.randomUUID()}`,
         conferenceSolutionKey: { type: "hangoutsMeet" },
       },
     },

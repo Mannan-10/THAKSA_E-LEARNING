@@ -11,23 +11,6 @@ import { useEffect, useRef, useState } from "react";
 
 const modules = [
   {
-    id: "workshops",
-    icon: BuildRoundedIcon,
-    title: "Workshops",
-    subtitle: "Hands-On Learning",
-    description:
-      "Offline workshops with direct mentor guidance, practical exercises, and clear takeaways you can apply immediately.",
-    color: "#6366f1",
-    gradient: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-    bgGlow: "rgba(99,102,241,0.12)",
-    borderColor: "rgba(99,102,241,0.25)",
-    route: "/workshops",
-    tag: "Offline Mode",
-    tagColor: "#6366f1",
-    tagBg: "rgba(99,102,241,0.1)",
-    whoFor: "College students who want practical exposure",
-  },
-  {
     id: "training",
     icon: WorkspacePremiumRoundedIcon,
     title: "Training",
@@ -39,44 +22,10 @@ const modules = [
     bgGlow: "rgba(15,118,110,0.12)",
     borderColor: "rgba(15,118,110,0.25)",
     route: "/training",
-    tag: "Structured tranind sessions",
+    tag: "Structured training sessions",
     tagColor: "#0f766e",
     tagBg: "rgba(15,118,110,0.1)",
     whoFor: "Students and fresh graduates building core skills",
-  },
-  {
-    id: "fyp",
-    icon: RocketLaunchRoundedIcon,
-    title: "Final Year Projects",
-    subtitle: "Guided Project Work",
-    description:
-      "End-to-end project guidance with documentation support, review checkpoints, and viva preparation.",
-    color: "#d97706",
-    gradient: "linear-gradient(135deg, #d97706 0%, #ea580c 100%)",
-    bgGlow: "rgba(217,119,6,0.12)",
-    borderColor: "rgba(217,119,6,0.25)",
-    route: "/final-year-projects",
-    tag: "Industry Grade",
-    tagColor: "#d97706",
-    tagBg: "rgba(217,119,6,0.1)",
-    whoFor: "Final-year students preparing academic projects",
-  },
-  {
-    id: "placements",
-    icon: WorkspacePremiumRoundedIcon,
-    title: "Placements",
-    subtitle: "Job Support",
-    description:
-      "Practical support for resumes, interviews, and job applications with clear preparation plans.",
-    color: "#0b4f8c",
-    gradient: "linear-gradient(135deg, #0b4f8c 0%, #2563eb 100%)",
-    bgGlow: "rgba(37,99,235,0.14)",
-    borderColor: "rgba(37,99,235,0.28)",
-    route: "/placements",
-    tag: "Hiring Support",
-    tagColor: "#1d4ed8",
-    tagBg: "rgba(37,99,235,0.1)",
-    whoFor: "Learners ready to prepare for interviews and jobs",
   },
 ];
 
@@ -354,7 +303,7 @@ export default function HeroSection() {
                 <Box
                   component="img"
                   src={new URL("./logo.jpeg", import.meta.url).href}
-                  alt="THAKSA Academy Logo"
+                  alt="SkillForge Academy Logo"
                   sx={{
                     width: { xs: 120, sm: 150 },
                     height: { xs: 120, sm: 150 },
@@ -387,7 +336,7 @@ export default function HeroSection() {
             >
               <SchoolRoundedIcon sx={{ fontSize: 18, color: "#6366f1" }} />
               <Typography sx={{ fontWeight: 700, fontSize: "0.82rem", color: "#6366f1" }}>
-                THAKSA Academy | Skill-first learning
+                SkillForge Academy | Skill-first learning
               </Typography>
             </Box>
 
@@ -434,7 +383,7 @@ export default function HeroSection() {
                 transition: "all 0.6s ease 0.2s",
               }}
             >
-              Workshops | Training | Final Year Projects | Placements
+              Structured Training & Placement Support
             </Typography>
 
             {/* Description */}
@@ -450,7 +399,7 @@ export default function HeroSection() {
                 transition: "all 0.6s ease 0.3s",
               }}
             >
-              Learn practical skills with guided mentors, real project work, and clear support
+              Learn practical skills with guided mentors, structured sessions, and clear support
               from learning to placement preparation.
             </Typography>
             <Stack
@@ -466,7 +415,7 @@ export default function HeroSection() {
               <Button
                 variant="contained"
                 size="large"
-                onClick={() => navigate("/workshops#workshop-contact")}
+                onClick={() => navigate("/contact")}
                 sx={{
                   textTransform: "none",
                   fontWeight: 800,
@@ -529,7 +478,7 @@ export default function HeroSection() {
               <Box
                 component="img"
                 src={new URL("./logo.jpeg", import.meta.url).href}
-                alt="THAKSA Academy Logo"
+                alt="SkillForge Academy Logo"
                 sx={{
                   width: { md: 280, lg: 340 },
                   height: { md: 280, lg: 340 },

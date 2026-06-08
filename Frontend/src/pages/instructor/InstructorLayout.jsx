@@ -68,7 +68,7 @@ export default function InstructorLayout() {
           fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
         }}
       >
-        Thaksa Instructor
+        SkillForge Instructor
       </Typography>
 
       <List sx={{ p: 0 }}>
