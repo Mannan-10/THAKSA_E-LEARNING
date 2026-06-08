@@ -77,7 +77,8 @@ const getStudentProgress = async (req, res) => {
 
     // ownership check
     const course = await db.query(
-        `SELECT id FROM courses WHERE id = $1 AND instructor_id = $2`[courseId, instructorId]
+        `SELECT id FROM courses WHERE id = $1 AND instructor_id = $2`,
+        [courseId, instructorId]
     );
 
     if (course.rows.length === 0) {
