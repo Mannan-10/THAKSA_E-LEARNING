@@ -33,7 +33,6 @@
     "testMatch": [
       "**/tests/**/*.test.js"
     ],
-    "transform": {},
-    "forceExit": true
+    "transform": {}
   }
 }

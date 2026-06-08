@@ -1,169 +1,347 @@
 /**
- * SkillForge — Critical Security Tests
+ * SkillForge — Security Integration Tests
  *
- * Tests the 4 key security fixes:
- *   1. Registration ignores role=admin/instructor from request body (always 'student')
- *   2. Unauthenticated user cannot access course content (401)
- *   3. Unenrolled student cannot access course content (403) — requires token in .env
- *   4. Enrolled student can access course content (200)         — requires token in .env
- *   5. Student cannot enroll without a completed payment (403)  — requires token in .env
+ * All test data (users, course, module, lesson, batch, enrollment, payment)
+ * is created from scratch in beforeAll using a dedicated DB pool.
+ * JWT tokens are minted directly via jwt.sign — no SMTP needed.
+ * All test data is deleted in afterAll in FK-safe order.
+ * Both DB pools are closed cleanly so Jest exits without open-handle warnings.
  *
- * Run: npm test
- *
- * Token-dependent tests (3, 4, 5) are automatically skipped if tokens are not
- * configured in .env. See TEST_CONFIG below.
- *
- * IMPORTANT: Registration tests will trigger a real OTP email via Gmail SMTP.
- * Make sure your .env has valid GMAIL / PASSWORD credentials, or the test will time out.
- * Add a longer timeout (20000ms) per test if your SMTP is slow.
+ * Covers:
+ *  Fix 1 — Registration always stores role='student' in otp_verifications
+ *  Fix 2 — Course content: 401 unauthenticated, 403 unenrolled, 200 enrolled
+ *  Fix 3 — Lesson complete: 403 unenrolled, 200 enrolled
+ *  Fix 4 — Enrollment: 403 without completed payment
  */
 
-import request from "supertest";
-import express from "express";
-import dotenv from "dotenv";
+import request    from "supertest";
+import express    from "express";
+import dotenv     from "dotenv";
+import bcrypt     from "bcrypt";
+import jwt        from "jsonwebtoken";
+import pkg        from "pg";
+import bodyParser from "body-parser";
+import cors       from "cors";
 
 dotenv.config();
 
-// ─── Build the Express app (same routes as index.js, no app.listen) ───────────
-import userRouter from "../src/routes/users.js";
+// ─── Dedicated pool used ONLY for test setup / teardown ──────────────────────
+// Kept separate from the app pool so we can close it independently.
+const { Pool } = pkg;
+const testPool = new Pool({
+  user:     process.env.DB_USER,
+  host:     process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port:     process.env.DB_PORT,
+});
+
+// ─── Import the app's own pool so we can close it in afterAll ────────────────
+import db from "../src/config/db.js";
+
+// ─── Build the Express app (mirrors index.js, no app.listen) ─────────────────
+import userRouter          from "../src/routes/users.js";
 import courseContentRouter from "../src/routes/courseContentRoutes.js";
-import enrollmentRouter from "../src/routes/enrollmentRoutes.js";
-import paymentRouter from "../src/routes/paymentRoutes.js";
-import bodyParser from "body-parser";
-import cors from "cors";
+import enrollmentRouter    from "../src/routes/enrollmentRoutes.js";
+import paymentRouter       from "../src/routes/paymentRoutes.js";
 
 const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-
-app.use("/api/users", userRouter);
+app.use("/api/users",   userRouter);
 app.use("/api/courses", courseContentRouter);
-app.use("/api", enrollmentRouter);
-app.use("/api", paymentRouter);
+app.use("/api",         enrollmentRouter);
+app.use("/api",         paymentRouter);
 
-// Jest is configured with --forceExit to handle open handles from pg Pool
-
-// ─── Test Configuration ───────────────────────────────────────────────────────
-// To run token-dependent tests, add these to Backend/.env:
-//
-//   TEST_UNENROLLED_STUDENT_TOKEN=<JWT of a student NOT enrolled in the test course>
-//   TEST_ENROLLED_STUDENT_TOKEN=<JWT of a student enrolled in the test course>
-//   TEST_UNPAID_BATCH_ID=<batch ID the unenrolled student has NOT paid for>
-//   TEST_UNENROLLED_COURSE_ID=<course ID the unenrolled student is NOT in>
-//   TEST_ENROLLED_COURSE_ID=<course ID the enrolled student IS in>
-//
-const TEST_CONFIG = {
-  unenrolledStudentToken: process.env.TEST_UNENROLLED_STUDENT_TOKEN || "",
-  enrolledStudentToken:   process.env.TEST_ENROLLED_STUDENT_TOKEN   || "",
-  unpaidBatchId:          process.env.TEST_UNPAID_BATCH_ID           || "1",
-  unenrolledCourseId:     process.env.TEST_UNENROLLED_COURSE_ID      || "1",
-  enrolledCourseId:       process.env.TEST_ENROLLED_COURSE_ID        || "1",
+// ─── Test data ────────────────────────────────────────────────────────────────
+// Unique email addresses that are unlikely to clash with real data
+const EMAILS = {
+  instructor:     "jest-sec-instr@skillforge.test",
+  unenrolled:     "jest-sec-unenr@skillforge.test",
+  enrolled:       "jest-sec-enr@skillforge.test",
+  roleEscalation: "jest-sec-rolehack@skillforge.test",
 };
+const TEST_PASSWORD = "JestSecurity123!";
 
-const skipIfNoToken = (token, label) => {
-  if (!token) {
-    console.warn(`  ⚠  Skipping "${label}" — configure token in .env to enable`);
-    return true;
-  }
-  return false;
-};
+// Minted once in beforeAll, used across all suites
+const ids    = {};   // { instructor, course, module, lesson, batch, unenrolled, enrolled }
+const tokens = {};   // { unenrolled, enrolled }
+
+// Helper: mint a JWT the same way the login controller does
+const makeToken = (userId, role) =>
+  jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════════════════════════════════════
+beforeAll(async () => {
+  const allEmails = Object.values(EMAILS);
+  const hashed    = await bcrypt.hash(TEST_PASSWORD, 10);
+
+  // 1. Wipe any leftovers from a previous interrupted run (FK-safe order)
+  await testPool.query(
+    `DELETE FROM payments
+     WHERE user_id IN (SELECT id FROM users WHERE email = ANY($1::text[]))`,
+    [allEmails]
+  );
+  await testPool.query(
+    `DELETE FROM courses
+     WHERE instructor_id IN (SELECT id FROM users WHERE email = ANY($1::text[]))`,
+    [allEmails]
+    // Cascades: course_modules → lessons → (nothing further)
+    //           batches → batch_enrollments
+  );
+  await testPool.query(
+    `DELETE FROM users WHERE email = ANY($1::text[])`,
+    [allEmails]
+    // Cascades: user_profiles, lesson_progress, batch_enrollments (user side)
+  );
+  await testPool.query(
+    `DELETE FROM otp_verifications WHERE email = ANY($1::text[])`,
+    [allEmails]
+  );
+
+  // 2. Instructor
+  const instrRow = await testPool.query(
+    `INSERT INTO users (name, email, password, role)
+     VALUES ('Jest Instructor', $1, $2, 'instructor') RETURNING id`,
+    [EMAILS.instructor, hashed]
+  );
+  ids.instructor = instrRow.rows[0].id;
+  await testPool.query(
+    `INSERT INTO user_profiles (user_id) VALUES ($1)`,
+    [ids.instructor]
+  );
+
+  // 3. Approved course owned by that instructor
+  const courseRow = await testPool.query(
+    `INSERT INTO courses
+       (title, description, price, level, approval_status, instructor_id, is_active)
+     VALUES ('Jest Security Course', 'Integration test', 0, 'Beginner', 'approved', $1, true)
+     RETURNING id`,
+    [ids.instructor]
+  );
+  ids.course = courseRow.rows[0].id;
+
+  // 4. Module + lesson (needed for lesson-complete tests)
+  const modRow = await testPool.query(
+    `INSERT INTO course_modules (course_id, title, order_number)
+     VALUES ($1, 'Jest Module', 1) RETURNING id`,
+    [ids.course]
+  );
+  ids.module = modRow.rows[0].id;
+
+  const lessonRow = await testPool.query(
+    `INSERT INTO lessons (module_id, title, order_number)
+     VALUES ($1, 'Jest Lesson', 1) RETURNING id`,
+    [ids.module]
+  );
+  ids.lesson = lessonRow.rows[0].id;
+
+  // 5. Batch linked to that course
+  const batchRow = await testPool.query(
+    `INSERT INTO batches
+       (course_id, batch_name, start_date, end_date, max_students, status, timezone)
+     VALUES ($1, 'Jest Batch', '2025-01-01', '2026-12-31', 50, 'started', 'Asia/Kolkata')
+     RETURNING id`,
+    [ids.course]
+  );
+  ids.batch = batchRow.rows[0].id;
+
+  // 6. Unenrolled student — no payment, no batch_enrollment
+  const unenrRow = await testPool.query(
+    `INSERT INTO users (name, email, password, role)
+     VALUES ('Jest Unenrolled', $1, $2, 'student') RETURNING id`,
+    [EMAILS.unenrolled, hashed]
+  );
+  ids.unenrolled = unenrRow.rows[0].id;
+  await testPool.query(
+    `INSERT INTO user_profiles (user_id) VALUES ($1)`,
+    [ids.unenrolled]
+  );
+
+  // 7. Enrolled student — has payment (status='SUCCESS') + active batch_enrollment
+  const enrRow = await testPool.query(
+    `INSERT INTO users (name, email, password, role)
+     VALUES ('Jest Enrolled', $1, $2, 'student') RETURNING id`,
+    [EMAILS.enrolled, hashed]
+  );
+  ids.enrolled = enrRow.rows[0].id;
+  await testPool.query(
+    `INSERT INTO user_profiles (user_id) VALUES ($1)`,
+    [ids.enrolled]
+  );
+
+  // Payment — payment_status stored as 'SUCCESS' to match makePayment controller
+  await testPool.query(
+    `INSERT INTO payments
+       (user_id, batch_id, amount, payment_method, payment_status, transaction_id)
+     VALUES ($1, $2, 0, 'TEST', 'SUCCESS', $3)`,
+    [ids.enrolled, ids.batch, `TXN_JEST_${Date.now()}`]
+  );
+
+  // Active enrollment
+  await testPool.query(
+    `INSERT INTO batch_enrollments (batch_id, user_id, status)
+     VALUES ($1, $2, true)`,
+    [ids.batch, ids.enrolled]
+  );
+
+  // 8. Mint JWT tokens directly — identical payload to what login controller produces.
+  //    This avoids calling the login HTTP endpoint (which triggers SMTP login-alert emails).
+  tokens.unenrolled = makeToken(ids.unenrolled, "student");
+  tokens.enrolled   = makeToken(ids.enrolled,   "student");
+}, 20000);
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TEARDOWN
+// ═══════════════════════════════════════════════════════════════════════════════
+afterAll(async () => {
+  const allEmails = Object.values(EMAILS);
+
+  // Delete in FK-safe order so no constraint violations
+  await testPool.query(
+    `DELETE FROM payments
+     WHERE user_id IN (SELECT id FROM users WHERE email = ANY($1::text[]))`,
+    [allEmails]
+  );
+  await testPool.query(
+    `DELETE FROM courses
+     WHERE instructor_id IN (SELECT id FROM users WHERE email = ANY($1::text[]))`,
+    [allEmails]
+  );
+  await testPool.query(
+    `DELETE FROM users WHERE email = ANY($1::text[])`,
+    [allEmails]
+  );
+  await testPool.query(
+    `DELETE FROM otp_verifications WHERE email = ANY($1::text[])`,
+    [allEmails]
+  );
+
+  // Close pools so Jest can exit without open-handle warnings.
+  // testPool: fully under our control — no persistent connections, drains immediately.
+  // db (app pool): db.connect() has been removed from db.js, so all connections are idle
+  //                and pool.end() completes quickly.
+  await testPool.end();
+  await db.end();
+}, 20000);
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SUITE 1: Registration Role Escalation
 // ═══════════════════════════════════════════════════════════════════════════════
-describe("Security Fix 1 — Registration Role Escalation", () => {
+describe("Fix 1 — Registration Role Escalation", () => {
   /**
-   * Sending role="admin" must be silently ignored.
-   * The server should still return 200 (OTP triggered), NOT a privilege error.
-   * After this test, verify in DB:
-   *   SELECT role FROM otp_verifications WHERE email = '<printed email>';
-   *   → must be 'student', not 'admin'
+   * Strategy:
+   *   POST /register performs the DB INSERT into otp_verifications BEFORE
+   *   calling sendMail. sendMail catches its own SMTP errors internally and
+   *   never throws — so the controller always returns 200.
    *
-   * NOTE: Uses a 20s timeout because Gmail SMTP can be slow.
+   *   We assert that what got written to otp_verifications has role='student',
+   *   regardless of the role='admin' sent in the request body.
    */
   test(
-    "POST /register with role=admin does not return role=admin in response (role is always 'student')",
+    "POST /register with role='admin' in body stores role='student' in otp_verifications",
     async () => {
-      const uniqueEmail = `test-role-hack-${Date.now()}@example.com`;
+      await testPool.query(
+        `DELETE FROM otp_verifications WHERE email = $1`,
+        [EMAILS.roleEscalation]
+      );
 
+      // Call the real register endpoint. SMTP may log an error but never throws,
+      // so this always resolves with 200.
       const res = await request(app)
         .post("/api/users/register")
         .send({
-          username: "RoleHackTester",
-          email: uniqueEmail,
-          password: "TestPassword123!",
-          role: "admin", // Must be ignored by the server
+          username: "RoleHacker",
+          email:    EMAILS.roleEscalation,
+          password: "Hack123!",
+          role:     "admin",           // <── must be ignored by the controller
         });
 
-      // The registration endpoint either:
-      //   - Returns 200 (OTP sent) if SMTP is configured in .env
-      //   - Returns 500 if Gmail SMTP is not set up in the test environment
-      // In BOTH cases, it must NOT return role="admin" anywhere in the response.
-      // The actual role fix is in the DB INSERT (always 'student') which runs before email.
-      expect([200, 500]).toContain(res.statusCode);
-      if (res.body.role) {
-        expect(res.body.role).toBe("student");
-      }
+      expect(res.statusCode).toBe(200);
 
-      // If OTP was sent, verify the message
-      if (res.statusCode === 200) {
-        expect(res.body.message).toMatch(/OTP sent/i);
-      }
-
-      // Manual DB verification after a successful OTP (when SMTP works):
-      // SELECT role FROM otp_verifications WHERE email = '<uniqueEmail>';
-      // Expected: 'student'  (never 'admin')
-      console.log(`  DB check: SELECT role FROM otp_verifications WHERE email = '${uniqueEmail}'; → expected 'student'`);
+      // Assert the DB row has role='student', NOT the 'admin' sent by client
+      const row = await testPool.query(
+        `SELECT role FROM otp_verifications WHERE email = $1`,
+        [EMAILS.roleEscalation]
+      );
+      expect(row.rows.length).toBe(1);
+      expect(row.rows[0].role).toBe("student");
     },
-    20000
+    15000   // allow time for bcrypt + SMTP timeout/failure
   );
 });
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SUITE 2: Course Content Access Guard
 // ═══════════════════════════════════════════════════════════════════════════════
-describe("Security Fix 2 — Unauthorized Course Content Access", () => {
-  test("Unauthenticated request to course content returns 401", async () => {
+describe("Fix 2 — Course Content Access Guard", () => {
+  test("Unauthenticated request returns 401", async () => {
     const res = await request(app)
-      .get(`/api/courses/${TEST_CONFIG.unenrolledCourseId}/content`);
+      .get(`/api/courses/${ids.course}/content`);
 
     expect(res.statusCode).toBe(401);
   });
 
-  test("Unenrolled student cannot access course content (403)", async () => {
-    if (skipIfNoToken(TEST_CONFIG.unenrolledStudentToken, "Unenrolled student → 403")) return;
-
+  test("Unenrolled student cannot access course content — expects 403", async () => {
     const res = await request(app)
-      .get(`/api/courses/${TEST_CONFIG.unenrolledCourseId}/content`)
-      .set("Authorization", `Bearer ${TEST_CONFIG.unenrolledStudentToken}`);
+      .get(`/api/courses/${ids.course}/content`)
+      .set("Authorization", `Bearer ${tokens.unenrolled}`);
 
     expect(res.statusCode).toBe(403);
     expect(res.body.message).toMatch(/access denied|enrolled/i);
   });
 
-  test("Enrolled student can access course content (200)", async () => {
-    if (skipIfNoToken(TEST_CONFIG.enrolledStudentToken, "Enrolled student → 200")) return;
-
+  test("Enrolled student can access course content — expects 200 with module list", async () => {
     const res = await request(app)
-      .get(`/api/courses/${TEST_CONFIG.enrolledCourseId}/content`)
-      .set("Authorization", `Bearer ${TEST_CONFIG.enrolledStudentToken}`);
+      .get(`/api/courses/${ids.course}/content`)
+      .set("Authorization", `Bearer ${tokens.enrolled}`);
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
+    // The test module we created must be in the response
+    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body[0]).toHaveProperty("module_title", "Jest Module");
   });
 });
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// SUITE 3: Enrollment Payment Check
-// ═══════════════════════════════════════════════════════════════════════════════
-describe("Security Fix 4 — Enrollment Payment Bypass", () => {
-  test("Student cannot enroll without a completed payment (403)", async () => {
-    if (skipIfNoToken(TEST_CONFIG.unenrolledStudentToken, "Enroll without payment → 403")) return;
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUITE 3: Lesson Completion Enrollment Check
+// ═══════════════════════════════════════════════════════════════════════════════
+describe("Fix 3 — Lesson Completion Enrollment Check", () => {
+  test("Unenrolled student cannot mark a lesson complete — expects 403", async () => {
     const res = await request(app)
-      .post(`/api/student/batches/${TEST_CONFIG.unpaidBatchId}/enroll`)
-      .set("Authorization", `Bearer ${TEST_CONFIG.unenrolledStudentToken}`);
+      .post(`/api/courses/lessons/${ids.lesson}/complete`)
+      .set("Authorization", `Bearer ${tokens.unenrolled}`);
+
+    expect(res.statusCode).toBe(403);
+    expect(res.body.message).toMatch(/access denied|enrolled/i);
+  });
+
+  test("Enrolled student can mark a lesson complete — expects 200", async () => {
+    const res = await request(app)
+      .post(`/api/courses/lessons/${ids.lesson}/complete`)
+      .set("Authorization", `Bearer ${tokens.enrolled}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("completed", true);
+  });
+});
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUITE 4: Enrollment Requires Completed Payment
+// ═══════════════════════════════════════════════════════════════════════════════
+describe("Fix 4 — Enrollment Requires Completed Payment", () => {
+  test("Student with no payment cannot enroll in a batch — expects 403", async () => {
+    const res = await request(app)
+      .post(`/api/student/batches/${ids.batch}/enroll`)
+      .set("Authorization", `Bearer ${tokens.unenrolled}`);
 
     expect(res.statusCode).toBe(403);
     expect(res.body.message).toMatch(/payment required/i);
