@@ -56,21 +56,17 @@ export default function AppRoutes() {
       <Route
         path="/"
         element={
-          <PublicOnlyRoute>
-            <PublicLayout>
-              <HomePage />
-            </PublicLayout>
-          </PublicOnlyRoute>
+          <PublicLayout>
+            <HomePage />
+          </PublicLayout>
         }
       />
       <Route
         path="/courses"
         element={
-          <PublicOnlyRoute>
-            <PublicLayout>
-              <CoursesPage />
-            </PublicLayout>
-          </PublicOnlyRoute>
+          <PublicLayout>
+            <CoursesPage />
+          </PublicLayout>
         }
       />
       <Route
@@ -92,21 +88,17 @@ export default function AppRoutes() {
       <Route
         path="/pricing"
         element={
-          <PublicOnlyRoute>
-            <PublicLayout>
-              <PricingPage />
-            </PublicLayout>
-          </PublicOnlyRoute>
+          <PublicLayout>
+            <PricingPage />
+          </PublicLayout>
         }
       />
       <Route
         path="/contact"
         element={
-          <PublicOnlyRoute>
-            <PublicLayout>
-              <ContactPage />
-            </PublicLayout>
-          </PublicOnlyRoute>
+          <PublicLayout>
+            <ContactPage />
+          </PublicLayout>
         }
       />
       <Route
