@@ -29,12 +29,15 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
+    // NOTE: role from the request body is intentionally ignored.
+    // All new users are always registered as 'student'.
+    // Role changes must be done through the admin panel after account creation.
     await db.query(
       `INSERT INTO otp_verifications (email, username, otp, password, role, expires_at)
        VALUES ($1,$2,$3,$4,$5,$6)
        ON CONFLICT (email)
        DO UPDATE SET otp=$3, expires_at=$6`,
-      [email, username, otp, hashedPassword, role || "student", expiresAt],
+      [email, username, otp, hashedPassword, "student", expiresAt],
     );
 
     await sendMail(email, `Thaksa E-Learning - Verify your email`, { name: username, otp });

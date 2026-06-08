@@ -5,7 +5,18 @@ const enrollBatch = async (req, res) => {
     const { batchId } = req.params;
 
     try {
-        // 1. Prevent duplicate enrollment
+        // 1. Verify a completed payment exists for this user + batch
+        // payment_status is stored as 'SUCCESS' (uppercase) by makePayment
+        const payment = await db.query(
+            `SELECT id FROM payments WHERE user_id = $1 AND batch_id = $2 AND UPPER(payment_status) = 'SUCCESS'`,
+            [userId, batchId]
+        );
+
+        if (payment.rows.length === 0) {
+            return res.status(403).json({ message: "Payment required before enrollment" });
+        }
+
+        // 2. Prevent duplicate enrollment
         const existing = await db.query(
             `SELECT id FROM batch_enrollments WHERE batch_id = $1 AND user_id = $2`,[batchId, userId]
         );
@@ -14,14 +25,14 @@ const enrollBatch = async (req, res) => {
             return res.status(400).json({ message: "Already Enrolled" });
         }
 
-        // 2. Enroll
+        // 3. Enroll
         await db.query(
             `INSERT INTO batch_enrollments (batch_id, user_id) VALUES ($1, $2)`,[batchId, userId]
         );
 
         res.status(201).json({ message: "Enrolled successfully"})
     } catch (error) {
-        res.status(500).json({ message: error.message})
+        res.status(500).json({ message: "Enrollment failed" })
     }
 }
 

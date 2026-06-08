@@ -20,7 +20,7 @@ const getUserById = async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-        res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "User not found" });
     }
     res.json(result.rows[0]);
 }

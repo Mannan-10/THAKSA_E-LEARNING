@@ -1,10 +1,55 @@
 import db from "../config/db.js";
 
+/**
+ * Shared helper: checks whether a user is allowed to access a given course's content.
+ *
+ * - admin  → always allowed
+ * - instructor → allowed only if they own the course
+ * - student → allowed only if they have an active enrollment in a batch for that course
+ *
+ * Returns true if access is granted, false otherwise.
+ */
+const canAccessCourseContent = async (userId, role, courseId) => {
+  if (role === "admin") {
+    return true;
+  }
+
+  if (role === "instructor") {
+    const result = await db.query(
+      `SELECT id FROM courses WHERE id = $1 AND instructor_id = $2`,
+      [courseId, userId]
+    );
+    return result.rows.length > 0;
+  }
+
+  if (role === "student") {
+    // Student must have an active enrollment in a batch linked to this course
+    const result = await db.query(
+      `SELECT be.id
+       FROM batch_enrollments be
+       JOIN batches b ON be.batch_id = b.id
+       WHERE be.user_id = $1
+         AND b.course_id = $2
+         AND be.status = true`,
+      [userId, courseId]
+    );
+    return result.rows.length > 0;
+  }
+
+  return false;
+};
+
 const getCourseContent = async (req, res) => {
   const { courseId } = req.params;
-  const { userId } = req.user;
+  const { userId, role } = req.user;
 
   try {
+    const allowed = await canAccessCourseContent(userId, role, courseId);
+
+    if (!allowed) {
+      return res.status(403).json({ message: "Access denied. You must be enrolled in this course." });
+    }
+
     const result = await db.query(
       `
         SELECT
@@ -35,7 +80,7 @@ const getCourseContent = async (req, res) => {
 
     return res.json(result.rows);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Failed to retrieve course content" });
   }
 };
 
@@ -44,6 +89,23 @@ const markLessonComplete = async (req, res) => {
   const { userId } = req.user;
 
   try {
+    // Security check: student must be enrolled in the course that contains this lesson
+    const enrollment = await db.query(
+      `SELECT be.id
+       FROM batch_enrollments be
+       JOIN batches b ON be.batch_id = b.id
+       JOIN course_modules cm ON cm.course_id = b.course_id
+       JOIN lessons l ON l.module_id = cm.id
+       WHERE be.user_id = $1
+         AND l.id = $2
+         AND be.status = true`,
+      [userId, lessonId]
+    );
+
+    if (enrollment.rows.length === 0) {
+      return res.status(403).json({ message: "Access denied. You must be enrolled in this course." });
+    }
+
     const result = await db.query(
       `
         INSERT INTO lesson_progress (user_id, lesson_id, completed, completed_at)
@@ -57,7 +119,7 @@ const markLessonComplete = async (req, res) => {
 
     return res.json(result.rows[0]);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Failed to update lesson progress" });
   }
 };
 

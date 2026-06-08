@@ -32,10 +32,14 @@ const makePayment = async (req, res) => {
 const getMyPayments = async (req, res) => {
     const { userId } = req.user;
 
-    const result = await db.query(
-        `SELECT p.*, b.batch_name c.title AS course FROM payments p JOIN batches b ON p.batch_id = b.id JOIN courses c ON b.course_id = c.id WHERE p.user_id = $1`,[userId]
-    );
-    res.json(result.rows);
+    try {
+        const result = await db.query(
+            `SELECT p.*, b.batch_name, c.title AS course FROM payments p JOIN batches b ON p.batch_id = b.id JOIN courses c ON b.course_id = c.id WHERE p.user_id = $1`,[userId]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to retrieve payments" });
+    }
 }
 
 const getInstructorPayments = async (req, res) => {
