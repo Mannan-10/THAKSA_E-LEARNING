@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { getUserDashboard, getPublicCourses } from "../../services/userServices";
 import RatingStars from "../../components/RatingStars";
-import { getCourseRatingSummary } from "../../services/reviewService";
 import CourseSkeleton from "../../components/skeletons/CourseSkeleton";
 
 export default function MyCourses() {
@@ -39,21 +38,14 @@ export default function MyCourses() {
         const courses = Array.isArray(publicData) ? publicData : publicData?.courses || [];
         setAllCourses(courses);
 
-        // Load ratings for all courses
+        // Load ratings directly from pre-fetched course properties
         const ratingsData = {};
-        await Promise.all(
-          courses.map(async (course) => {
-            try {
-              const rating = await getCourseRatingSummary(course.id);
-              ratingsData[course.id] = {
-                average: parseFloat(rating?.average_rating || 0),
-                count: parseInt(rating?.total_reviews || 0),
-              };
-            } catch {
-              ratingsData[course.id] = { average: 0, count: 0 };
-            }
-          })
-        );
+        courses.forEach((course) => {
+          ratingsData[course.id] = {
+            average: parseFloat(course.average_rating || 0),
+            count: parseInt(course.review_count || 0),
+          };
+        });
         if (active) setRatings(ratingsData);
       } catch (err) {
         console.error("Failed to load courses:", err);

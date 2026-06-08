@@ -25,30 +25,48 @@ const getPublicCourses = async (req, res) => {
         const values = [];
         let index = 1;
 
-        let baseQuery = `
-            FROM courses c
-            JOIN users u ON c.instructor_id = u.id
-            WHERE c.is_active = true AND c.approval_status = 'approved'
-        `;
+        let filterQuery = "";
 
         if (search) {
-            baseQuery += ` AND c.title ILIKE $${index}`;
+            filterQuery += ` AND c.title ILIKE $${index}`;
             values.push(`%${search}%`);
             index++;
         }
 
         if (level) {
-            baseQuery += ` AND c.level = $${index}`;
+            filterQuery += ` AND c.level = $${index}`;
             values.push(level);
             index++;
         }
 
-        const totalResult = await db.query(`SELECT COUNT(*) ${baseQuery}`, values);
+        const countQuery = `
+            SELECT COUNT(*) 
+            FROM courses c
+            JOIN users u ON c.instructor_id = u.id
+            WHERE c.is_active = true AND c.approval_status = 'approved'
+            ${filterQuery}
+        `;
+
+        const totalResult = await db.query(countQuery, values);
         const totalCourses = Number(totalResult.rows[0].count || 0);
 
         const listQuery = `
-            SELECT c.id, c.title, c.description, c.price, c.level, c.created_at, u.name AS instructor_name
-            ${baseQuery}
+            SELECT 
+                c.id, 
+                c.title, 
+                c.description, 
+                c.price, 
+                c.level, 
+                c.created_at, 
+                u.name AS instructor_name,
+                COALESCE(ROUND(AVG(r.rating), 1), 0) AS average_rating,
+                COALESCE(COUNT(r.id), 0) AS review_count
+            FROM courses c
+            JOIN users u ON c.instructor_id = u.id
+            LEFT JOIN reviews r ON c.id = r.course_id
+            WHERE c.is_active = true AND c.approval_status = 'approved'
+            ${filterQuery}
+            GROUP BY c.id, u.name
             ORDER BY c.created_at DESC
             LIMIT $${index} OFFSET $${index + 1}
         `;
