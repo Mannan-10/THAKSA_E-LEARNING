@@ -8,12 +8,21 @@ const { Pool, types } = pkg;
 // instead of converting to a JS Date object (which shifts by timezone)
 types.setTypeParser(1082, (val) => val);
 
-const db = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+const db = new Pool(
+  process.env.DATABASE_URL
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.DATABASE_URL.includes("localhost")
+          ? false
+          : { rejectUnauthorized: false }, // Required for secure hosted DB connections (Render, Neon, etc.)
+      }
+    : {
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,
+        database: process.env.DB_DATABASE,
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT,
+      }
+);
 
 export default db;

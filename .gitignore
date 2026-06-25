@@ -3,6 +3,7 @@ package-lock.json
 .env
 dist/
 .DS_Store
+docs
 PROJECT_AUDIT_AND_NEXT_STEPS.md
 PROJECT_PROFESSIONAL_AUDITS.md
 PROJECT_DOCUMENTATION.txt
