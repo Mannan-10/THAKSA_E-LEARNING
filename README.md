@@ -9,13 +9,23 @@
 
 ---
 
+## 🌐 Live Deployment
+
+Experience SkillForge E-Learning Platform live:
+
+**🔗 [https://skillforge-academy-xi.vercel.app/](https://skillforge-academy-xi.vercel.app/)**
+
+> Explore the platform, browse courses, and test the full e-learning experience in action!
+
+---
+
 ## 📖 1. Project Overview
-SkillForge is a full-stack, role-based e-learning and training platform designed to manage educational bootcamps, placement preparation tracks, campus-based workshops, and guided academic projects. It streamlines administrative, academic, and interactive operations, allowing educational providers to run structured cohorts (batches) with maximum transparency and secure access controls.
+SkillForge is a full-stack, role-based e-learning and training platform designed to manage educational bootcamps, placement preparation tracks, campus-based workshops, and guided academic projects[...]
 
 ---
 
 ## 💡 2. Why I Built This Project
-As an SDE, I wanted to build a real-world, data-driven system that tackles complex business logic, strict security guidelines, and performance optimization. Instead of a basic CRUD app, SkillForge implements:
+As an SDE, I wanted to build a real-world, data-driven system that tackles complex business logic, strict security guidelines, and performance optimization. Instead of a basic CRUD app, SkillForge[...]
 1. **Multi-role access patterns** (Admin, Instructor, Student) with distinct workflows.
 2. **Robust backend security protections** verified by automated integration tests.
 3. **Database query optimization** via structured indexes on foreign keys to support fast joins and large-scale data queries.
@@ -137,17 +147,17 @@ Below are placeholders representing the application interface.
 A backend security review was conducted on the API server resulting in the following fixes and integrations:
 
 1. **Fixed Registration Role Escalation**: Ignored user-defined role inputs during registration. All signups default to `student`. User promotion is locked behind admin-only REST endpoints.
-2. **Secured Course Content Access**: Implemented resource-level authorization guards for `GET /api/courses/:courseId/content`. Students can only see detailed course materials if they possess an active batch enrollment. Instructors are restricted to courses they own. Admins retain full access.
+2. **Secured Course Content Access**: Implemented resource-level authorization guards for `GET /api/courses/:courseId/content`. Students can only see detailed course materials if they possess an [...]
 3. **Secured Lesson Progress Completion**: Added validation checks in the progress logger to reject status updates for lessons that belong to courses/batches the student has not enrolled in.
 4. **Blocked Enrollment Without Completed Payment**: Verified successful transaction status (`SUCCESS`) on payment tables before allowing enrollment in course batches.
-5. **Express Response Guarding**: Fixed database-level query syntax bugs in the payment controller and missing exit paths (`return` statements) in the admin controller that could trigger a double-response server crash.
+5. **Express Response Guarding**: Fixed database-level query syntax bugs in the payment controller and missing exit paths (`return` statements) in the admin controller that could trigger a double[...]
 6. **Automated Integration Security Tests**: Developed integration tests checking and validating these rules.
 
 ---
 
 ## ⚡ 10. Performance Improvements
 
-1. **Foreign Key Indexes Migration**: Generated database indexes targeting all foreign keys and frequent composite columns. This prevents full-table sequential scans on join tables like `batch_enrollments`, `payments`, `lessons`, and `lesson_progress`.
+1. **Foreign Key Indexes Migration**: Generated database indexes targeting all foreign keys and frequent composite columns. This prevents full-table sequential scans on join tables like `batch_en[...]
 2. **Vite Config and API Isolation**: Configured Vite environment configuration using `.env.example` templates to cleanly parse API endpoints instead of referencing hardcoded paths.
 
 ---
@@ -328,15 +338,6 @@ Ran all test suites.
 
 ---
 
-## 🧠 17. What I Learned
-- **Relational Integrity & Performance**: Designing indexes for foreign keys highlighted the performance costs of database joins and sequential scans on large datasets.
-- **REST Security Review**: Fixing privilege escalation during signup showed me the importance of sanitizing and validating user data on the server instead of trusting client inputs.
-- **Integration Testing**: Testing security guards using Supertest with test databases taught me how to write cleanup hooks and handle pool connections cleanly.
+## 📄 License
 
----
-
-## 💼 18. Resume / Interview Highlights
-- **Engineered Multi-Role Role-Based Access Controls (RBAC)** across Student, Instructor, Admin portals on a Node.js + Express backend, securing 10+ protected endpoints.
-- **Wrote automated integration test suites** using Jest and Supertest, simulating OTP registration and auth flows to achieve zero authorization bypasses.
-- **Designed and optimized database indexing strategy** in PostgreSQL, implementing B-Tree indexes on foreign keys to eliminate sequential scans and reduce join latency.
-- **Configured Vite build variables** and environmental setups, separating dev, staging, and production API properties.
+© 2025 SkillForge Academy. All rights reserved.
