@@ -11,7 +11,7 @@ types.setTypeParser(1082, (val) => val);
 const db = new Pool(
   process.env.DATABASE_URL
     ? {
-        connectionString: process.env.DATABASE_URL,
+        connectionString: process.env.DATABASE_URL.replace("sslmode=require", "sslmode=verify-full"),
         ssl: process.env.DATABASE_URL.includes("localhost")
           ? false
           : { rejectUnauthorized: false }, // Required for secure hosted DB connections (Render, Neon, etc.)
