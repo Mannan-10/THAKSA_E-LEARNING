@@ -3,8 +3,8 @@ import { createTransport } from "nodemailer";
 const createMailer = () =>
   createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
       user: process.env.GMAIL,
       pass: process.env.PASSWORD,
