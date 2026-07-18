@@ -78,7 +78,8 @@ const login = async (req, res) => {
       { expiresIn: "1h" },
     );
 
-    await safeSendAccountMail(sendLoginAlertMail, user.email, user.name, "Login alert mail");
+    // Run email sending in the background without blocking the login response
+    safeSendAccountMail(sendLoginAlertMail, user.email, user.name, "Login alert mail").catch(console.error);
 
     res.json({
       message: "Login successful",
@@ -139,7 +140,8 @@ const verifyOtp = async (req, res) => {
 
     await client.query("COMMIT");
 
-    await safeSendAccountMail(sendWelcomeMail, email, record.username, "Welcome mail");
+    // Send welcome email in background
+    safeSendAccountMail(sendWelcomeMail, email, record.username, "Welcome mail").catch(console.error);
 
     return res.status(201).json({ message: "OTP verified successfully. User registered." });
   } catch (err) {
