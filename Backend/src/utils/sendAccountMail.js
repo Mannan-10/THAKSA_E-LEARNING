@@ -55,4 +55,4 @@ const sendLoginAlertMail = async (email, name) => {
   });
 };
 
-export { sendWelcomeMail, sendLoginAlertMail };
+export { createMailer, sendWelcomeMail, sendLoginAlertMail };
