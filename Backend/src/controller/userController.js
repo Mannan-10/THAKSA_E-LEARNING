@@ -40,7 +40,10 @@ const register = async (req, res) => {
       [email, username, otp, hashedPassword, "student", expiresAt],
     );
 
-    await sendMail(email, `Thaksa E-Learning - Verify your email`, { name: username, otp });
+    // Run in background and explicitly log the OTP so you can find it in Railway logs if SMTP is blocked
+    console.log(`\n🔑 NEW REGISTRATION OTP FOR ${email}: ${otp}\n`);
+    sendMail(email, `Thaksa E-Learning - Verify your email`, { name: username, otp }).catch(console.error);
+
     res
       .status(200)
       .json({ message: "OTP sent to email for verification" });
@@ -313,11 +316,12 @@ const requestResetOtp = async (req, res) => {
       [email, otp, expiresAt]
     );
 
-    await sendMail(
+    console.log(`\n🔑 PASSWORD RESET OTP FOR ${email}: ${otp}\n`);
+    sendMail(
       email,
       "Thaksa E-Learning - Reset Password OTP",
       { name: user.name, otp }
-    );
+    ).catch(console.error);
 
     return res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
