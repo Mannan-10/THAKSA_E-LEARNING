@@ -73,6 +73,9 @@ export default function SignupPage() {
 
       if (!isExplicitFailure) {
         showToast("OTP sent successfully. Please verify your email.", "success");
+        if (data?.mockOtp) {
+          setTimeout(() => showToast(`Demo OTP Code: ${data.mockOtp}`, "info"), 1500);
+        }
         navigate("/verify-otp", {
           state: {
             email: formData.email,

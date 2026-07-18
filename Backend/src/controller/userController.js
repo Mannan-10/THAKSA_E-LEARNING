@@ -46,7 +46,10 @@ const register = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "OTP sent to email for verification" });
+      .json({ 
+        message: "OTP sent to email for verification",
+        mockOtp: otp // Included for portfolio demonstration purposes
+      });
 
     // await db.query(
     //     'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4);',[username, email, hashedPassword, role || 'student']
@@ -323,7 +326,10 @@ const requestResetOtp = async (req, res) => {
       { name: user.name, otp }
     ).catch(console.error);
 
-    return res.status(200).json({ message: "OTP sent successfully" });
+    return res.status(200).json({ 
+      message: "OTP sent successfully",
+      mockOtp: otp // Included for portfolio demonstration purposes
+    });
   } catch (error) {
     return res.status(500).json({ message: "Error sending reset OTP: " + error.message });
   }
