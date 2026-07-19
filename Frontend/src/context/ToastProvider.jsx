@@ -19,7 +19,10 @@ export default function ToastProvider({ children }) {
     });
   }, []);
 
-  const closeToast = useCallback(() => {
+  const closeToast = useCallback((event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setToast((prev) => ({ ...prev, open: false }));
   }, []);
 
