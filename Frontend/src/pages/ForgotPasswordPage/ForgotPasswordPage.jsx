@@ -40,9 +40,10 @@ export default function ForgotPasswordPage() {
       setError("");
       const data = await requestForgotPasswordOtp({ email });
       setOtpSent(true);
-      showToast("OTP sent successfully. Please check your email.", "success");
       if (data?.mockOtp) {
-        setTimeout(() => showToast(`Demo OTP Code: ${data.mockOtp}`, "info"), 1500);
+        showToast(`OTP Sent! Demo Code: ${data.mockOtp}`, "success", null);
+      } else {
+        showToast("OTP sent successfully. Please check your email.", "success");
       }
     } catch (requestError) {
       setOtpSent(false);
